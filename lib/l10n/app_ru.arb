@@ -1,0 +1,789 @@
+{
+  "node": "Узел",
+  "inbound": "Входящий",
+  "start": "Начинать",
+  "log": "Бревно",
+  "logLevel": "Уровень журнала",
+  "settings": "Настройки",
+  "about": "О",
+  "version": "Версия",
+  "routing": "Маршрутизация",
+  "whileList": "CN",
+  "gfw": "ГФВ",
+  "proxyAll": "Прокси Все",
+  "auto": "Авто",
+  "systemProxy": "Системный прокси",
+  "inputManually": "Ввод вручную",
+  "qrCode": "QR-код",
+  "addNode": "Добавить узел",
+  "photo": "Фото",
+  "clipboard": "Буфер обмена",
+  "protocol": "Протокол",
+  "add": "Добавлять",
+  "name": "Имя",
+  "domainStrategy": "Стратегия домена",
+  "enableMux": "Включить мультиплексор",
+  "address": "Адрес",
+  "ipOrDomain": "IP-адрес/домен",
+  "port": "Порт",
+  "nodeSelection": "Выбор узла",
+  "server": "Сервер",
+  "compass": "Компас",
+  "home": "Дом",
+  "connecting": "Подключение",
+  "connected": "Подключен",
+  "disconnecting": "Отключение",
+  "disconnected": "Отключен",
+  "subscription": "Подписка",
+  "unknown": "Неизвестный",
+  "preparing": "Подготовка",
+  "edit": "Редактировать",
+  "speedTest": "Тест скорости",
+  "statusTest": "Тест пригодности к использованию",
+  "selfhost": "Селфхостинг",
+  "free": "Бесплатно",
+  "reconnecting": "Повторное подключение",
+  "cancel": "Отмена",
+  "save": "Сохранять",
+  "password": "Пароль",
+  "accountName": "Имя учетной записи",
+  "delete": "Удалить",
+  "gettingNodesSubscriptions": "Получение узлов/подписок",
+  "emptyClipboard": "Пустой буфер обмена",
+  "decodeQrCode": "Не удалось декодировать QR-код",
+  "proxy": "Прокси",
+  "direct": "Прямой",
+  "promote": "Повышение",
+  "domainsOrIps": "Домены/IP-адреса",
+  "addProxyDomainIp": "Добавить прокси-домен/IP",
+  "addDirectDomainIp": "Добавить прямой домен/IP",
+  "domain": "Домен",
+  "type": "Тип",
+  "invalidIp": "Неверный IP-адрес",
+  "invalidCidr": "Неверный CIDR",
+  "exact": "Точный",
+  "regularExpression": "Регулярное выражение",
+  "keyword": "Ключевое слово",
+  "rootDomain": "Корневой домен",
+  "addServer": "Добавить сервер",
+  "editServer": "Редактировать сервер",
+  "sshKey": "SSH-ключ",
+  "selectFromFile": "Выбрать из файла",
+  "sudoPassword": "Пароль Sudo",
+  "statusMonitor": "Монитор состояния",
+  "fieldRequired": "Обязательное поле",
+  "invalidPort": "Неверный порт",
+  "invalidAddress": "Неверный адрес",
+  "failedToAddServer": "Не удалось добавить сервер",
+  "memory": "Память",
+  "storage": "Хранилище",
+  "serverPubKey": "Открытый ключ сервера",
+  "serverPubKeyHelper": "Если поле не заполнено, будет принят любой открытый ключ, отправленный сервером при первом подключении, затем открытый ключ будет использоваться при последующих подключениях.",
+  "failedConnectServer": "Не удалось подключиться",
+  "retry": "Повторить попытку",
+  "keyPassphrase": "Ключевая фраза-пароль",
+  "showRealtimeStatus": "Показать статус в реальном времени",
+  "hideRealtimeStatus": "Скрыть статус в реальном времени",
+  "app": "Приложение",
+  "appName": "Название приложения",
+  "prefix": "Префикс",
+  "confirm": "Подтверждать",
+  "addToProxy": "Добавить в прокси?",
+  "addToDirect": "Добавить в Direct?",
+  "default0": "По умолчанию",
+  "website": "Веб-сайт",
+  "endTime": "Конец Времени",
+  "remainingData": "Оставшиеся данные",
+  "update": "Обновлять",
+  "actions": "Действия",
+  "updateInterval": "Интервал обновления",
+  "testArea": "Тестовая зона",
+  "autoUpdate": "Автоматическое обновление",
+  "unableToGetNodes": "Не удалось получить узлы, ваш буфер обмена не содержит URL-адрес подписки, который UmiVPN может проанализировать.",
+  "unableToGetNodesEmptyClipboard": "Не удалось получить узлы, буфер обмена пуст",
+  "subscriptionAddress": "Адрес подписки",
+  "empty": "Пустой",
+  "invalidHttp": "Неверный URL-адрес HTTPS",
+  "noNode": "Нет узла",
+  "failedToChangeOutboundMode": "Не удалось изменить исходящий режим",
+  "failedToChangeFakeDns": "Не удалось изменить поддельный DNS",
+  "failedToChangeRoutingMode": "Не удалось изменить режим маршрутизации.",
+  "disableInAuto": "Отключить в автоматическом режиме",
+  "area": "Область",
+  "remark": "Замечание",
+  "remarkAddress": "Замечание и адрес",
+  "usable": "Годен к использованию",
+  "speed": "Скорость",
+  "latency": "Задержка",
+  "selectOneOutbound": "Выбирать",
+  "addFailedUniqueConstraint": "Добавление не удалось, так как правило противоречит существующему правилу.",
+  "enableInAuto": "Включить в автоматическом режиме",
+  "showClient": "Показать клиента",
+  "connect": "Соединять",
+  "disconnect": "Отключить",
+  "disconnectedUnexpectedly": "Неожиданное отключение. Причина: {reason}",
+  "@disconnectedUnexpectedly": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "quit": "Покидать",
+  "iosAppRoutingNoSupport": "Маршрутизация на основе приложений в настоящее время не поддерживается на iOS.",
+  "failedToChangeInboundMode": "Не удалось изменить входящий",
+  "language": "Язык",
+  "mannual": "Руководство",
+  "updatedAt": "Обновлено в",
+  "min": "{value} {value, plural, =0{Минуты} =1{Минута} other{Минуты}}",
+  "@min": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "hour": "{value} {value, plural, =0{Часы} =1{Час} other{Часы}}",
+  "@hour": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "privacyPolicy": "политика конфиденциальности",
+  "contactUs": "Связаться с нами",
+  "openSourceSoftwareNotice": "Уведомление о программном обеспечении с открытым исходным кодом",
+  "copy": "Копировать",
+  "privacyPolicySummary": "UmiVPN собирает журналы диагностики только при включенном переключателе ниже. Эти журналы не содержат персональных данных. Нажмите кнопку ниже, чтобы ознакомиться с подробной политикой конфиденциальности.",
+  "diagnosticLogDoesNotContainPersonalData": "Диагностические журналы не связаны с вами и не содержат персональных данных.",
+  "shareDiagnosticLogWithDeveloper": "Делитесь журналами диагностики с разработчиками",
+  "yes": "Да",
+  "no": "Нет",
+  "contactUsSummary": "Вы можете связаться с нами следующими способами. Спасибо!",
+  "contactUsFreely": "Если у вас есть вопросы, пожалуйста, свяжитесь с нами.",
+  "bugAreWelcome": "Сообщения об ошибках и предложения приветствуются, большое спасибо!",
+  "copiedToClipboard": "Скопировано в буфер обмена",
+  "openSourceSoftwareNoticeText": "В связи с использованием проектов с открытым исходным кодом по лицензии MPL-2.0 часть исходного кода данного программного обеспечения должна быть раскрыта. Для просмотра нажмите кнопку ниже.",
+  "sourceCodeUrl": "URL к исходному коду",
+  "email": "Электронная почта",
+  "verificationCode": "Проверочный код",
+  "send": "Отправлять",
+  "login": "Авторизоваться",
+  "loginWithEmail": "Вход по электронной почте",
+  "loginWithGoogle": "Google",
+  "loginWithApple": "Яблоко",
+  "loginWithMicrosoft": "Майкрософт",
+  "newUserTrialText": "Новые пользователи могут попробовать Pro в течение 7 дней бесплатно.",
+  "proExpiredAt": "Срок действия Pro",
+  "lifetimeProAccount": "Пожизненная учетная запись Pro",
+  "addGroup": "Добавить группу",
+  "deleteGroup": "Удалить группу",
+  "group": "Группа",
+  "addToGroup": "Добавить в группу",
+  "addApp": "Добавить приложение",
+  "noSelectedNode": "Узел не выбран",
+  "pleaseSelectNode": "Пожалуйста, выберите узел",
+  "pleaseSelectSelector": "Пожалуйста, выберите селектор",
+  "pleaseEnterRuleName": "Пожалуйста, введите название правила",
+  "ruleName": "Имя соответствующего правила",
+  "matchAll": "Совпадение всех",
+  "ruleMatchCondition": "Правило срабатывает, когда выполняются все условия. Если условий нет, правило не сработает никогда.",
+  "inboundLabel": "Входящий",
+  "domainSet": "Набор доменов",
+  "appSet": "Набор приложений",
+  "ipSet": "Набор IP-адресов",
+  "addRouterRule": "Добавить правило маршрутизатора",
+  "addDnsRule": "Добавить правило DNS",
+  "editRule": "Редактировать правило",
+  "addRouter": "Добавить режим маршрута",
+  "copyDefault": "Копировать по умолчанию",
+  "ruleOrder": "Правила сопоставляются сверху вниз",
+  "nodeChain": "Цепочка узлов",
+  "nodeChainDesc": "Выбранные узлы будут использовать следующие узлы в цепочке. Последний узел в цепочке является посадочным.",
+  "addSelector": "Добавить селектор",
+  "selectorNameDuplicate": "Имя селектора не может быть дублировано.",
+  "renameSelector": "Переименовать селектор",
+  "allNodes": "Все узлы",
+  "partialNodes": "Частичные узлы",
+  "nodeGroup": "Группа узлов",
+  "lowestLatency": "Самая низкая задержка",
+  "lowLatency": "Низкая задержка",
+  "highThroughput": "Высокоскоростной",
+  "nameCannotBeEmpty": "Имя не может быть пустым",
+  "setNameDuplicate": "Имя набора не может быть дублировано.",
+  "mutuallyExclusiveSetName": "Взаимоисключающее имя набора",
+  "include": "Включать",
+  "exclude": "Исключать",
+  "simple": "Простой",
+  "advanced": "Передовой",
+  "customDirect": "Прямой заказ",
+  "customProxy": "Пользовательский прокси",
+  "cnGames": "CN Games",
+  "private": "Частный",
+  "gfwWithoutCustomDirect": "GFW (без прямого кастомного заказа)",
+  "gfwModeProxyDomains": "Прокси-домены режима GFW",
+  "gfwModeProxyIps": "IP-адреса прокси-сервера режима GFW",
+  "cnModeProxyDomains": "Прокси-домены режима CN",
+  "cnModeDirectDomains": "Прямые домены режима CN",
+  "cnModeDirectIps": "Прямые IP-адреса режима CN",
+  "proxyAllModeProxyDomains": "Прокси-домены в режиме Proxy-All",
+  "proxyAllModeDirectDomains": "Прямые домены в режиме Proxy-All",
+  "proxyAllModeDirectIps": "Прямые IP-адреса в режиме Proxy-All",
+  "ruBlockModeProxyDomains": "Прокси-домены в режиме RU-Block",
+  "ruBlockModeProxyIps": "IP-адреса прокси-серверов в режиме RU-Block",
+  "ruBlockAllModeProxyDomains": "Прокси-домены в режиме RU-Block(All)",
+  "ruBlockAllModeProxyIps": "IP-адреса прокси-серверов в режиме RU-Block(All)",
+  "ipToDomain": "IP -> Домен",
+  "proFeatureDescription": "Это функция Pro. Перейдите на Pro, чтобы получить доступ ко всем функциям.",
+  "becomePermanentPro": "Станьте постоянным пользователем Pro",
+  "becomePermanentProDescription": "Станьте постоянным пользователем Pro",
+  "tryPro": "Попробуйте Pro",
+  "newUserProTrial": "Новые пользователи могут попробовать Pro в течение 7 дней",
+  "purchase": "Покупка",
+  "purchaseCancelled": "Покупка отменена",
+  "verifyingPurchase": "Подтверждение покупки...",
+  "purchaseVerificationFailed": "Не удалось подтвердить покупку: {reason}",
+  "@purchaseVerificationFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "ifYouHavePaid": "Если вы оплатили заказ, не волнуйтесь: магазин автоматически вернёт вам деньги. Если у вас есть вопросы, свяжитесь с нами. Номер заказа: {orderId}",
+  "@ifYouHavePaid": {
+    "placeholders": {
+      "orderId": {
+        "type": "String"
+      }
+    }
+  },
+  "invalidPurchase": "Недействительная покупка",
+  "purchaseSuccessful": "Покупка успешна",
+  "purchaseFailed": "Покупка не удалась: {status}",
+  "@purchaseFailed": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "unableToConnectToStore": "Невозможно подключиться к магазину",
+  "loginBeforePurchase": "Пожалуйста, войдите в систему перед покупкой. Новые пользователи могут попробовать Pro-версию в течение 7 дней.",
+  "loginBeforeRestore": "Пожалуйста, войдите в систему перед восстановлением покупки.",
+  "alternativePurchase": "Если покупка не удалась, попробуйте другие платформы или официальный сайт.",
+  "upgradeToPermanentPro": "Обновление до Pro",
+  "upgrade": "Обновить",
+  "changePeriod": "Изменить период",
+  "downgrade": "Понизить",
+  "caseInsensitive": "Без учета регистра",
+  "startFailed": "Не удалось запустить",
+  "startFailedWithReason": "Не удалось запустить: {reason}",
+  "@startFailedWithReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "startFailedReasonTunNeedAdmin": "Входящий трафик Tun доступен только при запуске от имени администратора. Перезапустите UmiVPN от имени администратора или измените режим входящего трафика.",
+  "startFailedReasonNoNode": "Нет узла",
+  "startFailedReasonNoEnabledNode": "Нет включенных узлов, включите хотя бы один узел",
+  "startFailedReasonNoSelected": "Узел не выбран",
+  "failedToUpdateSub": "Не удалось обновить подписку: {value}",
+  "@failedToUpdateSub": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToAddSubscription": "Не удалось добавить подписку, существует существующая подписка с такой же ссылкой.",
+  "tunNeedAdmin": "Чтобы использовать tun, перезапустите UmiVPN от имени администратора.",
+  "decodeResult": "Успешно получено {value1} {value1, plural, =1{узел} other{узлы}}, {value2} {value2, plural, =1{узел не удался} other{узлы вышли из строя}}",
+  "@decodeResult": {
+    "placeholders": {
+      "value1": {
+        "type": "num",
+        "format": "compact"
+      },
+      "value2": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "updateSubResult": "Успешно обновлено {value1} {value1, plural, =1{подписка} other{подписки}}, {value2} {value2, plural, =1{подписка} other{подписки}} не удалось. Добавлено {value3} {value3, plural, =1{узел} other{узлы}}, не удалось проанализировать {value4} {value4, plural, =1{узел} other{узлы}}",
+  "@updateSubResult": {
+    "placeholders": {
+      "value1": {
+        "type": "num",
+        "format": "compact"
+      },
+      "value2": {
+        "type": "num",
+        "format": "compact"
+      },
+      "value3": {
+        "type": "num",
+        "format": "compact"
+      },
+      "value4": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "failedToUpdateCountry": "Не удалось обновить области",
+  "keepAlivePeriodMustBeBetween2And60": "Возраст должен быть от 2 до 60 лет.",
+  "showApp": "Показать приложение",
+  "hideApp": "Скрыть приложение",
+  "showSystemApps": "Показать системные приложения",
+  "hideSystemApps": "Скрыть системные приложения",
+  "doubleTapToDelete": "Дважды нажмите, чтобы удалить",
+  "method": "Метод",
+  "sshKeyPath": "Путь к файлу ключа SSH",
+  "useCommonSshKey": "Использовать добавленный ключ SSH",
+  "addCommonSshKey": "Добавить SSH-ключ",
+  "sshKeyContentOrPathRequired": "Требуется как минимум одно из следующего: содержимое ключа SSH или путь к файлу ключа SSH.",
+  "failedToAddCommonSshKey": "Не удалось добавить ключ SSH.",
+  "failedToAddCommonSshKeyDueToDuplicateName": "Не удалось добавить ключ SSH, так как существует ключ с таким же именем.",
+  "quickDeploy": "Быстрое развертывание",
+  "deploy": "Развертывать",
+  "close": "Закрывать",
+  "deploySuccess": "{deploy} на сервере-{server} успешно выполнено",
+  "@deploySuccess": {
+    "placeholders": {
+      "deploy": {
+        "type": "String"
+      },
+      "server": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToDeploy": "Не удалось развернуть: {value}",
+  "@failedToDeploy": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "peerCertChainSHA256Hash": "SHA256",
+  "serverCA": "Корневой центр сертификации",
+  "failedToInitGrpcClient": "Не удалось инициализировать клиент grpc: {value}",
+  "@failedToInitGrpcClient": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "block": "Блокировать",
+  "failure": "Отказ",
+  "appKeyword": "Ключевое слово приложения",
+  "sniffDomain": "Домен Sniff",
+  "trafficStats": "Статистика трафика",
+  "useSshKey": "Использовать SSH-ключ",
+  "errorOnly": "Только ошибка",
+  "all": "Все",
+  "failedToUndoBlockDns": "Не удалось удалить фильтр WFP для блокировки DNS-трафика основной сетевой карты. Закройте это приложение, которое может удалить фильтр.",
+  "failedToRemoveSystemProxy": "Не удалось удалить системный прокси-сервер. Пожалуйста, удалите его вручную в разделе «Настройки» > «Системный прокси-сервер».",
+  "failedToChangeNode": "Не удалось изменить узел: {value}",
+  "@failedToChangeNode": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "failureDetail": "Подробности отказа",
+  "failedNodes": "Неисправные узлы",
+  "failedSub": "Неудачные подписки",
+  "addRemark": "Добавить замечание?",
+  "multiSelect": "Множественный выбор",
+  "share": "Делиться",
+  "quickAction": "Быстрое действие",
+  "deleteUnusable": "Удалить неиспользуемые узлы",
+  "smallScreenPreference": "Настройки малого экрана",
+  "chainProxy": "Цепной прокси",
+  "singleNode": "Одиночный узел",
+  "multipleNodes": "Несколько узлов",
+  "balanceStrategy": "Стратегия баланса",
+  "manualNodeMode": "Ручной режим",
+  "outboundMode": "Исходящий",
+  "random": "Случайный",
+  "mode": "Режим",
+  "balanceStrategyMemory": "Память",
+  "selectingStrategy": "Выберите стратегию",
+  "mostThroughput": "Скорость самая высокая",
+  "allOk": "Годен к использованию",
+  "yourDevices": "Ваши устройства",
+  "destination": "Место назначения",
+  "addNewNode": "Добавить новый узел",
+  "useExistingNode": "Использовать существующий узел",
+  "atLeastTwoNodes": "Требуется не менее двух узлов.",
+  "advancedMode": "Профессиональный режим",
+  "simpleMode": "Простой режим",
+  "rule": "Правило",
+  "set": "Набор",
+  "selector": "Селектор",
+  "atmoicDomainSet": "Малый набор доменов",
+  "greatDomainSet": "Большой набор доменов",
+  "atmoicIpSet": "Малый набор IP-адресов",
+  "greatIpSet": "Большой набор IP-адресов",
+  "createGreatDomainSet": "Создайте отличный набор доменов",
+  "editGreatDomainSet": "Редактировать большой набор доменов",
+  "createSmallDomainSet": "Создать небольшой набор доменов",
+  "editSmallDomainSet": "Редактировать небольшой набор доменов",
+  "editGreatIpSet": "Редактировать отличный набор IP-адресов",
+  "createGreatIpSet": "Создайте отличный набор IP-адресов",
+  "editAppSet": "Редактировать набор приложений",
+  "condition": "Состояние",
+  "range": "Диапазон",
+  "account": "Счет",
+  "logout": "Выйти",
+  "geoSiteOrGeoIPFileNotFound": "Загрузка необходимых геофайлов...",
+  "createIpSmallSet": "Создать небольшой набор IP-адресов",
+  "editIpSmallSet": "Редактировать IP-адрес малого набора",
+  "deleteFailed": "Удаление не удалось",
+  "deleteAccount": "Удалить аккаунт",
+  "deleteAccountConfirm": "Вы уверены, что хотите удалить свою учётную запись? Это действие не может быть отменено.",
+  "domainSetDescription": "Следующий набор доменов использует прокси-DNS-сервер (по умолчанию 8.8.8.8 и 1.1.1.1) для разрешения, другие домены используют прямой DNS-сервер (по умолчанию это DNS-серверы вашей основной физической сетевой карты или 223.5.5.5 и 114.114.114.114, если первый неизвестен) для разрешения",
+  "routerRuleDescription": "Для каждого соединения правила сопоставляются одно за другим сверху вниз. Если одно правило совпало, последующие правила не учитываются. Если ни одно правило не совпало, соединение прерывается.",
+  "dstIpSet": "Набор IP-адресов назначения",
+  "ruleNameUmiVPNTestNodes": "Тестирование узла UmiVPN",
+  "ruleNameInternalDnsProxyGoProxy": "Внутренний DNS (CF)",
+  "ruleNameInternalDnsDirectGoDirect": "Внутренний DNS (Aliyun и CF)",
+  "ruleNameProxyDnsServerGoProxy": "Прокси-DNS-сервер по умолчанию",
+  "ruleNameDirectDnsServerGoDirect": "Прямой DNS-сервер по умолчанию",
+  "ruleNameDnsHijack": "Перехват DNS: непрямой домен",
+  "ruleNameCustomDirectDomain": "Пользовательский прямой домен",
+  "ruleNameCustomDirectIp": "Пользовательский прямой IP",
+  "ruleNameCustomProxyDomain": "Пользовательский прокси-домен",
+  "ruleNameCustomProxyIp": "Пользовательский прокси-IP",
+  "ruleNameProxyApp": "Прокси-приложение",
+  "ruleNameDirectApp": "Прямое приложение",
+  "ruleNameCnDirectIp": "Прямые IP-адреса режима CN",
+  "ruleNameDefaultProxy": "Прокси по умолчанию",
+  "ruleNameCnDirectDomain": "Прямые домены режима CN",
+  "ruleNameGfwProxyDomain": "Прокси-домены режима GFW",
+  "ruleNameGfwProxyIp": "IP-адреса прокси-сервера режима GFW",
+  "ruleNameRuBlockProxyDomain": "Прокси-домены в режиме RU-Block",
+  "ruleNameRuBlockProxyIp": "IP-адреса прокси-серверов в режиме RU-Block",
+  "ruleNameRuBlockAllProxyDomain": "Прокси-домены в режиме RU-Block(All)",
+  "ruleNameRuBlockAllProxyIp": "IP-адреса прокси-серверов в режиме RU-Block(All)",
+  "ruleNameDefaultDirect": "По умолчанию Прямой",
+  "ruleNameGlobalDirectDomain": "Прямые домены в режиме Proxy-All",
+  "ruleNameGlobalDirectIp": "Прямые IP-адреса в режиме Proxy-All",
+  "addAppSet": "Добавить набор приложений",
+  "pro": "Пожизненная учетная запись Pro",
+  "proxyShare": "Поделиться прокси",
+  "sniff": "Нюхать",
+  "proxyShareDesc": "Включите входящие HTTP и SOCKS после запуска VPN, чтобы другие устройства в локальной сети могли подключаться к интернету через этот компьютер. Имя входящего трафика — «proxyShare», его можно использовать в правилах.",
+  "loginSuccess": "Успешный вход",
+  "emailLogin": "Войти по электронной почте",
+  "google": "Google",
+  "apple": "Яблоко",
+  "microsoft": "Майкрософт",
+  "rateApp": "Оценить UmiVPN",
+  "userConsend": "После входа в систему ваш адрес электронной почты будет храниться на нашем сервере до тех пор, пока вы не удалите свою учётную запись. Это необходимо для обеспечения возможности входа в учётную запись. Мы не передаем ваш адрес электронной почты третьим лицам. Разрешаете ли вы нам хранить ваш адрес электронной почты?",
+  "okay": "Хорошо",
+  "disagree": "Не согласен",
+  "reject": "Отклонять",
+  "greatSetDescription1": "Большой набор состоит из небольших наборов или других больших наборов. При определении принадлежности домена/IP-адреса к набору в первую очередь рассматриваются исключенные наборы. Если домен входит в какой-либо из исключенных наборов, то он отсутствует в наборе. ",
+  "greatSetDescription2": "В большом наборе может быть взаимоисключающий набор. Если домен/IP-адрес входит в набор A, то этот домен/IP-адрес не входит в свой взаимоисключающий набор.",
+  "pleaseLoginFirst": "Пожалуйста, сначала войдите в систему",
+  "telegram": "Телеграмма",
+  "failedToDownloadGeoData": "Не удалось загрузить GeoData: {value}",
+  "@failedToDownloadGeoData": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "doNotUse1080IOS": "Не используйте 1080 на iOS",
+  "deletedNode": "Удаленный узел",
+  "selectorContainsDeletedLandHandler": "Селектор {value} использует удаленный узел в качестве целевого узла, пожалуйста, удалите его и повторите попытку.",
+  "@selectorContainsDeletedLandHandler": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "tunIpv6Settings": "Настройки IP TUN",
+  "alwaysEnableIpv6": "Всегда включать IPv6",
+  "dependsOnDefaultNic": "Зависит от физической сетевой карты по умолчанию",
+  "dependsOnDefaultNicDesc": "Если физическая сетевая карта по умолчанию поддерживает IPv6, то сетевая карта TUN также будет поддерживать IPv6, в противном случае IPv6 не поддерживается.",
+  "failedToCreateAllFirstLaunch": "Не удалось создать таблицы базы данных: {value}",
+  "@failedToCreateAllFirstLaunch": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToInsertDefaultData": "Не удалось вставить данные по умолчанию в базу данных: {value}",
+  "@failedToInsertDefaultData": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "newVersionDownloadedDialog": "Новая версия {version} загружена, установить ее?",
+  "@newVersionDownloadedDialog": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "skipThisVersion": "Пропустить эту версию",
+  "install": "Установить",
+  "later": "Напомнить мне позже",
+  "autoUpdateDescription": "Автоматически загружает новую версию и уведомляет вас, когда она будет готова",
+  "downloading": "Загрузка {version}...",
+  "@downloading": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "installFailed": "Не удалось установить обновление, причина: {reason}",
+  "@installFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "tun46SettingIpv4Only": "Только IPv4",
+  "tun46SettingIpv4AndIpv6": "IPv4 и IPv6",
+  "ad": "Реклама",
+  "advancedSettingDesc": "Настройки, связанные с VPN",
+  "general": "Общий",
+  "light": "Свет",
+  "dark": "Темный",
+  "system": "Система",
+  "themeMode": "Тема",
+  "serverError": "Ошибка сервера",
+  "gfwDesc": "Все домены/IP-адреса, заблокированные GFW, подключаются через прокси, остальные — напрямую.",
+  "cnDesc": "Все домены/IP-адреса материкового Китая переходят на прямой доступ, остальные — на прокси-сервер.",
+  "proxyAllDesc": "Все нечастные домены/IP-адреса переходят на прокси-сервер",
+  "dnsRule": "Правила DNS",
+  "dnsRuleNameGfwProxyFake": "Прокси-домены режима GFW (A/AAAA)",
+  "dnsRuleNameGfwProxy": "Прокси-домены режима GFW",
+  "dnsRuleNameRuBlockProxyFake": "Прокси-домены в режиме RU-Block (A/AAAA)",
+  "dnsRuleNameRuBlockProxy": "Прокси-домены в режиме RU-Block",
+  "dnsRuleNameRuBlockAllProxyFake": "Прокси-домены режима RU-Block(All) (A/AAAA)",
+  "dnsRuleNameRuBlockAllProxy": "Прокси-домены в режиме RU-Block(All)",
+  "dnsRuleNameCnProxyFake": "Прокси-домены режима CN (A/AAAA)",
+  "dnsRuleNameCnProxy": "Прокси-домены режима CN",
+  "dnsRuleNameProxyAllProxyFake": "Прокси-домены в режиме Proxy-All (A/AAAA)",
+  "dnsRuleNameProxyAllProxy": "Прокси-домены в режиме Proxy-All",
+  "dnsRuleNameDefaultDirect": "Другие",
+  "routerRules": "Правила маршрутизатора",
+  "dnsRuleDesc": "Для каждого DNS-запроса правила сопоставляются по одному, начиная с самого верха. Если правило совпало, следующее правило не учитывается. DNS-сервер, указанный в правиле, будет использоваться для обработки DNS-запроса.",
+  "dnsServer": "DNS-сервер",
+  "howDnsRuleMatch": "Если все условия совпадают или ни одно условие не включено, правило DNS срабатывает.",
+  "selectAtleastOneDnsServer": "Выберите хотя бы один DNS-сервер",
+  "dnsType": "Тип DNS",
+  "directDnsServer": "Прямой DNS-сервер",
+  "proxyDnsServer": "Прокси DNS-сервер",
+  "addDnsServer": "Добавить DNS-сервер",
+  "useDefaultDnsServer": "Используйте DNS-серверы сетевой карты по умолчанию. Если не удаётся получить доступ к серверам, используйте указанные выше серверы.",
+  "useDefaultNicDnsServer": "Используйте DNS-серверы сетевой карты по умолчанию. Если не удаётся получить доступ к серверам, используйте следующее:",
+  "addDnsAddressHint": "Поддерживается несколько адресов. Разделяйте их запятыми. Каждый DNS-запрос будет отправлен на все адреса одновременно, будет использован первый ответ.",
+  "invalidUrl": "Неверный URL-адрес",
+  "duplicateDnsServerName": "Дублирующееся имя DNS-сервера",
+  "dnsTypeConditionDesc": "Если флажок установлен, это условие включено. Условие выполняется только в том случае, если тип DNS-запроса соответствует выбранному типу.",
+  "enabledConditions": "Включенные условия: {number}",
+  "@enabledConditions": {
+    "placeholders": {
+      "number": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "showSelector": "Показать селектор",
+  "hideSelector": "Скрыть селектор",
+  "showHandler": "Показать обработчик",
+  "hideHandler": "Скрыть селектор",
+  "restoreIAP": "Восстановить покупку",
+  "debugLog": "Журнал отладки",
+  "upload": "Загрузить",
+  "saveToDownloadFolder": "Сохранить для загрузки",
+  "saveToDownloadFolderDesc": "Переместите журналы в папку «Загрузки».",
+  "debugLogDesc": "Если у вас возникли проблемы при использовании UmiVPN, вы можете включить кнопку и дождаться повторного возникновения проблемы, затем нажать кнопку «Загрузить», чтобы загрузить логи. Не забудьте закрыть её и удалить логи после загрузки. Журналы разработчика не загружаются автоматически, поскольку содержат информацию о вашей сетевой активности, включая используемые вами веб-сайты и приложения. Мы удаляем логи сразу после их обработки.",
+  "clashFormatSupported": "Поддерживаются только файлы правил коллизий.",
+  "network": "Сеть",
+  "source": "Источник",
+  "fallbackToProxy": "Возврат к прокси-серверу",
+  "fallbackToProxySetting": "При сбое прямого соединения используется резервный прокси-сервер. Будет использован узел, выбранный селектором «Прокси». Если селектор не существует, будет выбран случайный узел.",
+  "installAsWinService": "Добавить UmiVPN в службу Windows",
+  "installAsWinServiceDesc": "Перед использованием TUN необходимо добавить UmiVPN в службу Windows. Нажмите «Да», чтобы установить UmiVPN как службу. Для этого потребуется дать разрешение в следующем окне запроса UAC.",
+  "placeOnTop": "Вершина",
+  "stopPlaceOnTop": "Untop",
+  "fallbackTo": "Возврат к {node}",
+  "@fallbackTo": {
+    "placeholders": {
+      "node": {
+        "type": "String"
+      }
+    }
+  },
+  "pingTestMethod": "Метод проверки задержки",
+  "pingReal": "Реальная задержка",
+  "pingRealDesc": "Время, затраченное на получение результата",
+  "startOnBoot": "Запуск при загрузке",
+  "startOnBootDesc": "Запускать UmiVPN автоматически при запуске",
+  "alwaysOn": "Всегда включен",
+  "alwaysOnDesc": "Пока вы не нажали кнопку «Отключить», всегда старайтесь оставаться подключенным, когда приложение запущено.",
+  "checkAndUpdate": "Проверить и обновить",
+  "noNewVersion": "Нет новых версий",
+  "enableSystemExtension": "Включите UmiVPN SystemExtension, перейдя в Системные настройки -> Общие -> Элементы входа и расширения -> Сетевые расширения.",
+  "systemProxyPortSetting": "Настройка порта системного прокси-сервера",
+  "randomPorts": "Случайные порты",
+  "staticPorts": "Статические порты",
+  "whenNoDomain": "Снифф, когда нет информации о домене",
+  "enable": "Давать возможность",
+  "disable": "Запрещать",
+  "checkUpdate": "Проверить обновление",
+  "handlerCopiedSuccess": "Копирование выполнено успешно. Узел добавлен в группу по умолчанию.",
+  "hysteriaRejectQuic": "Истерия отвергает QUIC",
+  "syncBackup": "Синхронизация и резервное копирование",
+  "cloudSync": "Облачная синхронизация",
+  "cloudSyncDesc1": "Синхронизируйте базу данных между несколькими устройствами. ",
+  "cloudSyncDesc2": "Для устройств Android с установленными сервисами Google и устройств Apple, которые могут взаимодействовать с серверами Google FCM, синхронизация выполняется в режиме реального времени. В противном случае синхронизация будет происходить каждые 5 минут.",
+  "cloudSyncDesc3": "Данные синхронизации будут автоматически удалены из облака после того, как ваше устройство их скачает. Если ваше устройство не скачает их в течение 7 дней, данные будут удалены из облака.",
+  "nodeSub": "Узел/Подписка",
+  "routeSetDNSSelector": "Правило/Набор/Селектор/DNS",
+  "selectorSetting": "Настройки селектора",
+  "serverKey": "Сервер/Ключ",
+  "lanSync": "Синхронизация по локальной сети",
+  "sync": "Синхронизация",
+  "conditaionWarn1": "В большинстве случаев условия домена и условия IP-адреса не должны существовать одновременно. Если они присутствуют одновременно, правило сработает только в том случае, если запрос содержит информацию как о домене, так и об IP-адресе, что случается не всегда.",
+  "setName": "Установить имя",
+  "addSet": "Добавить набор",
+  "domainIpAppConditionDesc": "Если домен/IP-адрес/приложение запроса входит в любой из наборов, правило срабатывает.",
+  "backup": "Резервное копирование базы данных",
+  "autoBackup": "Автоматическое резервное копирование",
+  "autoBackupDesc": "Автоматически выполнять резервное копирование базы данных в облако один раз в день.",
+  "currentBackup": "Текущая резервная копия",
+  "uploadDb": "Загрузить",
+  "restoreDb": "Восстановить",
+  "deleteCloudDb": "Удалить базу данных в облаке",
+  "uploadDbSuccess": "База данных успешно загружена",
+  "restoreDbSuccess": "Восстановление базы данных успешно завершено",
+  "deleteDbSuccess": "Удалить успешно",
+  "gridView": "Вид сетки",
+  "listView": "Вид списка",
+  "sort": "Сортировать",
+  "clear": "Прозрачный",
+  "fallbackRetryDomain": "Повторить домен",
+  "fallbackRetryDomainDesc": "Если прокси-подключение использует IP-адреса и не удалось подключиться из-за тайм-аута ввода-вывода (например, из-за загрязнения DNS), используйте домен в качестве целевого и повторите попытку. Сначала будет использован домен, полученный с помощью сниффинга, а если он недоступен, будет использован домен IP-to-domain.",
+  "backupPasswordDesc": "Используется для шифрования базы данных. Восстановление резервных копий возможно только с устройств с этим паролем. Пароль зашифрован и хранится локально.",
+  "syncPasswordDesc": "Используется для шифрования данных синхронизации. Только устройства с этим паролем могут успешно синхронизировать данные. Пароль шифруется и хранится локально.",
+  "addDomainIpAppSet": "Добавить набор доменов/приложений/IP-адресов",
+  "unsaved": "Несохраненный",
+  "rememberPasswordInMemory": "Запомните пароль sudo для дальнейшего использования.",
+  "doNotShowAgain": "Не показывать снова",
+  "rpmTunNotice": "При включении TUN режим переадресации по обратному пути устанавливается на значение Loose(2) и возвращается к состоянию, которое было при отключении. Подробнее о переадресации по обратному пути можно узнать на следующем веб-сайте.",
+  "internalDnsDesc": "Внутренние DNS-серверы используются для разрешения доменов при исходящих звонках. Их два: один — internal-dns-proxy, который использует селектор прокси для подключения к 1.1.1.1; другой — internal-dns-direct, который использует прямое подключение к 223.5.5.5 и 1.1.1.1. Первым используется internal-dns-direct, а в случае неудачи — internal-dns-proxy.",
+  "nodeSetDesc": "Существует небольшой набор доменов под названием «__node__», содержащий домены и SNI всех узлов. Также существует небольшой набор IP-адресов под названием «__node__», содержащий IP-адреса всех узлов.",
+  "dnsNameDesc": "Имя DNS-сервера можно указать во входящем условии, чтобы указать, какой узел он использует.",
+  "directAppSetDesc": "На Android приложения из набора прямых приложений не будут проходить через UmiVPN (разделенный туннель)",
+  "deleteDebugLogs": "Удалить журналы отладки",
+  "conditionDesc": "Если у соединения нет информации об IP-адресе, условие IP-адреса будет ложным, и правило не сработает. Аналогично, если у соединения нет информации о домене, условие домена будет ложным, и правило не сработает.",
+  "lookupEch": "Поиск ECH",
+  "lookupEchDesc": "Если включено и указанная выше конфигурация ECH пуста, конфигурация ECH будет найдена на DNS-сервере. Если поиск успешен, использовать ECH, в противном случае не использовать ECH.",
+  "adWanted": "Опубликовать рекламу",
+  "basicQuickDeployTitle": "Два ядра, четыре протокола",
+  "basicQuickDeploySummary": "Развертывание ядер Xray, Hysteria и настройка узлов с четырьмя распространенными протоколами",
+  "basicQuickDeployDetails": "Установите Xray-core и Hysteria, а также разверните следующие четыре входящих сервера. Если на сервере уже установлены Xray или Hysteria, исходная конфигурация будет заменена. Если на сервере не включена поддержка BBR, BBR будет включен.",
+  "basicQuickDeployContent1": "Vmess пять случайных портов",
+  "basicQuickDeployContent2": "Shadowsocks пять случайных портов",
+  "basicQuickDeployContent3": "Порт Hysteria 443",
+  "basicQuickDeployContent4": "Порт Vless-XTLS-Vision 443",
+  "masqueradeQuickDeployTitle": "Реальность/XHTTP",
+  "masqueradeQuickDeploySummary": "Установите Xray-core и разверните входящий трафик Reality/XHTTP. Если на сервере уже установлен Xray, исходная конфигурация будет заменена. Если на сервере не включена поддержка BBR, BBR будет включен.",
+  "masqueradeQuickDeployDetails": "Установите Xray-core и разверните входящий трафик Reality/XHTTP. Если на сервере уже установлен Xray, исходная конфигурация будет заменена. Если на сервере не включена поддержка BBR, BBR будет включен.",
+  "fatalError": "Произошла ошибка. Перезапустите UmiVPN. Ошибка: {error}",
+  "@fatalError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exit": "Выход",
+  "info": "Информация",
+  "selectAtleastOneSelector": "Выберите хотя бы один селектор",
+  "addRouteMode": "Добавить режим маршрута",
+  "setNameProxyApp": "Прокси",
+  "setNameDirectApp": "Прямой",
+  "defaultSelectorTag": "Прокси",
+  "selectAtleastOneNode": "Выберите хотя бы один узел",
+  "insertDefaultError": "Не удалось вставить данные по умолчанию. Перезапустите UmiVPN и добавьте их на страницу маршрутизации. Причина: {error}",
+  "@insertDefaultError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pleaseSelectARoutingMode": "Пожалуйста, выберите режим маршрутизации",
+  "addRouteModeNotice": "Нажмите кнопку +, чтобы добавить режим маршрутизации.",
+  "freeUserCannotUseCustomRoutingMode": "Пользователи бесплатной версии не могут использовать пользовательские режимы маршрутизации. Выберите режим маршрутизации по умолчанию. Вы можете добавить режимы маршрутизации по умолчанию на странице маршрутизации.",
+  "defaultRouteModes": "Режимы по умолчанию",
+  "custom": "Обычай",
+  "geositeUrlDesc": "Если пусто, будет использоваться geosite.dat, предоставленный LoyalSoldier.",
+  "geoUrlDesc": "Если пусто, будет использоваться geoip.dat, предоставленный LoyalSoldier.",
+  "ruBlocked": "Россия заблокирована",
+  "ruBlockedDesc": "Заблокированные в России домены/IP-адреса переходят на прокси, остальные — на прямую.",
+  "ruBlockedAll": "Россия заблокирована (все)",
+  "ruBlockedAllDesc": "Все домены/IP-адреса, заблокированные в России, переходят на прокси, остальные — на прямую.",
+  "dnsServerProxy": "Прокси DNS-сервер",
+  "dnsServerDirect": "Прямой DNS-сервер",
+  "sniffDomainForIpConnection": "Если соединение использует целевой IP-адрес, прослушивайте домен",
+  "resolveDomain": "Для подключений с использованием доменных адресов используйте DNS для разрешения IP-адресов. Когда каждый разрешенный IP-адрес делает условие IP-адреса истинным, условие становится истинным.",
+  "skipSniff": "Нет нюха",
+  "resolve": "Ресовле",
+  "skipResolve": "Нет решимости",
+  "describeTheProblem": "Опишите проблему, с которой вы столкнулись. Если вы уже обращались в службу поддержки клиентов, оставьте поле пустым.",
+  "debugLogNotAvailable": "Функция журнала разработчика недоступна в версии, отличной от магазина.",
+  "useBloomFilter": "Используйте фильтр Блума в iOS",
+  "useBloomFilterDesc": "Фильтр Блума может сократить использование памяти, однако существует небольшая вероятность (1%) ложных срабатываний: домены, не входящие в набор, могут быть ошибочно классифицированы как входящие в набор.",
+  "addFromClashRuleFiles": "Добавить из файлов правил коллизий",
+  "selectFromInstalledApps": "Выбрать из установленных приложений",
+  "ipToDomainDesc": "Связь IP -> Домен берётся из недавней истории DNS. Поскольку многие домены могут быть преобразованы в один и тот же IP-адрес, это может быть не настоящий домен. Поэтому соединение, скорее всего, будет содержать домен, но это не гарантируется.",
+  "followingAiTranslated": "Перевод на следующие языки осуществляется с помощью искусственного интеллекта, поэтому он может быть неточным.",
+  "addToDefault": "Добавить в группу по умолчанию",
+  "couldNotOpenAppStoreSubscriptions": "Не удалось открыть управление подпиской. Перейдите в Настройки > [Ваше имя] > Подписки, чтобы управлять подпиской.",
+  "willRenewTo": "Будет продлено до {plan} ({period})",
+  "@willRenewTo": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "welcomeToUmiVPN": "Добро пожаловать в UmiVPN!",
+  "umivpnIsFreeToUse": "UmiVPN бесплатен для использования",
+  "welcomeConnectionInfo": "Каждое подключение длится максимум 15 минут, после этого вернитесь и подключитесь снова.",
+  "gotIt": "Понятно",
+  "enableAppOpenAds": "Включить рекламу при открытии приложения",
+  "enableAppOpenAdsDesc": "Включите рекламу при открытии приложения, чтобы получить 20 минут времени подключения вместо 15 минут. Реклама будет появляться при открытии приложения."
+}

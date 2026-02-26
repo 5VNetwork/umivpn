@@ -1,0 +1,216 @@
+name: Build Mac DMG
+
+on:
+  # push:
+  #   tags:
+  #     - "v*"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [trigger-vx-release]
+
+jobs:
+  build-mac-dmg:
+    runs-on: macos-latest
+    environment: mac
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          ref: dmg
+
+      - name: Save Provision profiles
+        env:
+          PROVISION_PROFILE_BASE64: ${{ secrets.DMG_PROVISION_PROFILE }}
+          SE_PROVISION_PROFILE_BASE64: ${{ secrets.DMG_SE_PROVISION_PROFILE }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+
+        run: |
+          PP_PATH=macos/pkg.provisionprofile
+          PP_SE_PATH=macos/pkg_se.provisionprofile
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          echo -n "$PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+          echo -n "$SE_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_SE_PATH
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+
+          #create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # import certificate to keychain
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          # apply provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_SE_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+
+      - name: Checkout dependencies
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          cd ..
+          git clone https://${GH_TOKEN}@github.com/5VNetwork/tm-plugin.git tm-plugin
+
+      - name: create files
+        run: |
+          touch ../tm-plugin/tm_windows/assets/x.dll
+          touch ../tm-plugin/tm_linux/assets/x.so
+          touch ../tm-plugin/tm_linux/assets/x
+          mkdir -p assets/google_fonts
+          mkdir -p assets/ads
+  
+      - name: Download geo
+        run: |
+          mkdir -p assets/geo
+          curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geoip.dat" 
+          mv simplified_geoip.dat assets/geo/simplified_geoip.dat
+          curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geosite.dat" 
+          mv simplified_geosite.dat assets/geo/simplified_geosite.dat
+
+      - name: Download library from release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          gh release download build \
+            -R 5VNetwork/vx-core \
+            -p "tm-macos.xcframework.zip"
+          unzip tm-macos.xcframework.zip 
+          mv tm.xcframework macos/tm.xcframework
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Install appdmg
+        run: npm install -g appdmg
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ${{ github.workspace }}/.dart_tool
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
+        with:
+          path: macos/Pods
+          key: pods-${{ runner.os }}-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            pods-${{ runner.os }}-
+
+      - name: Pod
+        run: |
+          cd macos && pod install
+
+      - name: Build
+        env:
+          LOG_KEY: ${{ secrets.LOG_KEY }}
+        run: flutter build macos --dart-define=LOG_KEY=$LOG_KEY --flavor pkg --release --obfuscate --split-debug-info=symbols/darwin
+
+      - name: Archive
+        run: |
+          cd macos
+          xcodebuild -scheme pkg -workspace Runner.xcworkspace \
+          -configuration Release-pkg -archivePath ./build/VX.xcarchive \
+          -destination "generic/platform=macOS" archive
+
+      - name: Set version
+        run: |
+          BUILD_NUMBER=$(grep '^version:' pubspec.yaml | sed 's/version: .*+\(.*\)/\1/')
+          VERSION_NAME=$(grep '^version:' pubspec.yaml | sed 's/version: \(.*\)+.*/\1/')
+          /usr/libexec/PlistBuddy -c  "Set :CFBundleShortVersionString $VERSION_NAME" \
+          "macos/build/VX.xcarchive/Products/Applications/VX.app/Contents/Library/SystemExtensions/com.5vnetwork.x.system.se.systemextension/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c  "Set :CFBundleVersion $BUILD_NUMBER" \
+          "macos/build/VX.xcarchive/Products/Applications/VX.app/Contents/Library/SystemExtensions/com.5vnetwork.x.system.se.systemextension/Contents/Info.plist"
+
+      - name: Sign
+        run: |
+          cd macos
+          xcodebuild -exportArchive -archivePath build/VX.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath .
+          codesign -d --entitlements VX.entitlements --xml VX.app
+          codesign -d --entitlements VX_SystemExtension.entitlements --xml VX.app/Contents/Library/SystemExtensions/com.5vnetwork.x.system.se.systemextension 
+          cp pkg.provisionprofile VX.app/Contents/embedded.provisionprofile
+          cp pkg_se.provisionprofile VX.app/Contents/Library/SystemExtensions/com.5vnetwork.x.system.se.systemextension/Contents/embedded.provisionprofile
+          codesign -s "Developer ID Application" -f --entitlements VX_SystemExtension.entitlements --timestamp -o runtime VX.app/Contents/Library/SystemExtensions/com.5vnetwork.x.system.se.systemextension
+          codesign -s "Developer ID Application" -f --entitlements VX.entitlements --timestamp -o runtime VX.app
+          codesign --verify --deep --strict --verbose=2  VX.app
+
+      - name: Notary
+        env:
+          NOTARYTOOL_PASSWORD: ${{ secrets.NOTARYTOOL_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+        run: |
+          cd macos
+          ditto -c -k --keepParent VX.app VX.zip
+          xcrun notarytool submit  VX.zip --apple-id "$APPLE_ID" \
+          --team-id "K4FDLB3LLD" --password "$NOTARYTOOL_PASSWORD" --wait
+          xcrun stapler staple VX.app
+
+      - name: Save Sparkle private key
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          # Save Sparkle private key to file
+          echo -n "$SPARKLE_PRIVATE_KEY" > $RUNNER_TEMP/sparkle_private_key.pem
+          chmod 600 $RUNNER_TEMP/sparkle_private_key.pem
+
+      - name: DMG
+        run: |
+          mv macos/VX.app macos/dmg/VX.app
+          mkdir -p releases
+          appdmg macos/dmg/dmg.json "releases/VX.dmg"
+          macos/Pods/Sparkle/bin/generate_appcast --ed-key-file "$RUNNER_TEMP/sparkle_private_key.pem" releases/
+
+      - name: Extract version from pubspec.yaml
+        id: get_version
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+          echo "version=v$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: v$VERSION"
+
+      - name: Upload DMG to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          gh release upload ${{ steps.get_version.outputs.version }} \
+            releases/VX.dmg \
+            --repo ${{ github.repository_owner }}/vx \
+            --clobber
+
+      - name: Configure AWS CLI for R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID" --profile r2
+          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile r2
+          aws configure set region auto --profile r2
+
+      - name: Upload DMG and appcast.xml to R2
+        run: |
+          aws s3 cp releases/VX.dmg s3://vproxy/ \
+            --profile r2 \
+            --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
+          aws s3 cp releases/appcast.xml s3://vproxy/ \
+            --profile r2 \
+            --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com

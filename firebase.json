@@ -1,0 +1,48 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "umivpn",
+          "appId": "1:44508252344:android:867c0bd2c5cd4cd2364c4d",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "umivpn",
+          "configurations": {
+            "android": "1:44508252344:android:867c0bd2c5cd4cd2364c4d",
+            "ios": "1:44508252344:ios:3c1553784d2b709f364c4d",
+            "macos": "1:44508252344:ios:3c1553784d2b709f364c4d"
+          }
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "umivpn",
+          "appId": "1:44508252344:ios:6dd931a102028204364c4d",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "umivpn",
+          "appId": "1:44508252344:ios:6dd931a102028204364c4d",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      }
+    }
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  }
+}

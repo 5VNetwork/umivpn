@@ -1,0 +1,884 @@
+{
+  "node": "节点",
+  "inbound": "入站",
+  "start": "启动",
+  "log": "日志",
+  "logLevel": "日志级别",
+  "settings": "设置",
+  "about": "关于",
+  "version": "版本",
+  "routing": "路由",
+  "whileList": "白名单",
+  "gfw": "黑名单",
+  "proxyAll": "全局",
+  "auto": "自动",
+  "systemProxy": "系统代理",
+  "inputManually": "手动输入",
+  "qrCode": "二维码",
+  "addNode": "添加节点",
+  "photo": "图片",
+  "clipboard": "剪贴板",
+  "protocol": "协议",
+  "add": "添加",
+  "name": "名称",
+  "domainStrategy": "域名策略",
+  "enableMux": "启用Mux",
+  "address": "地址",
+  "ipOrDomain": "IP / 域名",
+  "port": "端口",
+  "nodeSelection": "节点选择",
+  "server": "服务器",
+  "compass": "指南",
+  "home": "主页",
+  "connecting": "连接中",
+  "connected": "已连接",
+  "disconnecting": "正在断开连接",
+  "disconnected": "未连接",
+  "disconnectedUnexpectedly": "连接意外断开。原因: {reason}",
+  "@disconnectedUnexpectedly": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "unknown": "未知",
+  "preparing": "准备中",
+  "subscription": "订阅",
+  "edit": "编辑",
+  "speedTest": "速度测试",
+  "statusTest": "可用测试",
+  "selfhost": "自建",
+  "free": "免费",
+  "reconnecting": "重连中",
+  "cancel": "取消",
+  "save": "保存",
+  "password": "密码",
+  "accountName": "用户名",
+  "delete": "删除",
+  "gettingNodesSubscriptions": "获取节点/订阅中",
+  "emptyClipboard": "剪切板为空",
+  "decodeQrCode": "无法解码二维码",
+  "proxy": "代理",
+  "direct": "直连",
+  "promote": "推广",
+  "domainsOrIps": "域名/IP",
+  "addProxyDomainIp": "添加代理域名/IP",
+  "addDirectDomainIp": "添加直连域名/IP",
+  "domain": "域名",
+  "type": "类型",
+  "invalidCidr": "无效的CIDR",
+  "exact": "精确",
+  "regularExpression": "正则",
+  "keyword": "关键字",
+  "rootDomain": "根域名",
+  "addServer": "添加服务器",
+  "editServer": "编辑服务器",
+  "sshKey": "SSH密钥",
+  "selectFromFile": "从文件中选择",
+  "sudoPassword": "sudo密码",
+  "statusMonitor": "状态监控",
+  "fieldRequired": "此项不能为空",
+  "invalidPort": "端口有误",
+  "invalidAddress": "地址有误",
+  "failedToAddServer": "添加服务器失败",
+  "memory": "内存",
+  "storage": "空间",
+  "serverPubKey": "服务器公钥",
+  "serverPubKeyHelper": "如果省略,服务器在第一次连接时发来的任何公钥都会被接受,此后的连接都会使用这个公钥",
+  "failedConnectServer": "连接失败",
+  "retry": "重试",
+  "keyPassphrase": "密钥密码",
+  "showRealtimeStatus": "显示实时状态",
+  "hideRealtimeStatus": "隐藏实时状态",
+  "app": "应用",
+  "appName": "应用名称",
+  "prefix": "前缀",
+  "confirm": "确定",
+  "addToProxy": "添加到代理?",
+  "addToDirect": "添加到直连?",
+  "default0": "默认",
+  "update": "更新",
+  "website": "网站",
+  "remainingData": "剩余流量",
+  "endTime": "到期日",
+  "actions": "动作",
+  "updateInterval": "更新间隔",
+  "testArea": "地区检测",
+  "autoUpdate": "自动更新",
+  "unableToGetNodes": "获取节点失败，请复制正确格式的订阅链接后重试",
+  "unableToGetNodesEmptyClipboard": "获取节点失败，剪贴板无内容",
+  "subscriptionAddress": "订阅地址",
+  "empty": "空",
+  "invalidHttp": "无效的HTTPS地址",
+  "noNode": "无节点",
+  "failedToChangeOutboundMode": "无法设置出站选择",
+  "failedToChangeFakeDns": "设置Fake DNS失败",
+  "failedToChangeRoutingMode": "设置路由模式失败",
+  "disableInAuto": "自动模式下禁用",
+  "area": "地区",
+  "remark": "备注",
+  "remarkAddress": "备注·地址",
+  "usable": "可用",
+  "speed": "速度",
+  "latency": "延迟",
+  "selectOneOutbound": "使用",
+  "addFailedUniqueConstraint": "添加规则失败,与已有的规则冲突",
+  "enableInAuto": "自动模式下启用",
+  "showClient": "显示客户端",
+  "connect": "连接",
+  "disconnect": "断开",
+  "quit": "退出",
+  "iosAppRoutingNoSupport": "iOS目前不支持应用路由",
+  "failedToChangeInboundMode": "入站模式切换失败",
+  "invalidIp": "无效的IP",
+  "language": "语言",
+  "mannual": "手动",
+  "updatedAt": "更新于",
+  "min": "{value}分钟",
+  "@min": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "hour": "{value}小时",
+  "@hour": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "privacyPolicy": "隐私政策",
+  "contactUs": "联系我们",
+  "openSourceSoftwareNotice": "开源软件声明",
+  "copy": "复制",
+  "privacyPolicySummary": "UmiVPN只在下方按钮开启的情况下收集诊断日志，这些日志不包含您的个人数据。详细的隐私政策请点击下方按钮查看。",
+  "shareDiagnosticLogWithDeveloper": "分享诊断日志给开发者",
+  "diagnosticLogDoesNotContainPersonalData": "诊断日志不与您建立关联，也不包含个人数据",
+  "yes": "好的",
+  "no": "不",
+  "contactUsSummary": "您可以通过以下方式联系我们。",
+  "contactUsFreely": "如果您在使用UmiVPN的过程中有任何问题，请随时联系我们。",
+  "bugAreWelcome": "欢迎向我们反馈bug和建议，谢谢!",
+  "copiedToClipboard": "已复制到剪贴板",
+  "openSourceSoftwareNoticeText": "UmiVPN使用了以下开源项目：",
+  "sourceCodeUrl": "源码链接",
+  "email": "邮箱",
+  "verificationCode": "验证码",
+  "send": "发送",
+  "login": "登录",
+  "loginWithEmail": "邮箱登录",
+  "loginWithGoogle": "谷歌",
+  "loginWithApple": "苹果",
+  "loginWithMicrosoft": "微软",
+  "newUserTrialText": "新用户可免费试用Pro 7天",
+  "proExpiredAt": "Pro 到期时间",
+  "lifetimeProAccount": "永久Pro账户",
+  "addGroup": "添加分组",
+  "deleteGroup": "删除分组",
+  "group": "分组",
+  "addToGroup": "添加至分组",
+  "addApp": "添加应用",
+  "noSelectedNode": "无选中节点",
+  "pleaseSelectNode": "请选择一个节点",
+  "pleaseSelectSelector": "请选择一个选择器",
+  "pleaseEnterRuleName": "请输入规则名称",
+  "ruleName": "命中规则名称",
+  "block": "阻止",
+  "matchAll": "匹配所有",
+  "ruleMatchCondition": "当所有条件成立时，规则匹配。如果条件数量为零，规则永远不会匹配。",
+  "inboundLabel": "入站",
+  "domainSet": "域名集合:",
+  "appSet": "应用集合:",
+  "ipSet": "目标IP集合:",
+  "addRouterRule": "添加路由规则",
+  "addDnsRule": "添加DNS规则",
+  "editRule": "编辑规则",
+  "addRouter": "添加路由模式",
+  "copyDefault": "复制默认",
+  "ruleOrder": "规则由上到下依次进行匹配",
+  "nodeChain": "代理链",
+  "nodeChainDesc": "选中的节点将使用以下节点组成代理链。链的最后一个节点为落地节点。",
+  "addSelector": "添加选择器",
+  "selectorNameDuplicate": "选择器名称不能重复",
+  "renameSelector": "重命名选择器",
+  "allNodes": "全部节点",
+  "partialNodes": "部分节点",
+  "nodeGroup": "节点组",
+  "all": "全部",
+  "lowestLatency": "最低延迟",
+  "lowLatency": "低延迟",
+  "highThroughput": "高速度",
+  "nameCannotBeEmpty": "名称不能为空",
+  "setNameDuplicate": "集合的名称不能重复",
+  "mutuallyExclusiveSetName": "互斥集合名称",
+  "include": "包含",
+  "exclude": "排除",
+  "simple": "简易",
+  "advanced": "高级",
+  "customDirect": "自定义直连",
+  "customProxy": "自定义代理",
+  "cnGames": "CN游戏",
+  "private": "私有",
+  "gfwWithoutCustomDirect": "GFW(不包含自定义直连)",
+  "gfwModeProxyDomains": "GFW模式代理域名",
+  "gfwModeDirectDomains": "GFW模式直连域名",
+  "gfwModeProxyIps": "GFW模式代理IP",
+  "cnModeProxyDomains": "CN模式代理域名",
+  "cnModeDirectDomains": "CN模式直连域名",
+  "cnModeDirectIps": "CN模式直连IP",
+  "proxyAllModeProxyDomains": "全局模式代理域名",
+  "proxyAllModeDirectDomains": "全局模式直连域名",
+  "proxyAllModeDirectIps": "全局模式直连IP",
+  "ruBlockModeProxyDomains": "俄罗斯屏蔽(全部)模式代理域名",
+  "ruBlockModeProxyIps": "俄罗斯屏蔽(全部)模式代理IP",
+  "ruBlockAllModeProxyDomains": "俄罗斯屏蔽(全部)模式代理域名",
+  "ruBlockAllModeProxyIps": "俄罗斯屏蔽(全部)模式代理IP",
+  "ipToDomain": "IP -> 域名",
+  "proFeatureDescription": "该功能为Pro功能，升级为Pro用户即可解锁全部功能",
+  "becomePermanentPro": "永久成为Pro用户",
+  "becomePermanentProDescription": "永久成为Pro用户",
+  "tryPro": "试用Pro",
+  "newUserProTrial": "新用户可试用Pro7天",
+  "purchase": "购买",
+  "purchaseCancelled": "购买已取消",
+  "verifyingPurchase": "正在验证购买...",
+  "purchaseVerificationFailed": "无法验证购买: {reason}",
+  "@purchaseVerificationFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "ifYouHavePaid": "如果您已支付，请不要担心，您的支付会被商店自动退款。如果有任何问题，请联系我们。订单ID: {orderId}",
+  "@ifYouHavePaid": {
+    "placeholders": {
+      "orderId": {
+        "type": "String"
+      }
+    }
+  },
+  "invalidPurchase": "无效购买",
+  "purchaseSuccessful": "购买成功",
+  "purchaseFailed": "购买失败: {status}",
+  "@purchaseFailed": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "unableToConnectToStore": "无法与商店连接",
+  "loginBeforePurchase": "购买前请先登录",
+  "loginBeforeRestore": "恢复购买购买前请先登录",
+  "alternativePurchase": "如购买失败，请通过其他平台或者官网购买。",
+  "upgradeToPermanentPro": "升级为永久Pro",
+  "upgrade": "升级",
+  "changePeriod": "更改周期",
+  "downgrade": "降级",
+  "caseInsensitive": "不区分大小写",
+  "startFailed": "启动失败",
+  "startFailedWithReason": "启动失败: {reason}",
+  "@startFailedWithReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "startFailedReasonTunNeedAdmin": "Tun需要管理员身份。请以管理员身份重新运行UmiVPN或更换入站模式。",
+  "startFailedReasonNoNode": "无节点",
+  "startFailedReasonNoEnabledNode": "无启用节点，请至少启用一个节点",
+  "startFailedReasonNoSelected": "未选择节点",
+  "failedToUpdateSub": "更新订阅“{value}”失败",
+  "@failedToUpdateSub": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToAddSubscription": "添加订阅失败，此订阅已存在",
+  "tunNeedAdmin": "TUN需要以管理员身份运行",
+  "decodeResult": "成功获取{value1}个节点，失败{value2}个节点",
+  "@decodeResult": {
+    "placeholders": {
+      "value1": {
+        "type": "num",
+        "format": "compact"
+      },
+      "value2": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "updateSubResult": "成功更新{value1}个订阅，失败{value2}个订阅; 成功添加{value3}个节点，失败{value4}个节点",
+  "@updateSubResult": {
+    "placeholders": {
+      "value1": {
+        "type": "num",
+        "format": "compact"
+      },
+      "value2": {
+        "type": "num",
+        "format": "compact"
+      },
+      "value3": {
+        "type": "num",
+        "format": "compact"
+      },
+      "value4": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "failedToUpdateCountry": "更新地区失败",
+  "keepAlivePeriodMustBeBetween2And60": "必须在2到60之间",
+  "showApp": "显示应用",
+  "hideApp": "隐藏应用",
+  "showSystemApps": "显示系统应用",
+  "hideSystemApps": "隐藏系统应用",
+  "doubleTapToDelete": "双击删除",
+  "method": "方法",
+  "sshKeyPath": "密钥文件路径",
+  "useCommonSshKey": "使用已有SSH密钥",
+  "addCommonSshKey": "添加SSH密钥",
+  "sshKeyContentOrPathRequired": "密钥内容或密钥文件路径不能同时为空",
+  "failedToAddCommonSshKey": "添加SSH密钥失败",
+  "failedToAddCommonSshKeyDueToDuplicateName": "添加SSH密钥失败，因为存在同名密钥",
+  "quickDeploy": "快捷部署",
+  "deploy": "部署",
+  "close": "关闭",
+  "deploySuccess": "服务器{server} {deploy} 部署成功",
+  "@deploySuccess": {
+    "placeholders": {
+      "deploy": {
+        "type": "String"
+      },
+      "server": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToDeploy": "部署失败: {value}",
+  "@failedToDeploy": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "peerCertChainSHA256Hash": "SHA256",
+  "serverCA": "Root CA",
+  "failedToInitGrpcClient": "无法初始化grpc客户端: {value}",
+  "@failedToInitGrpcClient": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "block": "屏蔽",
+  "failure": "失败",
+  "appKeyword": "应用关键字",
+  "sniffDomain": "嗅探域名",
+  "trafficStats": "流量统计",
+  "useSshKey": "使用SSH密钥",
+  "errorOnly": "只显示错误",
+  "all": "全部",
+  "advanced": "高级",
+  "failedToUndoBlockDns": "移除WFP设置失败，请关闭此应用，WFP设置将在应用关闭后自动移除",
+  "failedToRemoveSystemProxy": "移除系统代理失败，请手动在设置中移除",
+  "failedToChangeNode": "切换节点失败: {value}",
+  "@failedToChangeNode": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "failureDetail": "失败详情",
+  "failedNodes": "失败节点",
+  "failedSub": "失败订阅",
+  "addRemark": "添加一个备注?",
+  "multiSelect": "多选",
+  "share": "分享",
+  "quickAction": "一键操作",
+  "deleteUnusable": "删除不可用节点",
+  "smallScreenPreference": "小尺寸屏幕偏好",
+  "chainProxy": "链式代理",
+  "singleNode": "单节点",
+  "multipleNodes": "多节点",
+  "balanceStrategy": "负载均衡",
+  "manualNodeMode": "手动模式",
+  "outboundMode": "出站",
+  "random": "随机",
+  "mode": "模式",
+  "balanceStrategyMemory": "记忆",
+  "selectingStrategy": "选择策略",
+  "mostThroughput": "最高速度",
+  "allOk": "可用",
+  "yourDevices": "你的设备",
+  "destination": "目的地",
+  "addNewNode": "添加新节点",
+  "useExistingNode": "使用已有节点",
+  "atLeastTwoNodes": "至少需要两个节点",
+  "advancedMode": "高级模式",
+  "simpleMode": "简单模式",
+  "rule": "规则",
+  "set": "集合",
+  "selector": "选择器",
+  "domainSet": "域名集合",
+  "atmoicDomainSet": "域名小集合",
+  "greatDomainSet": "域名大集合",
+  "ipSet": "IP集合",
+  "atmoicIpSet": "IP小集合",
+  "greatIpSet": "IP大集合",
+  "createGreatDomainSet": "创建域名大集合",
+  "editGreatDomainSet": "编辑域名大集合",
+  "createSmallDomainSet": "创建域名小集合",
+  "editSmallDomainSet": "编辑域名小集合",
+  "createGreatIpSet": "创建IP大集合",
+  "editGreatIpSet": "编辑IP大集合",
+  "editAppSet": "编辑应用集合",
+  "appSet": "应用集合",
+  "condition": "条件",
+  "nodeGroup": "节点组",
+  "range": "范围",
+  "account": "账户",
+  "login": "登录",
+  "logout": "登出",
+  "geoSiteOrGeoIPFileNotFound": "正在Geo文件...",
+  "createIpSmallSet": "创建IP小集合",
+  "editIpSmallSet": "编辑IP小集合",
+  "deleteFailed": "删除失败",
+  "deleteAccount": "删除账户",
+  "deleteAccountConfirm": "确定要删除账户吗？此操作无法撤销。",
+  "domainSetDescription": "以下域名集合使用代理DNS服务器（默认为8.8.8.8和1.1.1.1）解析，其余域名使用直连DNS服务器（默认是物理网卡的DNS服务器，或223.5.5.5和114.114.114.114如果物理网卡的DNS服务器无法获取到）解析",
+  "routerRuleDescription": "对于每一个连接，规则由上到下依次进行匹配，一旦匹配成功，后面的规则不会在被考虑。如果没有匹配到规则，此连接将会失败",
+  "matchAll": "匹配所有",
+  "dstIpSet": "目标IP集合",
+  "ruleNameUmiVPNTestNodes": "UmiVPN节点测试",
+  "ruleNameInternalDnsProxyGoProxy": "内部DNS CF",
+  "ruleNameInternalDnsDirectGoDirect": "内部DNS 阿里云&CF",
+  "ruleNameProxyDnsServerGoProxy": "默认代理DNS服务器",
+  "ruleNameDirectDnsServerGoDirect": "默认直连DNS服务器",
+  "ruleNameDnsHijack": "DNS劫持:非直连域名",
+  "ruleNameCustomDirectDomain": "自定义直连域名",
+  "ruleNameCustomDirectIp": "自定义直连IP",
+  "ruleNameCustomProxyDomain": "自定义代理域名",
+  "ruleNameCustomProxyIp": "自定义代理IP",
+  "ruleNameProxyApp": "代理应用",
+  "ruleNameDirectApp": "直连应用",
+  "ruleNameCnDirectIp": "CN模式直连IP",
+  "ruleNameDefaultProxy": "默认代理",
+  "ruleNameCnDirectDomain": "CN模式直连域名",
+  "ruleNameGfwProxyDomain": "GFW模式代理域名",
+  "ruleNameGfwProxyIp": "GFW模式代理IP",
+  "ruleNameDefaultDirect": "默认直连",
+  "ruleNameGlobalDirectDomain": "全局模式直连域名",
+  "ruleNameGlobalDirectIp": "全局模式直连IP",
+  "ruleNameRuBlockProxyDomain": "俄罗斯屏蔽(全部)模式代理域名",
+  "ruleNameRuBlockProxyIp": "俄罗斯屏蔽(全部)模式代理IP",
+  "ruleNameRuBlockAllProxyDomain": "俄罗斯屏蔽(全部)模式代理域名",
+  "ruleNameRuBlockAllProxyIp": "俄罗斯屏蔽(全部)模式代理IP",
+  "addAppSet": "添加应用集合",
+  "pro": "永久Pro账户",
+  "proxyShare": "代理共享",
+  "sniff": "嗅探",
+  "proxyShareDesc": "启动VPN后开启HTTP和SOCKS入站，以使局域网内其他设备通过本机上网。（入站名称为“proxyShare”）",
+  "loginSuccess": "登录成功",
+  "emailLogin": "邮箱登录",
+  "google": "谷歌",
+  "apple": "苹果",
+  "microsoft": "微软",
+  "rateApp": "评价UmiVPN",
+  "userConsend": "一旦登录成功，您的邮箱将存储在我们的服务器，直到您删除账户为止。这是为了提供账户登录功能所必需的个人信息。我们不会与任何第三方分享您的邮箱。您是否允许我们存储您的邮箱？",
+  "okay": "好的",
+  "disagree": "不同意",
+  "reject": "拒绝",
+  "greatSetDescription1": "大集合由小集合或大集合组成。当判断一个域名/IP是否在集合中时，首先会考虑排除集合，如果域名在排除的集合中，则域名不在集合中。",
+  "greatSetDescription2": "一个大集合可以有一个互斥集合。如果一个域名/IP在集合A内，则该域名/IP不在集合A的互斥集合内。",
+  "pleaseLoginFirst": "请先登录",
+  "telegram": "电报",
+  "failedToDownloadGeoData": "下载GeoData失败: {value}",
+  "@failedToDownloadGeoData": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "doNotUse1080IOS": "iOS上无法使用1080端口",
+  "deletedNode": "已删除的节点",
+  "selectorContainsDeletedLandHandler": "选择器{value}使用已删除的节点作为落地节点，请删除该落地节点并重试",
+  "@selectorContainsDeletedLandHandler": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "tunIpv6Settings": "TUN IP 设置",
+  "alwaysEnableIpv6": "总是启用IPv6",
+  "dependsOnDefaultNic": "取决于默认物理网卡",
+  "dependsOnDefaultNicDesc": "如果默认物理网卡支持IPv6，TUN网卡也支持IPv6",
+  "failedToCreateAllFirstLaunch": "初始化数据库失败: {value}",
+  "@failedToCreateAllFirstLaunch": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToInsertDefaultData": "数据库添加默认数据失败: {value}",
+  "@failedToInsertDefaultData": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "newVersionDownloadedDialog": "新版本{version}已下载，是否安装？",
+  "@newVersionDownloadedDialog": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "skipThisVersion": "跳过此版本",
+  "install": "安装",
+  "later": "暂时不安装",
+  "autoUpdateDescription": "自动下载新版本安装包并在完成后提示您进行安装",
+  "downloading": "正在下载{version}...",
+  "@downloading": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "installFailed": "安装失败: {reason}",
+  "@installFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "tun46SettingIpv4Only": "IPv4",
+  "tun46SettingIpv4AndIpv6": "IPv4 & IPv6",
+  "ad": "广告",
+  "advancedSettingDesc": "VPN相关设置",
+  "general": "通用",
+  "light": "亮色",
+  "dark": "暗色",
+  "system": "系统",
+  "themeMode": "主题",
+  "serverError": "服务器错误",
+  "gfwDesc": "GFW域名/IP使用代理，其他使用直连",
+  "cnDesc": "大陆的域名/IP使用直连，其他使用代理",
+  "proxyAllDesc": "除私有地址外所有域名/IP均使用代理",
+  "dnsRule": "DNS规则",
+  "dnsRuleNameGfwProxyFake": "GFW模式代理域名A/AAAA",
+  "dnsRuleNameGfwProxy": "GFW模式代理域名",
+  "dnsRuleNameRuBlockProxyFake": "俄罗斯屏蔽(全部)模式代理域名A/AAAA",
+  "dnsRuleNameRuBlockProxy": "俄罗斯屏蔽(全部)模式代理域名",
+  "dnsRuleNameRuBlockAllProxyFake": "俄罗斯屏蔽(全部)模式代理域名A/AAAA",
+  "dnsRuleNameRuBlockAllProxy": "俄罗斯屏蔽(全部)模式代理域名",
+  "dnsRuleNameCnProxyFake": "CN模式代理域名A/AAAA",
+  "dnsRuleNameCnProxy": "CN模式代理域名",
+  "dnsRuleNameProxyAllProxyFake": "全局模式代理域名A/AAAA",
+  "dnsRuleNameProxyAllProxy": "全局模式代理域名",
+  "dnsRuleNameDefaultDirect": "其余",
+  "routerRules": "路由规则",
+  "dnsRuleDesc": "对于每一个DNS请求，DNS规则从上到下依次进行匹配，一旦匹配成功，该规则所指定的DNS服务器将被用来处理该DNS请求。如果没有规则匹配，该DNS请求将被忽略。",
+  "dnsServer": "DNS服务器",
+  "howDnsRuleMatch": "当所有条件成立或该规则没有任何条件启用时，规则匹配。",
+  "selectAtleastOneDnsServer": "请选择一个DNS服务器",
+  "dnsType": "DNS类型",
+  "directDnsServer": "直连DNS服务器",
+  "proxyDnsServer": "代理DNS服务器",
+  "addDnsServer": "添加DNS服务器",
+  "useDefaultDnsServer": "使用物理网卡的DNS服务器。如无法获取到物理网卡的DNS服务器，使用输入的服务器",
+  "useDefaultNicDnsServer": "使用物理网卡的DNS服务器。如无法获取到物理网卡的DNS服务器，使用以下服务器：",
+  "addDnsAddressHint": "该类型支持多地址。使用“,”分隔。每一个DNS请求会被同时发往所有地址，第一个返回的结果将被采用",
+  "invalidUrl": "无效的URL",
+  "duplicateDnsServerName": "DNS服务器名称与已有DNS服务器重复",
+  "dnsTypeConditionDesc": "被勾选时，该条件启用。只有当一个DNS请求的类型是选中的类型时，条件成立",
+  "enabledConditions": "已启用的条件: {number}",
+  "@enabledConditions": {
+    "placeholders": {
+      "number": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "showSelector": "显示选择器",
+  "hideSelector": "隐藏选择器",
+  "showHandler": "显示节点",
+  "hideHandler": "隐藏节点",
+  "restoreIAP": "恢复购买",
+  "debugLog": "开发者日志",
+  "upload": "上传",
+  "saveToDownloadFolder": "保存至下载",
+  "saveToDownloadFolderDesc": "将日志转移至下载文件夹",
+  "debugLogDesc": "如果你在使用过程中遇到了问题，你可以打开开发者日志，然后等再次遇到问题后，点击上传将开发者日志上传给我们，这将帮助我们发现BUG。（开发者日志不会被自动上传，你需要手动点击上传按钮或者将这些日志通过电报/邮箱给我们。开发者日志会包含您的网络活动, 比如使用了哪些应用和网站。我们在处理完日志后会立刻删除日志。）上传完毕后，请关闭开发者日志并删除日志文件。",
+  "clashFormatSupported": "支持Clash Rule",
+  "network": "网络类型",
+  "source": "来源",
+  "fallbackToProxy": "回退到代理",
+  "fallbackToProxySetting": "如果直连失败，使用节点重试。如果“代理选择器”存在，它选择的节点将被使用。如果它不存在，将随机选取一个正在使用的节点。",
+  "installAsWinService": "添加UmiVPN进Windows Service",
+  "installAsWinServiceDesc": "在使用TUN前，需要将UmiVPN添加进Windows Service，点击“添加”以进行添加。",
+  "placeOnTop": "置顶",
+  "stopPlaceOnTop": "取消置顶",
+  "fallbackTo": "回退到 {node}",
+  "@fallbackTo": {
+    "placeholders": {
+      "node": {
+        "type": "String"
+      }
+    }
+  },
+  "pingTestMethod": "延迟测试方式",
+  "pingReal": "真延迟",
+  "pingRealDesc": "拿到结果所需的时间",
+  "startOnBoot": "开机自启动",
+  "startOnBootDesc": "开机时自动运行UmiVPN",
+  "alwaysOn": "保持连接",
+  "alwaysOnDesc": "在点击“连接”后，只要不点击“断开连接”，会一直保持连接状态。",
+  "checkAndUpdate": "检测并更新",
+  "noNewVersion": "无更新版本",
+  "enableSystemExtension": "请前往[系统设置->通用->登录项与扩展->网络扩展]并开启 UmiVPN SystemExtension",
+  "systemProxyPortSetting": "系统代理端口设定",
+  "randomPorts": "随机端口",
+  "staticPorts": "固定端口",
+  "whenNoDomain": "没有域名时嗅探",
+  "enable": "启用",
+  "disable": "禁用",
+  "checkUpdate": "检查更新",
+  "handlerCopiedSuccess": "复制节点成功！该节点已加入默认分组",
+  "hysteriaRejectQuic": "Hysteria拒绝QUIC",
+  "syncBackup": "同步与备份",
+  "cloudSync": "云同步",
+  "cloudSyncDesc1": "多设备间同步数据库。",
+  "cloudSyncDesc2": "可以与谷歌FCM服务器正常通信的苹果设备和安卓设备（需装有谷歌服务）可以实现实时同步。其他设备会每5分钟同步一次。",
+  "cloudSyncDesc3": "同步数据会在同步后自动从云端消除，如果一直没有同步，数据在云端最多保留7天。",
+  "nodeSub": "节点/订阅",
+  "routeSetDNSSelector": "规则/集合/选择器/DNS",
+  "selectorSetting": "选择器设定",
+  "serverKey": "服务器/密钥",
+  "lanSync": "局域网同步",
+  "sync": "同步",
+  "conditaionWarn1": "多数情况下，域名条件和IP条件不应该同时存在。同时存在时，只有当一个请求既有域名信息，也有IP信息的时候，该规则才有可能命中。",
+  "setName": "集合名称",
+  "addSet": "添加集合",
+  "domainIpAppConditionDesc": "当请求的域名/IP/应用在下面任何集合中时，该规则匹配。",
+  "backup": "数据库备份",
+  "autoBackup": "自动备份",
+  "autoBackupDesc": "备份数据库到云端，频率为每天1次。",
+  "currentBackup": "当前备份",
+  "uploadDb": "上传",
+  "restoreDb": "恢复",
+  "uploadDbSuccess": "上传数据库成功",
+  "restoreDbSuccess": "恢复数据库成功",
+  "deleteCloudDb": "删除云端数据库",
+  "deleteDbSuccess": "删除成功",
+  "gridView": "网格视图",
+  "listView": "列表视图",
+  "sort": "排序",
+  "clear": "清除",
+  "fallbackRetryDomain": "回退到域名",
+  "fallbackRetryDomainDesc": "如果代理连接使用IP目标，并且由于I/O超时而失败（这可能是因为DNS污染），则使用域名作为目标并重试。连接的嗅探域名将被首先使用，如果它不存在，则使用IP-to-域名。",
+  "backupPasswordDesc": "用于加密数据库。只有有这个密码的设备才可以恢复备份。密码加密储存在本地。",
+  "syncPasswordDesc": "用于加密同步数据。只有有这个密码的设备才可以同步数据。密码加密储存在本地。",
+  "addDomainIpAppSet": "添加域名/应用/IP集合",
+  "unsaved": "尚未保存",
+  "rememberPasswordInMemory": "在内存中记住 sudo 密码",
+  "doNotShowAgain": "Do not show again",
+  "rpmTunNotice": "When TUN is on, Reverse Path Forwarding mode will be set to Loose(2) and reset to what it was when disconnect. You can go to the following website to learn about Reverse Path Forwarding",
+  "internalDnsDesc": "内部DNS服务器用于在出站拨号时解析域名。有两个，一个叫“internal-dns-proxy”，默认模式下它使用代理选择器连接到1.1.1.1；另一个叫“internal-dns-direct”，默认模式下直连223.5.5.5和1.1.1.1。解析域名时会先使用internal-dns-direct，如果失败，则使用internal-dns-proxy，如果它也没有返回结果，那么就使用系统DNS",
+  "nodeSetDesc": "\"__node__\"为包含所有节点域名/IP的域名小集合/IP小集合。它主要被用于让UmiVPN节点测试走直连。节点域名包括它的地址和SNI",
+  "dnsNameDesc": "DNS服务器名称可以在入站条件那里引用，以指定它所使用的节点。",
+  "directAppSetDesc": "在安卓上，直连应用集合内的应用不会经过UmiVPN（Split Tunnel）",
+  "deleteDebugLogs": "删除日志文件",
+  "conditionDesc": "当一个连接没有IP信息时，IP条件不会成立，因此规则不会匹配。同样，当一个连接没有域名信息时，域名条件不会成立，因此规则也不会匹配。",
+  "lookupEch": "查询ECH",
+  "lookupEchDesc": "如果启用且上面的ECH Config为空，则从DNS服务器查找ECH Config, 如果查询成功，使用ECH，否则不使用ECH。",
+  "adWanted": "发布广告",
+  "basicQuickDeployTitle": "双核四协议",
+  "basicQuickDeploySummary": "部署Xray、Hysteria核心和四个常用协议",
+  "basicQuickDeployDetails": "安装Xray-core以及Hysteria，并且部署以下四个入站。如果服务器已安装Xray或Hysteria，原有配置将被替换。如果服务器未开启BBR，开启BBR。",
+  "basicQuickDeployContent1": "Vmess 五个随机端口",
+  "basicQuickDeployContent2": "Shadowsocks 五个随机端口",
+  "basicQuickDeployContent3": "Hysteria 443端口",
+  "basicQuickDeployContent4": "Vless-XTLS-Vision 443端口",
+  "masqueradeQuickDeployTitle": "Reality/XHTTP",
+  "masqueradeQuickDeploySummary": "安装Xray-core并部署Reality/XHTTP入站。如果服务器已安装Xray，原有配置将被替换。如果服务器未开启BBR，开启BBR。",
+  "masqueradeQuickDeployDetails": "安装Xray-core，并部署Reality/XHTTP入站。如果服务器已安装Xray，原有配置将被替换。如果服务器未开启BBR，开启BBR。",
+  "fatalError": "发生错误。请重启UmiVPN。错误: {error}",
+  "@fatalError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exit": "退出",
+  "info": "说明",
+  "selectAtleastOneSelector": "请选择至少一个选择器",
+  "addRouteMode": "添加路由模式",
+  "selectAtleastOneNode": "请选择至少一个节点",
+  "insertDefaultError": "添加默认路由模式失败，请重启客户端后在路由页面点击添加。失败原因：{error}",
+  "@insertDefaultError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pleaseSelectARoutingMode": "请选择一个路由模式",
+  "addRouteModeNotice": "点击“+”按钮添加路由模式。",
+  "freeUserCannotUseCustomRoutingMode": "免费用户无法使用自定义路由模式。请选择一个默认路由模式。您可以在路由界面添加默认路由模式。",
+  "addRouteMode": "添加路由模式",
+  "defaultRouteModes": "默认路由模式",
+  "custom": "自定义",
+  "geositeUrlDesc": "如果为空，LoyalSoldier提供的geosite.dat将被使用",
+  "geoUrlDesc": "如果为空，LoyalSoldier提供的geoip.dat将被使用",
+  "ruBlocked": "俄罗斯屏蔽",
+  "ruBlockedDesc": "俄罗斯屏蔽的域名/IP使用代理，其他使用直连",
+  "ruBlockedAll": "俄罗斯屏蔽(全部)",
+  "ruBlockedAllDesc": "所有已知在俄罗斯被屏蔽的域名/IP使用代理，其他使用直连",
+  "dnsServerProxy": "代理DNS服务器",
+  "dnsServerDirect": "直连DNS服务器",
+  "sniffDomainForIpConnection": "如果连接使用IP目标，嗅探域名",
+  "resolveDomain": "对于目标为域名的连接，使用DNS查询IP，当每一个解析出来的IP都在指定的CIDR集合内时，该条件成立",
+  "sniff": "嗅探",
+  "skipSniff": "不嗅探",
+  "resolve": "解析域名",
+  "skipResolve": "不解析域名", 
+  "defaultSelectorTag": "代理",
+  "describeTheProblem": "请描述您遇到的问题，如果您已于客服沟通，可以不填",
+  "debugLogNotAvailable": "开发者日志功能在非商店版本中不可用",
+  "useBloomFilter": "在iOS上使用Bloom Filter",
+  "useBloomFilterDesc": "Bloom Filter可以减少内存使用，但是会有小概率（1%）的误判：不在集合中的域名可能会被误判为在集合中。",
+  "addFromClashRuleFiles": "选择Clash规则文件",
+  "selectFromInstalledApps": "选择已安装的应用",
+  "ipToDomainDesc": "IP -> Domain是最近DNS历史记录中获取的，由于许多域名可以解析到相同的IP，它可能不是实际的域名。",
+  "followingAiTranslated": "以下语言由AI翻译，可能不准确。",
+  "addToDefault": "添加到默认",
+  "managePlan": "管理套餐",
+  "managePlanDesc": "更换套餐、取消订阅、重新订阅",
+  "availablePlans": "可用套餐",
+  "currentPlan": "当前套餐",
+  "dontCancelSubscription": "不取消订阅",
+  "cancelSubscription": "取消订阅",
+  "manageSubscription": "管理订阅",
+  "noTokenFound": "未找到令牌",
+  "subscriptionReactivated": "订阅已重新激活",
+  "subscriptionCancelled": "订阅已取消",
+  "couldNotOpenCustomerPortal": "无法打开客户门户",
+  "noPortalUrlReceived": "未收到门户URL",
+  "failedToOpenCustomerPortal": "打开客户门户失败: {errorMessage}",
+  "@failedToOpenCustomerPortal": {
+    "placeholders": {
+      "errorMessage": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotOpenPlayStoreSubscriptions": "无法打开Play商店订阅",
+  "couldNotOpenAppStoreSubscriptions": "无法打开订阅管理。请前往设置 > [您的姓名] > 订阅来管理您的订阅。",
+  "cannotDeleteAccountWithActiveSubscription": "您在有活动订阅时无法删除账户。请先取消您的订阅。",
+  "visitOfficialWebsite": "访问官方网站",
+  "noPlansAvailable": "没有可用套餐",
+  "noPricingOptionsAvailable": "此套餐没有可用的价格选项",
+  "priceIdNotAvailable": "此套餐的价格ID不可用",
+  "noAuthenticationTokenFound": "未找到身份验证令牌",
+  "couldNotOpenCheckoutUrl": "无法打开结账URL",
+  "noCheckoutUrlReceived": "未收到结账URL",
+  "failedToCreateCheckoutSession": "创建结账会话失败: {errorMessage}",
+  "@failedToCreateCheckoutSession": {
+    "placeholders": {
+      "errorMessage": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyTraffic": "月度流量",
+  "unlimitedData": "无限流量",
+  "currentLocation": "位置",
+  "expired": "已过期",
+  "today": "今天",
+  "tomorrow": "明天",
+  "days": "{count}天",
+  "@days": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "areYouSureReactivate": "您确定要重新激活吗？",
+  "cancelled": "已取消",
+  "dataRefresh": "数据刷新",
+  "renewalDate": "续订日期",
+  "endDate": "结束日期",
+  "subscribe": "订阅",
+  "current": "当前",
+  "selectBillingPeriod": "选择计费周期",
+  "activeSubscriptionFound": "发现活动订阅",
+  "activeSubscriptionFoundMessage": "您已经有一个源自其他系统的订阅。在订阅新套餐之前，请先取消您当前的订阅。",
+  "warningExistingSubscription": "警告：现有订阅",
+  "warningExistingSubscriptionMessage": "您当前有一个已取消但尚未结束的订阅。现在订阅新套餐将导致您失去现有订阅的权益，即使它尚未结束。",
+  "loginRequired": "需要登录",
+  "loginRequiredMessage": "购买订阅前请先登录。",
+  "failedToLoadPlans": "加载套餐失败",
+  "failedToLoadPlansMessage": "请访问我们的网站查看可用套餐。",
+  "copyDatabase": "复制数据库",
+  "fromClipboard": "从剪贴板",
+  "selectQrCode": "选择二维码",
+  "youtube": "YouTube",
+  "perMonth": "每月",
+  "perQuarter": "每季度",
+  "perHalfYear": "每半年",
+  "perYear": "每年",
+  "willRenewTo": "更新时套餐将变为 {plan} ({period})",
+  "@willRenewTo": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "securelyConnected": "已连接",
+  "versionTooOld": "版本过旧",
+  "versionTooOldMessage": "您的应用程序版本过旧。请升级到最新版本以继续。",
+  "noServers": "没有服务器",
+  "noServersMessage": "抱歉，没有匹配到合适的服务器。请稍后再试。",
+  "selectRouteMode": "选择路由模式",
+  "welcomeToUmiVPN": "欢迎使用 UmiVPN！",
+  "umivpnIsFreeToUse": "UmiVPN 免费使用",
+  "welcomeConnectionInfo": "每次连接最多持续 30 分钟，之后请返回并重新连接。",
+  "gotIt": "知道了",
+  "umivpnSlogan": "你的自由，悠咪来守护",
+  "enableAppOpenAds": "返回应用广告",
+  "enableAppOpenAdsDesc": "开启后连接最大时长为 30 分钟，（而非 15 分钟）。打开UmiVPN时会显示广告。",
+  "noTorrect": "无法种子下载",
+  "noTorrectDesc": "UmiVPN无法用于下载种子，种子下载流量不会通过UmiVPN隧道传输。它们的流量会直接进入到公共互联网"
+}

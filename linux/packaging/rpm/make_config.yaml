@@ -1,0 +1,33 @@
+icon: assets/dev/icon.png
+summary: A proxy client
+group: Application/Proxy
+vendor: 5V Network LLC
+packager: 5V Network LLC
+packagerEmail: contactumivpn@proton.me
+url: https://umivpn.5vnetwork.com
+license: Commercial
+display_name: UmiVPN
+
+keywords:
+  - VPN
+  - Proxy
+  - Network
+  - Security
+  - Tunneling
+  - Privacy
+  - Internet
+  - Connection
+  - Firewall
+  - Bypass
+  - GFW
+
+generic_name: UmiVPN
+
+categories:
+  - Tool
+  - Proxy
+
+startup_notify: true
+# You can also specify [metainfo](https://freedesktop.org/software/appstream/docs/chap-Quickstart.html) file
+# which contains metadata of the app.
+# metainfo: linux/packaging/myappid.appdata.xml

@@ -1,0 +1,874 @@
+{
+  "node": "Node",
+  "inbound": "Inbound",
+  "start": "Start",
+  "log": "Log",
+  "logLevel": "Log Level",
+  "settings": "Settings",
+  "about": "About",
+  "version": "Version",
+  "routing": "Routing",
+  "whileList": "CN",
+  "gfw": "GFW",
+  "proxyAll": "Proxy All",
+  "auto": "Auto",
+  "systemProxy": "System Proxy",
+  "inputManually": "Input Manually",
+  "qrCode": "QR Code",
+  "addNode": "Add Node",
+  "photo": "Photo",
+  "clipboard": "Clipboard",
+  "protocol": "Protocol",
+  "add": "Add",
+  "name": "Name",
+  "domainStrategy": "Domain Strategy",
+  "enableMux": "Enable Mux",
+  "address": "Address",
+  "ipOrDomain": "IP / Domain",
+  "port": "Port",
+  "nodeSelection": "Node Selection",
+  "server": "Server",
+  "compass": "Compass",
+  "home": "Home",
+  "connecting": "Connecting",
+  "connected": "Connected",
+  "disconnecting": "Disconnecting",
+  "disconnected": "Disconnected",
+  "subscription": "Subscription",
+  "unknown": "Unknown",
+  "preparing": "Preparing",
+  "edit": "Edit",
+  "speedTest": "Speed Test",
+  "statusTest": "Usable Test",
+  "selfhost": "Selfhost",
+  "free": "Free",
+  "reconnecting": "Reconnecting",
+  "cancel": "Cancel",
+  "save": "Save",
+  "password": "Password",
+  "accountName": "Account Name",
+  "delete": "Delete",
+  "emptyClipboard": "Empty clipboard",
+  "decodeQrCode": "Failed to decode QR code",
+  "proxy": "Proxy",
+  "direct": "Direct",
+  "promote": "Promotion",
+  "domainsOrIps": "Domains/IPs",
+  "addProxyDomainIp": "Add Proxy Domain/IP",
+  "addDirectDomainIp": "Add Direct Domain/IP",
+  "domain": "Domain",
+  "type": "Type",
+  "invalidIp": "Invalid IP",
+  "invalidCidr": "Invalid CIDR",
+  "exact": "Exact",
+  "regularExpression": "Regular Expression",
+  "keyword": "Keyword",
+  "rootDomain": "Root Domain",
+  "addServer": "Add Server",
+  "editServer": "Edit Server",
+  "sshKey": "SSH Key",
+  "selectFromFile": "Select From File",
+  "sudoPassword": "Sudo Password",
+  "statusMonitor": "Status Monitor",
+  "fieldRequired": "Field Required",
+  "invalidPort": "Invalid Port",
+  "invalidAddress": "Invalid Address",
+  "failedToAddServer": "Failed to add server",
+  "memory": "Memory",
+  "storage": "Storage",
+  "serverPubKey": "Server Public Key",
+  "serverPubKeyHelper": "If not filled, any public key sent by the server on the first connection will be accepted, then the public key will be used on the future connections.",
+  "failedConnectServer": "Failed to connect",
+  "retry": "Retry",
+  "keyPassphrase": "Key Passphrase",
+  "showRealtimeStatus": "Show Realtime Status",
+  "hideRealtimeStatus": "Hide Realtime Status",
+  "app": "App",
+  "appName": "App Name",
+  "prefix": "Prefix",
+  "confirm": "Confirm",
+  "addToProxy": "Add to Proxy?",
+  "addToDirect": "Add to Direct?",
+  "default0": "Default",
+  "website": "Website",
+  "endTime": "End Time",
+  "remainingData": "Remaining Data",
+  "update": "Update",
+  "actions": "Actions",
+  "updateInterval": "Update Interval",
+  "testArea": "Test Area",
+  "autoUpdate": "Auto Update",
+  "unableToGetNodes": "Failed to get nodes, your pasteboard does not contain a subscription url that UmiVPN can parse",
+  "unableToGetNodesEmptyClipboard": "Failed to get nodes, clipboard is empty",
+  "subscriptionAddress": "Subscription Address",
+  "empty": "Empty",
+  "invalidHttp": "Invalid HTTPS URL",
+  "noNode": "No Node",
+  "failedToChangeOutboundMode": "Failed to change outbound mode",
+  "failedToChangeFakeDns": "Failed to change fake dns",
+  "failedToChangeRoutingMode": "Failed to change routing mode",
+  "disableInAuto": "Disable in auto mode",
+  "area": "Area",
+  "remark": "Remark",
+  "remarkAddress": "Remark & Address",
+  "usable": "Usable",
+  "speed": "Speed",
+  "latency": "Latency",
+  "selectOneOutbound": "Select",
+  "addFailedUniqueConstraint": "Addition failed because the rule confilcts with an existing rule.",
+  "enableInAuto": "Enable in auto mode",
+  "showClient": "Show Client",
+  "connect": "Connect",
+  "disconnect": "Disconnect",
+  "disconnectedUnexpectedly": "Disconnected unexpectedly. Reason: {reason}",
+  "@disconnectedUnexpectedly": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "quit": "Quit",
+  "iosAppRoutingNoSupport": "App-based routing is currently not supported on iOS",
+  "failedToChangeInboundMode": "Failed to change inbound",
+  "language": "Language",
+  "mannual": "Manual",
+  "updatedAt": "Updated at",
+  "min": "{value} {value, plural, =0{Minutes} =1{Minute} other{Minutes}}",
+  "@min": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "hour": "{value} {value, plural, =0{Hours} =1{Hour} other{Hours}}",
+  "@hour": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "privacyPolicy": "Privacy Policy",
+  "contactUs": "Contact Us",
+  "openSourceSoftwareNotice": "Open Source Software Notice",
+  "copy": "Copy",
+  "privacyPolicySummary": "UmiVPN only collects diagnostic logs if the switch button below is on. These logs do not contain personal data. Please click the button below to view the detailed privacy policy.",
+  "diagnosticLogDoesNotContainPersonalData": "Diagnostic logs does not link to you, and does not contain personal data",
+  "shareDiagnosticLogWithDeveloper": "Share diagnostic logs with developers",
+  "yes": "Yes",
+  "no": "No",
+  "contactUsSummary": "You can contact us by the following ways. Thank you!",
+  "contactUsFreely": "If you have any questions, please contact us.",
+  "bugAreWelcome": "Bug reports and suggestions are welcome, thanks very much!",
+  "copiedToClipboard": "Copied to clipboard",
+  "openSourceSoftwareNoticeText": "UmiVPN uses the following open-source projects:",
+  "sourceCodeUrl": "URL to source code",
+  "email": "Email",
+  "verificationCode": "Verification Code",
+  "send": "Send",
+  "login": "Login",
+  "loginWithEmail": "Email Login",
+  "loginWithGoogle": "Google",
+  "loginWithApple": "Apple",
+  "loginWithMicrosoft": "Microsoft",
+  "newUserTrialText": "New users can try Pro for 7 days for free",
+  "proExpiredAt": "Pro Expiry",
+  "lifetimeProAccount": "Lifetime Pro Account",
+  "addGroup": "Add Group",
+  "deleteGroup": "Delete Group",
+  "group": "Group",
+  "addToGroup": "Add to Group",
+  "addApp": "Add App",
+  "noSelectedNode": "No selected node",
+  "pleaseSelectNode": "Please select a node",
+  "pleaseSelectSelector": "Please select a selector",
+  "pleaseEnterRuleName": "Please enter rule name",
+  "ruleName": "Matched Rule Name",
+  "matchAll": "Match All",
+  "ruleMatchCondition": "When all conditions are met, the rule matches. If there are zero conditions, the rule will never match.",
+  "inboundLabel": "Inbound",
+  "domainSet": "Domain Set",
+  "appSet": "App Set",
+  "ipSet": "IP Set",
+  "addRouterRule": "Add Router Rule",
+  "addDnsRule": "Add DNS Rule",
+  "editRule": "Edit Rule",
+  "addRouter": "Add Route Mode",
+  "copyDefault": "Copy Default",
+  "ruleOrder": "Rules are matched from top to bottom",
+  "nodeChain": "Node Chain",
+  "nodeChainDesc": "Nodes selected will use the following nodes in a node chain. The last node in the chain is the landing node.",
+  "addSelector": "Add Selector",
+  "selectorNameDuplicate": "Selector name cannot be duplicated",
+  "renameSelector": "Rename Selector",
+  "allNodes": "All Nodes",
+  "partialNodes": "Partial Nodes",
+  "nodeGroup": "Node Group",
+  "lowestLatency": "Lowest Latency",
+  "lowLatency": "Low Latency",
+  "highThroughput": "High Speed",
+  "nameCannotBeEmpty": "Name cannot be empty",
+  "setNameDuplicate": "Set name cannot be duplicated",
+  "mutuallyExclusiveSetName": "Mutually Exclusive Set Name",
+  "include": "Include",
+  "exclude": "Exclude",
+  "simple": "Simple",
+  "advanced": "Advanced",
+  "customDirect": "Custom Direct",
+  "customProxy": "Custom Proxy",
+  "cnGames": "CN Games",
+  "private": "Private",
+  "gfwWithoutCustomDirect": "GFW (without custom direct)",
+  "gfwModeProxyDomains": "GFW Mode Proxy Domains",
+  "gfwModeProxyIps": "GFW Mode Proxy IPs",
+  "cnModeProxyDomains": "CN Mode Proxy Domains",
+  "cnModeDirectDomains": "CN Mode Direct Domains",
+  "cnModeDirectIps": "CN Mode Direct IPs",
+  "proxyAllModeProxyDomains": "Proxy-All Mode Proxy Domains",
+  "proxyAllModeDirectDomains": "Proxy-All Mode Direct Domains",
+  "proxyAllModeDirectIps": "Proxy-All Mode Direct IPs",
+  "ruBlockModeProxyDomains": "RU-Block Mode Proxy Domains",
+  "ruBlockModeProxyIps": "RU-Block Mode Proxy IPs",
+  "ruBlockAllModeProxyDomains": "RU-Block(All) Mode Proxy Domains",
+  "ruBlockAllModeProxyIps": "RU-Block(All) Mode Proxy IPs",
+  "ipToDomain": "IP -> Domain",
+  "proFeatureDescription": "This is a Pro feature. Upgrade to Pro to unlock all features",
+  "becomePermanentPro": "Become Permanent Pro User",
+  "becomePermanentProDescription": "Become permanent Pro user",
+  "tryPro": "Try Pro",
+  "newUserProTrial": "New users can try Pro for 7 days",
+  "purchase": "Purchase",
+  "purchaseCancelled": "Purchase Cancelled",
+  "verifyingPurchase": "Verifying Purchase...",
+  "purchaseVerificationFailed": "Unable to verify purchase: {reason}",
+  "@purchaseVerificationFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "ifYouHavePaid": "If you have paid, don't worry, your payment will be automatically refunded by the store. If you have any questions, please contact us. Order ID: {orderId}",
+  "@ifYouHavePaid": {
+    "placeholders": {
+      "orderId": {
+        "type": "String"
+      }
+    }
+  },
+  "invalidPurchase": "Invalid Purchase",
+  "purchaseSuccessful": "Purchase Successful",
+  "purchaseFailed": "Purchase failed: {status}",
+  "@purchaseFailed": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "unableToConnectToStore": "Unable to connect to store",
+  "loginBeforePurchase": "Please login before purchasing. New users can try Pro for 7 days",
+  "loginBeforeRestore": "Please login before restoring purchase.",
+  "alternativePurchase": "If purchase fails, please try other platforms or official website.",
+  "upgradeToPermanentPro": "Upgrade to Pro",
+  "upgrade": "Upgrade",
+  "changePeriod": "Change Period",
+  "downgrade": "Downgrade",
+  "caseInsensitive": "Case Insensitive",
+  "startFailed": "Failed to start",
+  "startFailedWithReason": "Failed to start: {reason}",
+  "@startFailedWithReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "startFailedReasonTunNeedAdmin": "Tun inbound is only available when running as administrator. Rerun UmiVPN as administrator or change inbound mode.",
+  "startFailedReasonNoNode": "No node",
+  "startFailedReasonNoEnabledNode": "No enabled nodes, enable at least one node",
+  "startFailedReasonNoSelected": "No selected node",
+  "failedToUpdateSub": "Failed to update subscription: {value}",
+  "@failedToUpdateSub": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToAddSubscription": "Failed to add subscription, there is an existing subscription with the same link",
+  "tunNeedAdmin": "To use tun, rerun UmiVPN as administrator",
+  "decodeResult": "Successfully got {value1} {value1, plural, =1{node} other{nodes}}, {value2} {value2, plural, =1{node failed} other{nodes failed}}",
+  "@decodeResult": {
+    "placeholders": {
+      "value1": {
+        "type": "num",
+        "format": "compact"
+      },
+      "value2": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "updateSubResult": "Successfully updated {value1} {value1, plural, =1{subscription} other{subscriptions}}, {value2} {value2, plural, =1{subscription} other{subscriptions}} failed. {value3} {value3, plural, =1{node} other{nodes}} added, {value4} {value4, plural, =1{node} other{nodes}} failed to parse",
+  "@updateSubResult": {
+    "placeholders": {
+      "value1": {
+        "type": "num",
+        "format": "compact"
+      },
+      "value2": {
+        "type": "num",
+        "format": "compact"
+      },
+      "value3": {
+        "type": "num",
+        "format": "compact"
+      },
+      "value4": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "failedToUpdateCountry": "Failed to update areas",
+  "keepAlivePeriodMustBeBetween2And60": "Need to be between 2 and 60",
+  "showApp": "Show App",
+  "hideApp": "Hide App",
+  "showSystemApps": "Show System Apps",
+  "hideSystemApps": "Hide System Apps",
+  "doubleTapToDelete": "Double tap to delete",
+  "method": "Method",
+  "sshKeyPath": "SSH Key File Path",
+  "useCommonSshKey": "Use Added SSH Key",
+  "addCommonSshKey": "Add SSH Key",
+  "sshKeyContentOrPathRequired": "At least one of SSH Key Content or SSH Key File Path is required",
+  "failedToAddCommonSshKey": "Failed to add SSH key",
+  "failedToAddCommonSshKeyDueToDuplicateName": "Failed to add SSH key because there is a key with the same name",
+  "quickDeploy": "Quick Deploy",
+  "deploy": "Deploy",
+  "close": "Close",
+  "deploySuccess": "{deploy} on Server-{server} succeeded",
+  "@deploySuccess": {
+    "placeholders": {
+      "deploy": {
+        "type": "String"
+      },
+      "server": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToDeploy": "Failed to deploy: {value}",
+  "@failedToDeploy": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "peerCertChainSHA256Hash": "SHA256",
+  "serverCA": "Root CA",
+  "failedToInitGrpcClient": "Failed to init grpc client: {value}",
+  "@failedToInitGrpcClient": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "block": "Block",
+  "failure": "Failure",
+  "appKeyword": "App Keyword",
+  "sniffDomain": "Sniff Domain",
+  "trafficStats": "Traffic Stats",
+  "useSshKey": "Use SSH Key",
+  "errorOnly": "Error Only",
+  "all": "All",
+  "failedToUndoBlockDns": "Failed to remove the WFP filter for blocking dns traffic of primary NIC, please close this app which can remove the filter",
+  "failedToRemoveSystemProxy": "Failed to remove system proxy, please remove it mannually at Settings > System Proxy.",
+  "failedToChangeNode": "Failed to change node: {value}",
+  "@failedToChangeNode": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "failureDetail": "Failure detail",
+  "failedNodes": "Failed nodes",
+  "failedSub": "Failed subscriptions",
+  "addRemark": "Add a remark?",
+  "multiSelect": "Multi Select",
+  "share": "Share",
+  "quickAction": "Quick Action",
+  "deleteUnusable": "Delete Unusable Nodes",
+  "smallScreenPreference": "Small Screen Preference",
+  "chainProxy": "Chain Proxy",
+  "singleNode": "Single Node",
+  "multipleNodes": "Multiple Nodes",
+  "balanceStrategy": "Balance Strategy",
+  "manualNodeMode": "Manual Mode",
+  "outboundMode": "Outbound",
+  "random": "Random",
+  "mode": "Mode",
+  "balanceStrategyMemory": "Memory",
+  "selectingStrategy": "Select Strategy",
+  "mostThroughput": "Speed Highest",
+  "allOk": "Usable",
+  "yourDevices": "Your Devices",
+  "destination": "Destination",
+  "addNewNode": "Add New Node",
+  "useExistingNode": "Use Existing Node",
+  "atLeastTwoNodes": "At least two nodes are required",
+  "advancedMode": "Pro Mode",
+  "simpleMode": "Simple Mode",
+  "rule": "Rule",
+  "set": "Set",
+  "selector": "Selector",
+  "atmoicDomainSet": "Small Domain Set",
+  "greatDomainSet": "Large Domain Set",
+  "atmoicIpSet": "Small IP Set",
+  "greatIpSet": "Large IP Set",
+  "createGreatDomainSet": "Create Great Domain Set",
+  "editGreatDomainSet": "Edit Great Domain Set",
+  "createSmallDomainSet": "Create Small Domain Set",
+  "editSmallDomainSet": "Edit Small Domain Set",
+  "editGreatIpSet": "Edit Great IP Set",
+  "createGreatIpSet": "Create Great IP Set",
+  "editAppSet": "Edit App Set",
+  "condition": "Condition",
+  "range": "Range",
+  "account": "Account",
+  "logout": "Logout",
+  "geoSiteOrGeoIPFileNotFound": "Downloading needed geo files...",
+  "createIpSmallSet": "Create IP Small Set",
+  "editIpSmallSet": "Edit IP Small Set",
+  "deleteFailed": "Delete failed",
+  "deleteAccount": "Delete Account",
+  "deleteAccountConfirm": "Are you sure you want to delete your account? This action cannot be undone.",
+  "domainSetDescription": "The following domain set uses proxy DNS server (default 8.8.8.8 and 1.1.1.1) to resolve, other domains use direct DNS server (default is dns servers of your primary physical nic, or 223.5.5.5 and 114.114.114.114 if the former cannot be known) to resolve",
+  "routerRuleDescription": "For each connection, rules are matched one by one from top to bottom, if a rule matches, the following rules will not be considered. If no rule matches, the connection will abort.",
+  "dstIpSet": "Destination IP Set",
+  "ruleNameUmiVPNTestNodes": "UmiVPN Node Testing",
+  "ruleNameInternalDnsProxyGoProxy": "Internal DNS (CF)",
+  "ruleNameInternalDnsDirectGoDirect": "Internal DNS (Aliyun & CF)",
+  "ruleNameProxyDnsServerGoProxy": "Default Proxy DNS Server",
+  "ruleNameDirectDnsServerGoDirect": "Default Direct DNS Server",
+  "ruleNameDnsHijack": "DNS Hijack: Non-Direct Domain",
+  "ruleNameCustomDirectDomain": "Custom Direct Domain",
+  "ruleNameCustomDirectIp": "Custom Direct IP",
+  "ruleNameCustomProxyDomain": "Custom Proxy Domain",
+  "ruleNameCustomProxyIp": "Custom Proxy IP",
+  "ruleNameProxyApp": "Proxy App",
+  "ruleNameDirectApp": "Direct App",
+  "ruleNameCnDirectIp": "CN Mode Direct IPs",
+  "ruleNameDefaultProxy": "Default Proxy",
+  "ruleNameCnDirectDomain": "CN Mode Direct Domains",
+  "ruleNameGfwProxyDomain": "GFW Mode Proxy Domains",
+  "ruleNameGfwProxyIp": "GFW Mode Proxy IPs",
+  "ruleNameRuBlockProxyDomain": "RU-Block Mode Proxy Domains",
+  "ruleNameRuBlockProxyIp": "RU-Block Mode Proxy IPs",
+  "ruleNameRuBlockAllProxyDomain": "RU-Block(All) Mode Proxy Domains",
+  "ruleNameRuBlockAllProxyIp": "RU-Block(All) Mode Proxy IPs",
+  "ruleNameDefaultDirect": "Default Direct",
+  "ruleNameGlobalDirectDomain": "Proxy-All Mode Direct Domains",
+  "ruleNameGlobalDirectIp": "Proxy-All Mode Direct IPs",
+  "addAppSet": "Add App Set",
+  "pro": "Lifetime Pro Account",
+  "proxyShare": "Proxy Share",
+  "sniff": "Sniff",
+  "proxyShareDesc": "Enable HTTP and SOCKS inbound after VPN starts, so that other devices in the local network can access the internet through this machine. The inbound name is \"proxyShare\", which you can use in rules.",
+  "loginSuccess": "Login Success",
+  "emailLogin": "Login by Email",
+  "google": "Google",
+  "apple": "Apple",
+  "microsoft": "Microsoft",
+  "rateApp": "Rate UmiVPN",
+  "userConsend": "Once you login, your email will be stored in our server until you delete your account. This is neccessary for providing account login. We do not share your email with any third party. Do you allow us to store your email?",
+  "okay": "Okay",
+  "disagree": "Disagree",
+  "reject": "Reject",
+  "greatSetDescription1": "A large set is composed of small sets or other large sets. When telling whether a domain/IP is in the set, the exluded sets will be considered first, if the domain is in any of the excluded set, then the domain is not in the set. ",
+  "greatSetDescription2": "A large set can have a mutually exclusive set. If a domain/IP is in set A, then the domain/IP is not in it's mutually exclusive set.",
+  "pleaseLoginFirst": "Please login first",
+  "telegram": "Telegram",
+  "failedToDownloadGeoData": "Failed to download GeoData: {value}",
+  "@failedToDownloadGeoData": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "doNotUse1080IOS": "Do not use 1080 on iOS",
+  "deletedNode": "Deleted Node",
+  "selectorContainsDeletedLandHandler": "Selector {value} uses a deleted node as landing node, please remove it and retry",
+  "@selectorContainsDeletedLandHandler": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "tunIpv6Settings": "TUN IP Settings",
+  "alwaysEnableIpv6": "Always Enable IPv6",
+  "dependsOnDefaultNic": "Depends on Default Physical NIC",
+  "dependsOnDefaultNicDesc": "If the default physical NIC supports IPv6, then the TUN NIC will also support IPv6, otherwise IPv6 is not supported",
+  "failedToCreateAllFirstLaunch": "Failed to create database tables: {value}",
+  "@failedToCreateAllFirstLaunch": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToInsertDefaultData": "Failed to insert default data into database: {value}",
+  "@failedToInsertDefaultData": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "newVersionDownloadedDialog": "New version {version} downloaded, install it?",
+  "@newVersionDownloadedDialog": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "skipThisVersion": "Skip this version",
+  "install": "Install",
+  "later": "Remind Me Later",
+  "autoUpdateDescription": "Automatically downloading new version and notify you when it's ready",
+  "downloading": "Downloading {version}...",
+  "@downloading": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "installFailed": "Failed to install update, reason: {reason}",
+  "@installFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "tun46SettingIpv4Only": "IPv4 Only",
+  "tun46SettingIpv4AndIpv6": "IPv4 and IPv6",
+  "ad": "Ads",
+  "advancedSettingDesc": "VPN related settings",
+  "general": "General",
+  "light": "Light",
+  "dark": "Dark",
+  "system": "System",
+  "themeMode": "Theme",
+  "serverError": "Server Error",
+  "gfwDesc": "All domains/IPs of GFW go proxy, others go direct",
+  "cnDesc": "All domains/IPs of China mainland go direct, others go proxy",
+  "proxyAllDesc": "All non-private domains/IPs go proxy",
+  "dnsRule": "DNS Rules",
+  "dnsRuleNameGfwProxyFake": "GFW Mode Proxy Domains(A/AAAA)",
+  "dnsRuleNameGfwProxy": "GFW Mode Proxy Domains",
+  "dnsRuleNameRuBlockProxyFake": "RU-Block Mode Proxy Domains(A/AAAA)",
+  "dnsRuleNameRuBlockProxy": "RU-Block Mode Proxy Domains",
+  "dnsRuleNameRuBlockAllProxyFake": "RU-Block(All) Mode Proxy Domains(A/AAAA)",
+  "dnsRuleNameRuBlockAllProxy": "RU-Block(All) Mode Proxy Domains",
+  "dnsRuleNameCnProxyFake": "CN Mode Proxy Domains(A/AAAA)",
+  "dnsRuleNameCnProxy": "CN Mode Proxy Domains",
+  "dnsRuleNameProxyAllProxyFake": "Proxy-All Mode Proxy Domains(A/AAAA)",
+  "dnsRuleNameProxyAllProxy": "Proxy-All Mode Proxy Domains",
+  "dnsRuleNameDefaultDirect": "Others",
+  "routerRules": "Router Rules",
+  "dnsRuleDesc": "For each DNS request, rules are matched one by one starting from the top. If a rule matches, the following rule will not be considered. The dns server specified by the rule will be used to handle the dns query",
+  "dnsServer": "DNS Server",
+  "howDnsRuleMatch": "When all conditions match or there is no condition enabled, a dns rule matches.",
+  "selectAtleastOneDnsServer": "Select at least one dns server",
+  "dnsType": "DNS Type",
+  "directDnsServer": "Direct DNS Server",
+  "proxyDnsServer": "Proxy DNS Server",
+  "addDnsServer": "Add DNS Server",
+  "useDefaultDnsServer": "Use DNS servers of default NIC. If unable to get the servers, fallback to use the above servers.",
+  "useDefaultNicDnsServer": "Use DNS servers of default NIC. If unable to get the servers, use the following:",
+  "addDnsAddressHint": "Multiple addresses supported. Use comma to seperate. Each dns query will be sent to all addresses simultaneouly, the first reply will be used.",
+  "invalidUrl": "Invalid URL",
+  "duplicateDnsServerName": "Duplicate DNS server name",
+  "dnsTypeConditionDesc": "If checked, then this condition is enabled. The condition is true only when the type of a dns query is in the selected type.",
+  "enabledConditions": "Enabled conditions: {number}",
+  "@enabledConditions": {
+    "placeholders": {
+      "number": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "showSelector": "Show Selector",
+  "hideSelector": "Hide Selector",
+  "showHandler": "Show Handler",
+  "hideHandler": "Hide Selector",
+  "restoreIAP": "Restore Purchase",
+  "debugLog": "Debug Log",
+  "upload": "Upload",
+  "saveToDownloadFolder": "Save to Download",
+  "saveToDownloadFolderDesc": "Move the logs to your Download folder",
+  "debugLogDesc": "If you encountered any problem during using UmiVPN, you can enable the button, and wait until the problem occur again, then click upload to upload the logs to us, rememeber to close it and delete the logsafter uploading.  Developer logs are not uploaded automatically since they contain your network activities, including the websites and apps you use. We delete the logs immediately once we process them.",
+  "clashFormatSupported": "Only Clash Rule files are supported",
+  "network": "Network",
+  "source": "Source",
+  "fallbackToProxy": "Fallback To Proxy",
+  "fallbackToProxySetting": "When a direct connection failed, fallback to use proxy. The node selected by the \"Proxy\" selector will be used, if the selector does not exist, a random nodes will be selected",
+  "installAsWinService": "Add UmiVPN to Windows Service",
+  "installAsWinServiceDesc": "Before use TUN, UmiVPN needs to be added into Windows Service. Click Yes to install UmiVPN as a service, which would require you to give permission in the following UAC prompt window.",
+  "placeOnTop": "Top",
+  "stopPlaceOnTop": "Untop",
+  "fallbackTo": "Fallback to {node}",
+  "@fallbackTo": {
+    "placeholders": {
+      "node": {
+        "type": "String"
+      }
+    }
+  },
+  "pingTestMethod": "Latency Test Method",
+  "pingReal": "Real Latency",
+  "pingRealDesc": "Time used to retrieve a result",
+  "startOnBoot": "Start on Boot",
+  "startOnBootDesc": "Start UmiVPN automatically at startup",
+  "alwaysOn": "Always ON",
+  "alwaysOnDesc": "As long as you did not click disconnect, always try to be connected when the app is running",
+  "checkAndUpdate": "Check and Update",
+  "noNewVersion": "No new versions",
+  "enableSystemExtension": "Please enable UmiVPN SystemExtension by going to System Settings -> General -> Login Items & Extensions -> Network Extensions",
+  "systemProxyPortSetting": "System Proxy Port Setting",
+  "randomPorts": "Random Ports",
+  "staticPorts": "Static Ports",
+  "whenNoDomain": "Sniff When No Domain Info",
+  "enable": "Enable",
+  "disable": "Disable",
+  "checkUpdate": "Check Update",
+  "handlerCopiedSuccess": "Copy succeeded. The node has been added to the Default group",
+  "hysteriaRejectQuic": "Hysteria Reject QUIC",
+  "syncBackup": "Sync & Backup",
+  "cloudSync": "Cloud Sync",
+  "cloudSyncDesc1": "Sync your database between multiple devices. ",
+  "cloudSyncDesc2": "For Android devices with Google Services installed and Apple devices that can communicate with Google FCM servers, sync are real-time. Otherwise, sync will happen every 5 minutes.",
+  "cloudSyncDesc3": "The sync data will be automatically cleared from the cloud after your device have fetched them. If your device has not fetched them for 7 days, the data will deleted from the cloud.",
+  "nodeSub": "Node/Subscription",
+  "routeSetDNSSelector": "Rule/Set/Selector/DNS",
+  "selectorSetting": "Selector Settings",
+  "serverKey": "Server/Key",
+  "lanSync": "LAN Sync",
+  "sync": "Sync",
+  "conditaionWarn1": "In most cases, domain conditions and IP conditions should not exist at the same time. When they both exist, the rule will only match when the request has both domain and IP information, which is not always the case.",
+  "setName": "Set Name",
+  "addSet": "Add Set",
+  "domainIpAppConditionDesc": "When a request's domain/IP/App is in any of the sets, the rule matches.",
+  "backup": "Database Backup",
+  "autoBackup": "Auto Backup",
+  "autoBackupDesc": "Automatically backup database to cloud once a day.",
+  "currentBackup": "Current Backup",
+  "uploadDb": "Upload",
+  "restoreDb": "Restore",
+  "deleteCloudDb": "Delete database in cloud",
+  "uploadDbSuccess": "Upload database successfully",
+  "restoreDbSuccess": "Restore database successfully",
+  "deleteDbSuccess": "Delete successfully",
+  "gridView": "Grid View",
+  "listView": "List View",
+  "sort": "Sort",
+  "clear": "Clear",
+  "fallbackRetryDomain": "Retry Domain",
+  "fallbackRetryDomainDesc": "If a proxy connection uses ip targets and failed due to i/o timeout(this might due to DNS pollution), use domain as target and retry. The sniffed domain of the connection will be used first, if it is unavailable, the ip-to-domain domain will be used.",
+  "backupPasswordDesc": "Used to encrypt database. Only devices with this password can restore backups. The password is encrypted and stored locally.",
+  "syncPasswordDesc": "Used to encrypt sync data. Only devices with this password can sync data successfully. The password is encrypted and stored locally.",
+  "addDomainIpAppSet": "Add Domain/App/IP Set",
+  "unsaved": "Unsaved",
+  "rememberPasswordInMemory": "Remember sudo password in memory for later use",
+  "doNotShowAgain": "Do not show again",
+  "rpmTunNotice": "When TUN is on, Reverse Path Forwarding mode will be set to Loose(2) and reset to what it was when disconnect. You can go to the following website to learn about Reverse Path Forwarding",
+  "internalDnsDesc": "Internal DNS servers are used to resolve domains when outbounds are dialing. There are two of them, one is internal-dns-proxy, which uses the Proxy selector to connect to 1.1.1.1; the other is internal-dns-direct, which uses directly connect to 223.5.5.5 and 1.1.1.1. The internal-dns-direct is used first, if it failed, the internal-dns-proxy will be used.",
+  "nodeSetDesc": "There is a small domain set named \"__node__\" which contains domains and SNIs of all nodes. There is also a small IP set named \"__node__\" which contains IPs of all nodes.",
+  "dnsNameDesc": "A DNS server's name can be referenced in the inbound condition to specify which node it uses.",
+  "directAppSetDesc": "On Android, applications in the direct app set will not go through UmiVPN (Split Tunnel)",
+  "deleteDebugLogs": "Delete Debug Logs",
+  "conditionDesc": "When a connection does not have IP info, IP condition will be false and the rule will not match. Similarly, when a connection does not have domain info, domain condition will be false and the rule will not match.",
+  "lookupEch": "Lookup ECH",
+  "lookupEchDesc": "If enabled and above ECH Config is empty, ECH config will be looked up from DNS server. If lookup success, use ECH, otherwise do not use ECH.",
+  "adWanted": "Publish Ads",
+  "basicQuickDeployTitle": "Two cores, four protocols",
+  "basicQuickDeploySummary": "Deploy Xray, Hysteria cores and set nodes with four common protocols",
+  "basicQuickDeployDetails": "Install Xray-core and Hysteria, and deploy the following four inbound. If the server has already installed Xray or Hysteria, the original configuration will be replaced. If the server has not enabled BBR, BBR will be enabled.",
+  "basicQuickDeployContent1": "Vmess five random ports",
+  "basicQuickDeployContent2": "Shadowsocks five random ports",
+  "basicQuickDeployContent3": "Hysteria 443 port",
+  "basicQuickDeployContent4": "Vless-XTLS-Vision 443 port",
+  "masqueradeQuickDeployTitle": "Reality/XHTTP",
+  "masqueradeQuickDeploySummary": "Install Xray-core and deploy Reality/XHTTP inbound. If the server has already installed Xray, the original configuration will be replaced. If the server has not enabled BBR, BBR will be enabled.",
+  "masqueradeQuickDeployDetails": "Install Xray-core, and deploy Reality/XHTTP inbound. If the server has already installed Xray, the original configuration will be replaced. If the server has not enabled BBR, BBR will be enabled.",
+  "fatalError": "An error occurred. Please restart UmiVPN. Error: {error}",
+  "@fatalError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exit": "Exit",
+  "info": "Info",
+  "selectAtleastOneSelector": "Select at least one selector",
+  "addRouteMode": "Add Route Mode",
+  "setNameProxyApp": "Proxy",
+  "setNameDirectApp": "Direct",
+  "defaultSelectorTag": "Proxy",
+  "selectAtleastOneNode": "Select at least one node",
+  "insertDefaultError": "Failed to insert default data, please restart UmiVPN and add them in the routing page. Reason: {error}",
+  "@insertDefaultError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pleaseSelectARoutingMode": "Please select a routing mode",
+  "addRouteModeNotice": "Clicking the + button to add a routing mode.",
+  "freeUserCannotUseCustomRoutingMode": "Free users cannot use custom routing modes. Please select a default routing mode. You can add default routing modes in the routing page.",
+  "addRouteMode": "Add Route Mode",
+  "defaultRouteModes": "Default modes",
+  "custom": "Custom",
+  "geositeUrlDesc": "If empty, the geosite.dat provided by LoyalSoldier will be used",
+  "geoUrlDesc": "If empty, the geoip.dat provided by LoyalSoldier will be used",
+  "ruBlocked": "Russia Blocked",
+  "ruBlockedDesc": "Domains/IPs blocked in Russia go proxy, others go direct",
+  "ruBlockedAll": "Russia Blocked(All)",
+  "ruBlockedAllDesc": "All domains/IPs known to be blocked in Russia go proxy, others go direct",
+  "dnsServerProxy": "Proxy DNS Server",
+  "dnsServerDirect": "Direct DNS Server",
+  "sniffDomainForIpConnection": "If a connection use IP target, sniff domain",
+  "resolveDomain": "For connections using domain targets, use DNS to resolve IPs. When each resolved IP make the IP condition true, the condition is true",
+  "sniff": "Sniff",
+  "skipSniff": "No Sniff",
+  "resolve": "Resovle",
+  "skipResolve": "No Resolve",
+  "describeTheProblem": "Please describe the problem you encountered, if you have already contacted customer service, you can leave it blank",
+  "debugLogNotAvailable": "Developer log function is not available in non-store version",
+  "useBloomFilter": "Use Bloom Filter in iOS",
+  "useBloomFilterDesc": "Bloom Filter can reduce memory usage, however, there is a small chance (1%) of false positives: domains not in the set might be misclassified as in the set.",
+  "addFromClashRuleFiles": "Add from Clash Rule Files",
+  "selectFromInstalledApps": "Select from Installed Apps",
+  "ipToDomainDesc": "IP -> Domain is got from the recent DNS history. Because many domains can be resolved to the same IP, it might not be the actual domain. Therefore, the connection is likely to have the domain, but not guaranteed.",
+  "followingAiTranslated": "The following languages are translated by AI, which may not be accurate.",
+  "addToDefault": "Add to Default",
+  "managePlan": "Manage Plan",
+  "managePlanDesc": "Upgrade, downgrade or cancel subscription",
+  "availablePlans": "Available Plans",
+  "currentPlan": "Current Plan",
+  "dontCancelSubscription": "Don't Cancel Subscription",
+  "cancelSubscription": "Cancel Subscription",
+  "manageSubscription": "Manage Subscription",
+  "noTokenFound": "No token found",
+  "subscriptionReactivated": "Subscription reactivated",
+  "subscriptionCancelled": "Subscription cancelled",
+  "couldNotOpenCustomerPortal": "Could not open customer portal",
+  "noPortalUrlReceived": "No portal URL received",
+  "failedToOpenCustomerPortal": "Failed to open customer portal: {errorMessage}",
+  "@failedToOpenCustomerPortal": {
+    "placeholders": {
+      "errorMessage": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotOpenPlayStoreSubscriptions": "Could not open Play Store subscriptions",
+  "couldNotOpenAppStoreSubscriptions": "Could not open subscription management. Please go to Settings > [Your Name] > Subscriptions to manage your subscription.",
+  "cannotDeleteAccountWithActiveSubscription": "You cannot delete your account while you have an active subscription. Please cancel your subscription first.",
+  "visitOfficialWebsite": "Visit Official Website",
+  "noPlansAvailable": "No plans available",
+  "noPricingOptionsAvailable": "No pricing options available for this plan",
+  "priceIdNotAvailable": "Price ID not available for this plan",
+  "noAuthenticationTokenFound": "No authentication token found",
+  "couldNotOpenCheckoutUrl": "Could not open checkout URL",
+  "noCheckoutUrlReceived": "No checkout URL received",
+  "failedToCreateCheckoutSession": "Failed to create checkout session: {errorMessage}",
+  "@failedToCreateCheckoutSession": {
+    "placeholders": {
+      "errorMessage": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyTraffic": "Monthly Traffic",
+  "unlimitedData": "Unlimited Data",
+  "currentLocation": "Location",
+  "expired": "Expired",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "days": "{count} days",
+  "@days": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "areYouSureReactivate": "Are you sure you want to reactivate?",
+  "cancelled": "Cancelled",
+  "dataRefresh": "Data Refresh",
+  "renewalDate": "Renewal Date",
+  "endDate": "End Date",
+  "subscribe": "Subscribe",
+  "current": "Current",
+  "selectBillingPeriod": "Select Billing Period",
+  "activeSubscriptionFound": "Active Subscription Found",
+  "activeSubscriptionFoundMessage": "You already have an active subscription from other source. Please cancel that subscription before subscribing to this plan. If you cancel that subscription and subscribe to this plan, benefits of the old subscription will be lost.",
+  "warningExistingSubscription": "Warning: Existing Subscription",
+  "warningExistingSubscriptionMessage": "You currently have a canceled subscription that has not ended yet. Subscribing to a new plan now will cause you to lose the benefits of your existing subscription, even though it has not ended.",
+  "loginRequired": "Login Required",
+  "loginRequiredMessage": "Please log in before purchasing a subscription.",
+  "failedToLoadPlans": "Failed to load plans",
+  "failedToLoadPlansMessage": "Please visit our website to view available plans.",
+  "copyDatabase": "Copy Database",
+  "fromClipboard": "From Clipboard",
+  "selectQrCode": "Select QR Code",
+  "youtube": "Youtube",
+  "perMonth": "per month",
+  "perQuarter": "per quarter",
+  "perHalfYear": "per half year",
+  "perYear": "per year",
+  "willRenewTo": "When renew, plan will change to {plan} ({period})",
+  "@willRenewTo": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "securelyConnected": "SECURELY CONNECTED",
+  "versionTooOld": "Version Too Old",
+  "versionTooOldMessage": "Your app version is too old. Please upgrade to the latest version to continue.",
+  "noServers": "No Servers",
+  "noServersMessage": "Sorry, no server matching your choice is available now. Please try again later.",
+  "selectRouteMode": "Select Route Mode",
+  "welcomeToUmiVPN": "Welcome to UmiVPN!",
+  "umivpnIsFreeToUse": "UmiVPN is free to use",
+  "welcomeConnectionInfo": "Each connection lasts 30 minutes, after that, please come back and connect again.",
+  "gotIt": "Got It",
+  "enableAppOpenAds": "App Open Ads",
+  "enableAppOpenAdsDesc": "Once enabled, the connection duration will be 30 minutes instead of 15 minutes. An ad will appear when you open UmiVPN.",
+  "noTorrect": "No Torrenting",
+  "noTorrectDesc": "UmiVPN cannot be used for torrenting, torrenting traffic will not go through VPN tunnels. They will be go directly to the public Internet"
+}
