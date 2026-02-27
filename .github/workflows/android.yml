@@ -87,18 +87,18 @@ jobs:
           echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
           echo "Extracted build number: $BUILD_NUMBER"
 
-      - name: build bundle
-        env:
-          LOG_KEY: ${{ secrets.LOG_KEY }}
-        run: |
-          flutter build appbundle --dart-define=PLAY_STORE=true --dart-define=LOG_KEY=$LOG_KEY --flavor production --release \
-          --obfuscate --split-debug-info=symbols/android  --build-name ${{ steps.get_version.outputs.version }} \
-          --build-number ${{ steps.get_version.outputs.build_number }}
+      # - name: build bundle
+      #   env:
+      #     LOG_KEY: ${{ secrets.LOG_KEY }}
+      #   run: |
+      #     flutter build appbundle --dart-define=PLAY_STORE=true --dart-define=LOG_KEY=$LOG_KEY --flavor production --release \
+      #     --obfuscate --split-debug-info=symbols/android  --build-name ${{ steps.get_version.outputs.version }} \
+      #     --build-number ${{ steps.get_version.outputs.build_number }}
 
-      - name: upload to play store
-        env:
-          FASTLANE_PLAY_STORE: ${{ secrets.FASTLANE_PLAY_STORE }}
-        run: cd android && fastlane beta
+      # - name: upload to play store
+      #   env:
+      #     FASTLANE_PLAY_STORE: ${{ secrets.FASTLANE_PLAY_STORE }}
+      #   run: cd android && fastlane beta
 
       - name: make releases dir
         run: mkdir -p releases
@@ -106,11 +106,12 @@ jobs:
       - name: build apks
         env:
           LOG_KEY: ${{ secrets.LOG_KEY }}
+          URL: ${{ secrets.URL }}
         run: |
-          flutter build apk  --flavor apk --dart-define=LOG_KEY=$LOG_KEY --release --obfuscate --split-debug-info=symbols/android --split-per-abi
+          flutter build apk  --flavor apk --dart-define=LOG_KEY=$LOG_KEY --dart-define=URL=$URL --release --obfuscate --split-debug-info=symbols/android --split-per-abi
           mv build/app/outputs/flutter-apk/app-arm64-v8a-apk-release.apk releases/umivpn-arm64-v8a.apk
           zip -j releases/umivpn-arm64-v8a.apk.zip releases/umivpn-arm64-v8a.apk
-          flutter build apk  --flavor apk --dart-define=LOG_KEY=$LOG_KEY --release --obfuscate --split-debug-info=symbols/android --dart-define=LOG_KEY=$LOG_KEY
+          flutter build apk  --flavor apk --dart-define=LOG_KEY=$LOG_KEY --dart-define=URL=$URL --release --obfuscate --split-debug-info=symbols/android --dart-define=LOG_KEY=$LOG_KEY
           mv build/app/outputs/flutter-apk/app-apk-release.apk releases/umivpn-universal.apk
           zip -j releases/umivpn-universal.apk.zip releases/umivpn-universal.apk
           rm releases/umivpn-universal.apk
