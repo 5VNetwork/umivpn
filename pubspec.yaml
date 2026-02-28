@@ -15,7 +15,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archßive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.0.0+3
+version: 0.0.1+3
 
 environment:
   sdk: ">=3.3.4 <4.0.0"
@@ -94,12 +94,9 @@ dependencies:
   file_saver: ^0.3.1
   launch_at_startup: ^0.5.1
   flutter_common:
-    git:
-      url: https://github.com/5vnetwork/flutter_common.git
+    path: ../flutter_common
   country:
-    git:
-      url: https://github.com/5vnetwork/flutter_common.git
-      path: packages/country
+    path: ../flutter_common/packages/country
   in_app_purchase_android: ^0.4.0+8
   cryptography: ^2.9.0
   google_mobile_ads: ^7.0.0
