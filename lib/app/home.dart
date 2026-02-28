@@ -37,8 +37,64 @@ part 'home_mode_selector.dart';
 part 'home_traffic_card.dart';
 part 'home_button.dart';
 
-class VpnHomePage extends StatelessWidget {
+class VpnHomePage extends StatefulWidget {
   const VpnHomePage({super.key});
+
+  @override
+  State<VpnHomePage> createState() => _VpnHomePageState();
+}
+
+class _VpnHomePageState extends State<VpnHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    final pref = context.read<SharedPreferences>();
+    if (Platform.isAndroid && !pref.hasShownVpnServiceInfo || true) {
+      pref.setHasShownVpnServiceInfo(true);
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              final theme = Theme.of(context);
+              final l10n = AppLocalizations.of(context)!;
+              return AlertDialog(
+                contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                title: Row(
+                  children: [
+                    Icon(
+                      Icons.shield,
+                      color: theme.colorScheme.primary,
+                      size: 28,
+                    ),
+                    const SizedBox(width: 8),
+                    Text('VPN Service'),
+                  ],
+                ),
+                content: Text(
+                  l10n.vpnServiceDesc,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    height: 1.5,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                actions: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => context.pop(),
+                      child: Text(l10n.okay),
+                    ),
+                  ),
+                ],
+              );
+            });
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -19,6 +19,22 @@ extension PrefHelperExtension on SharedPreferences {
     setBool('initialLaunch', true);
   }
 
+  bool get hasShownVpnServiceInfo {
+    return getBool('hasShownVpnServiceInfo') ?? false;
+  }
+  
+  void setHasShownVpnServiceInfo(bool value) {
+    setBool('hasShownVpnServiceInfo', value);
+  }
+
+  bool get hasShownPrivacyInfo {
+    return getBool('hasShownPrivacyInfo') ?? false;
+  }
+
+  void setHasShownPrivacyInfo(bool value) {
+    setBool('hasShownPrivacyInfo', value);
+  }
+
   // return either a string or a RouteMode
   DefaultRouteMode get routingMode {
     final mode = getInt('routingMode');

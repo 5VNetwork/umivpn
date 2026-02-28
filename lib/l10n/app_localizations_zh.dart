@@ -2022,13 +2022,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get umivpnIsFreeToUse => 'UmiVPN 免费使用';
 
   @override
-  String get welcomeConnectionInfo => '每次连接最多持续 15 分钟，之后请返回并重新连接。';
+  String get welcomeConnectionInfo => '每次连接最多持续 30 分钟，之后请返回并重新连接。';
 
   @override
   String get gotIt => '知道了';
 
   @override
-  String get enableAppOpenAds => '启动广告';
+  String get enableAppOpenAds => '返回应用广告';
 
   @override
   String get enableAppOpenAdsDesc => '开启后连接最大时长为 30 分钟，（而非 15 分钟）。打开UmiVPN时会显示广告。';
@@ -2038,4 +2038,52 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get noTorrectDesc => 'UmiVPN无法用于下载种子，种子下载流量不会通过UmiVPN隧道传输。它们的流量会直接进入到公共互联网';
+
+  @override
+  String get privacy0 => '电子邮件地址';
+
+  @override
+  String get privacy0Desc => '用于账户创建和身份验证';
+
+  @override
+  String get privacy1 => 'Google 账户显示名称（如果使用 Google 登录';
+
+  @override
+  String get privacy1Desc => '用于提供谷歌登录服务';
+
+  @override
+  String get privacy2 => '城市和网络服务提供商';
+
+  @override
+  String get privacy2Desc => '用于防止账户共享，提供最优线路';
+
+  @override
+  String get privacy3 => '使用了多少流量';
+
+  @override
+  String get privacy3Desc => '用于提供流量统计, 衡量套餐定价, 防止滥用';
+
+  @override
+  String get privacy4 => '登录设备数量';
+
+  @override
+  String get privacy4Desc => '用于防止账户共享';
+
+  @override
+  String get privacy5 => '使用VPN的时长';
+
+  @override
+  String get privacy5Desc => '用于防止违反服务条款的滥用行为';
+
+  @override
+  String get privacyAssurance0 => '我们不收集其他个人信息，比如浏览历史、IP地址等。';
+
+  @override
+  String get privacyAssurance1 => '我们不会向第三方出售、交易或出租您的个人信息。';
+
+  @override
+  String get personalDataWeCollect => '我们收集的个人数据：';
+
+  @override
+  String get vpnServiceDesc => 'UmiVPN利用VPNService使您的上网体验更加安全，私密与稳定。在使用VPNService的过程中，我们会根据您的IP地址来为您提供最优服务器，我们不会分享或储存您的IP地址。';
 }

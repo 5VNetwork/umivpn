@@ -24,28 +24,24 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return MaterialApp.router(
-          scaffoldMessengerKey: rootScaffoldMessengerKey,
-          locale: _locale,
-          debugShowCheckedModeBanner: false,
-          themeMode: ThemeMode.dark,
-          theme: darkTheme(_locale),
-          darkTheme: darkTheme(_locale),
-          builder: desktopPlatforms
-              ? (context, child) => DesktopTray(
-                    child: child!,
-                  )
-              : null,
-          routerConfig: router,
-          localizationsDelegates: [
-            ...AppLocalizations.localizationsDelegates,
-            ...xv_app_localizations.AppLocalizations.localizationsDelegates,
-          ],
-          supportedLocales: AppLocalizations.supportedLocales,
-        );
-      },
+    return MaterialApp.router(
+      scaffoldMessengerKey: rootScaffoldMessengerKey,
+      locale: _locale,
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.dark,
+      theme: darkTheme(_locale),
+      darkTheme: darkTheme(_locale),
+      builder: desktopPlatforms
+          ? (context, child) => DesktopTray(
+                child: child!,
+              )
+          : null,
+      routerConfig: router,
+      localizationsDelegates: [
+        ...AppLocalizations.localizationsDelegates,
+        ...xv_app_localizations.AppLocalizations.localizationsDelegates,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 

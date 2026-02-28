@@ -880,5 +880,21 @@
   "enableAppOpenAds": "返回应用广告",
   "enableAppOpenAdsDesc": "开启后连接最大时长为 30 分钟，（而非 15 分钟）。打开UmiVPN时会显示广告。",
   "noTorrect": "无法种子下载",
-  "noTorrectDesc": "UmiVPN无法用于下载种子，种子下载流量不会通过UmiVPN隧道传输。它们的流量会直接进入到公共互联网"
+  "noTorrectDesc": "UmiVPN无法用于下载种子，种子下载流量不会通过UmiVPN隧道传输。它们的流量会直接进入到公共互联网",
+  "privacy0": "电子邮件地址",
+  "privacy0Desc": "用于账户创建和身份验证",
+  "privacy1": "Google 账户显示名称（如果使用 Google 登录",
+  "privacy1Desc": "用于提供谷歌登录服务",
+  "privacy2": "城市和网络服务提供商",
+  "privacy2Desc": "用于防止账户共享，提供最优线路",
+  "privacy3": "使用了多少流量",
+  "privacy3Desc": "用于提供流量统计, 衡量套餐定价, 防止滥用",
+  "privacy4": "登录设备数量",
+  "privacy4Desc": "用于防止账户共享",
+  "privacy5": "使用VPN的时长",
+  "privacy5Desc": "用于防止违反服务条款的滥用行为",
+  "privacyAssurance0": "我们不收集其他个人信息，比如浏览历史、IP地址等。",
+  "privacyAssurance1": "我们不会向第三方出售、交易或出租您的个人信息。",
+  "personalDataWeCollect": "我们收集的个人数据：",
+  "vpnServiceDesc": "UmiVPN利用VPNService使您的上网体验更加安全，私密与稳定。在使用VPNService的过程中，我们会根据您的IP地址来为您提供最优服务器，我们不会分享或储存您的IP地址。"
 }

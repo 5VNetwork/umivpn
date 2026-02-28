@@ -870,5 +870,21 @@
   "enableAppOpenAds": "App Open Ads",
   "enableAppOpenAdsDesc": "Once enabled, the connection duration will be 30 minutes instead of 15 minutes. An ad will appear when you open UmiVPN.",
   "noTorrect": "No Torrenting",
-  "noTorrectDesc": "UmiVPN cannot be used for torrenting, torrenting traffic will not go through VPN tunnels. They will be go directly to the public Internet"
+  "noTorrectDesc": "UmiVPN cannot be used for torrenting, torrenting traffic will not go through VPN tunnels. They will be go directly to the public Internet",
+  "privacy0": "Email Address",
+  "privacy0Desc": "For account creation and authentication",
+  "privacy1": "Google Account Display Name (if using Google login)",
+  "privacy1Desc": "For providing Google login service",
+  "privacy2": "City and Network Service Provider",
+  "privacy2Desc": "To prevent account sharing, provide the best route",
+  "privacy3": "Data Usage",
+  "privacy3Desc": "For providing traffic statistics, pricing, and preventing abuse",
+  "privacy4": "Logged-in Device Count",
+  "privacy4Desc": "To prevent account sharing and abuse",
+  "privacy5": "VPN Connection Duration",
+  "privacy5Desc": "To prevent abuse and violation of Terms of Service",
+  "privacyAssurance0": "We do not collect other personal data, such as browsing history, IP address.",
+  "privacyAssurance1": "We do not sell, trade, or rent your personal data to third parties.",
+  "personalDataWeCollect": "The personal data we collect:",
+  "vpnServiceDesc": "UmiVPN uses VPNService to make your internet experience more secure, private, and stable. During the use of VPNService, we will provide you with the best server based on your IP address, and we will not share or store your IP address."
 }

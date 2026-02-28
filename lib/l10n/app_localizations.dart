@@ -3930,6 +3930,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'UmiVPN cannot be used for torrenting, torrenting traffic will not go through VPN tunnels. They will be go directly to the public Internet'**
   String get noTorrectDesc;
+
+  /// No description provided for @privacy0.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Address'**
+  String get privacy0;
+
+  /// No description provided for @privacy0Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'For account creation and authentication'**
+  String get privacy0Desc;
+
+  /// No description provided for @privacy1.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Account Display Name (if using Google login)'**
+  String get privacy1;
+
+  /// No description provided for @privacy1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'For providing Google login service'**
+  String get privacy1Desc;
+
+  /// No description provided for @privacy2.
+  ///
+  /// In en, this message translates to:
+  /// **'City and Network Service Provider'**
+  String get privacy2;
+
+  /// No description provided for @privacy2Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'To prevent account sharing, provide the best route'**
+  String get privacy2Desc;
+
+  /// No description provided for @privacy3.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Usage'**
+  String get privacy3;
+
+  /// No description provided for @privacy3Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'For providing traffic statistics, pricing, and preventing abuse'**
+  String get privacy3Desc;
+
+  /// No description provided for @privacy4.
+  ///
+  /// In en, this message translates to:
+  /// **'Logged-in Device Count'**
+  String get privacy4;
+
+  /// No description provided for @privacy4Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'To prevent account sharing and abuse'**
+  String get privacy4Desc;
+
+  /// No description provided for @privacy5.
+  ///
+  /// In en, this message translates to:
+  /// **'VPN Connection Duration'**
+  String get privacy5;
+
+  /// No description provided for @privacy5Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'To prevent abuse and violation of Terms of Service'**
+  String get privacy5Desc;
+
+  /// No description provided for @privacyAssurance0.
+  ///
+  /// In en, this message translates to:
+  /// **'We do not collect other personal data, such as browsing history, IP address.'**
+  String get privacyAssurance0;
+
+  /// No description provided for @privacyAssurance1.
+  ///
+  /// In en, this message translates to:
+  /// **'We do not sell, trade, or rent your personal data to third parties.'**
+  String get privacyAssurance1;
+
+  /// No description provided for @personalDataWeCollect.
+  ///
+  /// In en, this message translates to:
+  /// **'The personal data we collect:'**
+  String get personalDataWeCollect;
+
+  /// No description provided for @vpnServiceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'UmiVPN uses VPNService to make your internet experience more secure, private, and stable. During the use of VPNService, we will provide you with the best server based on your IP address, and we will not share or store your IP address.'**
+  String get vpnServiceDesc;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

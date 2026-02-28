@@ -2088,4 +2088,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noTorrectDesc => 'UmiVPN cannot be used for torrenting, torrenting traffic will not go through VPN tunnels. They will be go directly to the public Internet';
+
+  @override
+  String get privacy0 => 'Email Address';
+
+  @override
+  String get privacy0Desc => 'For account creation and authentication';
+
+  @override
+  String get privacy1 => 'Google Account Display Name (if using Google login)';
+
+  @override
+  String get privacy1Desc => 'For providing Google login service';
+
+  @override
+  String get privacy2 => 'City and Network Service Provider';
+
+  @override
+  String get privacy2Desc => 'To prevent account sharing, provide the best route';
+
+  @override
+  String get privacy3 => 'Data Usage';
+
+  @override
+  String get privacy3Desc => 'For providing traffic statistics, pricing, and preventing abuse';
+
+  @override
+  String get privacy4 => 'Logged-in Device Count';
+
+  @override
+  String get privacy4Desc => 'To prevent account sharing and abuse';
+
+  @override
+  String get privacy5 => 'VPN Connection Duration';
+
+  @override
+  String get privacy5Desc => 'To prevent abuse and violation of Terms of Service';
+
+  @override
+  String get privacyAssurance0 => 'We do not collect other personal data, such as browsing history, IP address.';
+
+  @override
+  String get privacyAssurance1 => 'We do not sell, trade, or rent your personal data to third parties.';
+
+  @override
+  String get personalDataWeCollect => 'The personal data we collect:';
+
+  @override
+  String get vpnServiceDesc => 'UmiVPN uses VPNService to make your internet experience more secure, private, and stable. During the use of VPNService, we will provide you with the best server based on your IP address, and we will not share or store your IP address.';
 }

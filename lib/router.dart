@@ -4,25 +4,26 @@ late final GoRouter router;
 
 void initRouter(AuthProvider authProvider) {
   router = GoRouter(
-      debugLogDiagnostics: true,
+      debugLogDiagnostics: !isProduction(),
       initialLocation: '/',
       redirect: (context, state) {
-        final authProvider = context.read<AuthProvider>();
         final pref = context.read<SharedPreferences>();
-
-        // Check if welcome page should be shown
-        if (authProvider.currentSession != null &&
-            !pref.hasShownWelcome &&
-            state.matchedLocation != '/welcome') {
-          return '/welcome';
+        // Check if privacy page should be shown
+        if (Platform.isIOS &&
+            !pref.hasShownPrivacyInfo &&
+            state.matchedLocation != '/privacy') {
+          return '/privacy';
         }
 
+        final authProvider = context.read<AuthProvider>();
         if (authProvider.currentSession == null) {
           return '/sign-in';
         }
-        if (authProvider.currentSession != null &&
-            state.matchedLocation == '/sign-in') {
+        if (state.matchedLocation == '/sign-in') {
           return '/';
+        }
+        if (!pref.hasShownWelcome && state.matchedLocation != '/welcome') {
+          return '/welcome';
         }
         return null;
       },
@@ -98,6 +99,10 @@ void initRouter(AuthProvider authProvider) {
         GoRoute(
           path: '/welcome',
           builder: (context, state) => const WelcomePage(),
+        ),
+        GoRoute(
+          path: '/privacy',
+          builder: (context, state) => const InitialPage(),
         ),
         GoRoute(
           path: '/sign-in',

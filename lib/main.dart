@@ -26,6 +26,7 @@ import 'package:tm/xconfig_helper.dart';
 import 'package:tm/status_cubit.dart';
 import 'package:tm/ads/app_lifecycle.dart';
 import 'package:tm/ads/start_ad.dart';
+import 'package:umivpn/app/privacy.dart';
 import 'package:umivpn/utils/android_host_api.g.dart';
 import 'package:umivpn/app/choice_cubit.dart';
 import 'package:umivpn/utils/darwin_host_api.g.dart';
