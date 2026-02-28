@@ -1,0 +1,149 @@
+name: Build Android
+
+on:
+  # push:
+  #   tags:
+  #     - "v*"
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: macos-latest
+    environment: android
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Checkout dependencies
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          cd ..
+          git clone https://${GH_TOKEN}@github.com/5VNetwork/umivpn-plugin.git umivpn-plugin
+
+      - name: create files
+        run: |
+          touch ../umivpn-plugin/tm_windows/assets/x.dll
+          touch ../umivpn-plugin/tm_linux/assets/x.so
+          touch ../umivpn-plugin/tm_linux/assets/x
+          mkdir ../umivpn-plugin/tm_android/android/libs
+          mkdir -p assets/google_fonts
+
+      - name: Download geo
+        run: |
+          mkdir -p assets/geo
+          curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geoip.dat" 
+          mv simplified_geoip.dat assets/geo/simplified_geoip.dat
+          curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geosite.dat" 
+          mv simplified_geosite.dat assets/geo/simplified_geosite.dat
+
+      - name: Download library from release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        shell: bash
+        run: |
+          gh release download build \
+            -R 5VNetwork/umi-go \
+            -p "x.aar"
+          cp x.aar ../umivpn-plugin/tm_android/android/libs/x.aar
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ${{ github.workspace }}/.dart_tool
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: save keys
+        env:
+          UPLOAD_KEY: ${{ secrets.UPLOAD_KEY }}
+          KEY_PROPERTY: ${{ secrets.KEY_PROPERTY }}
+        run: |
+          echo "$UPLOAD_KEY" | base64 --decode > android/upload-keystore.jks
+          echo "$KEY_PROPERTY" | base64 --decode > android/key.properties
+
+      - name: Set version
+        id: get_version
+        run: |
+          BUILD_NUMBER=$(grep '^version:' pubspec.yaml | sed 's/version: .*+\(.*\)/\1/')
+          VERSION_NAME=$(grep '^version:' pubspec.yaml | sed 's/version: \(.*\)+.*/\1/')
+          echo "version=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION_NAME"
+          echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+          echo "Extracted build number: $BUILD_NUMBER"
+
+      # - name: build bundle
+      #   env:
+      #     LOG_KEY: ${{ secrets.LOG_KEY }}
+      #   run: |
+      #     flutter build appbundle --dart-define=PLAY_STORE=true --dart-define=LOG_KEY=$LOG_KEY --flavor production --release \
+      #     --obfuscate --split-debug-info=symbols/android  --build-name ${{ steps.get_version.outputs.version }} \
+      #     --build-number ${{ steps.get_version.outputs.build_number }}
+
+      # - name: upload to play store
+      #   env:
+      #     FASTLANE_PLAY_STORE: ${{ secrets.FASTLANE_PLAY_STORE }}
+      #   run: cd android && fastlane beta
+
+      - name: make releases dir
+        run: mkdir -p releases
+
+      - name: build apks
+        env:
+          LOG_KEY: ${{ secrets.LOG_KEY }}
+          URL: ${{ secrets.URL }}
+        run: |
+          flutter build apk  --flavor apk --dart-define=LOG_KEY=$LOG_KEY --dart-define=URL=$URL --release --obfuscate --split-debug-info=symbols/android --split-per-abi
+          mv build/app/outputs/flutter-apk/app-arm64-v8a-apk-release.apk releases/umivpn-arm64-v8a.apk
+          zip -j releases/umivpn-arm64-v8a.apk.zip releases/umivpn-arm64-v8a.apk
+          flutter build apk  --flavor apk --dart-define=LOG_KEY=$LOG_KEY --dart-define=URL=$URL --release --obfuscate --split-debug-info=symbols/android --dart-define=LOG_KEY=$LOG_KEY
+          mv build/app/outputs/flutter-apk/app-apk-release.apk releases/umivpn-universal.apk
+          zip -j releases/umivpn-universal.apk.zip releases/umivpn-universal.apk
+          rm releases/umivpn-universal.apk
+
+      - name: upload apks to github release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          gh release upload v${{ steps.get_version.outputs.version }} \
+            releases/umivpn-arm64-v8a.apk \
+            releases/umivpn-arm64-v8a.apk.zip \
+            releases/umivpn-universal.apk.zip \
+            --repo ${{ github.repository_owner }}/umivpn \
+            --clobber
+
+      - name: Configure AWS CLI for R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID" --profile r2
+          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile r2
+          aws configure set region auto --profile r2
+
+      - name: Upload DMG and appcast.xml to R2
+        run: |
+          aws s3 cp releases/umivpn-arm64-v8a.apk s3://umivpn/ \
+            --profile r2 \
+            --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
+          aws s3 cp releases/umivpn-arm64-v8a.apk.zip s3://umivpn/ \
+            --profile r2 \
+            --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
+          aws s3 cp releases/umivpn-universal.apk.zip s3://umivpn/ \
+            --profile r2 \
+            --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com

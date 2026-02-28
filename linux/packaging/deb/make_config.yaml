@@ -1,0 +1,47 @@
+display_name: UmiVPN
+package_name: com.5vnetwork.umivpn
+maintainer:
+  name: 5vnetworkllc
+  email: contactumivpn@proton.me
+priority: optional
+section: net
+
+installed_size: 6604
+essential: false
+icon: assets/dev/icon.png
+
+postinstall_scripts:
+  - echo "Installed UmiVPN"
+  #- echo "UmiVPN requires root privileges to function properly"
+  #- echo "Setting up network permissions..."
+  #- setcap cap_net_admin,cap_net_raw,cap_dac_override+ep /usr/bin/umivpn 
+  #- echo "Installing PolicyKit policy..."
+  #- cp /usr/share/polkit-1/actions/com.5vnetwork.umivpn.policy /usr/share/polkit-1/actions/ || echo "PolicyKit policy installation failed"
+postuninstall_scripts:
+  - echo "UmiVPN has been removed from your system"
+
+keywords:
+  - VPN
+  - Proxy
+  - Network
+  - Security
+  - Tunneling
+  - Privacy
+  - Internet
+  - Connection
+  - Firewall
+  - Bypass
+  - GFW
+
+categories:
+  - Network
+  - Proxy
+
+startup_notify: true
+
+supported_mime_type:
+  - x-scheme-handler/umivpn # my_custom_scheme:/...
+
+# You can also specify [metainfo](https://freedesktop.org/software/appstream/docs/chap-Quickstart.html) file
+# which contains metadata of the app.
+# metainfo: linux/packaging/myappid.appdata.xml

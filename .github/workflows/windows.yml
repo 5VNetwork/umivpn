@@ -1,0 +1,404 @@
+name: Build Windows
+
+on:
+  # push:
+  #   tags:
+  #     - "v*"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [trigger-vx-release]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    environment: win
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Cache dependencies repositories
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: |
+            ../tm-plugin
+          key: deps-repos-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            deps-repos-${{ runner.os }}-
+
+      - name: Checkout dependencies
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        shell: bash
+        run: |
+          cd ..
+          git clone https://x-access-token:${GH_TOKEN}@github.com/5VNetwork/tm-plugin.git tm-plugin
+
+      - name: create files in tm_plugin and folders
+        run: |
+          touch ../tm-plugin/tm_linux/assets/x.so
+          touch ../tm-plugin/tm_linux/assets/x
+          mkdir -p assets/google_fonts
+          mkdir -p assets/geo
+          mkdir -p assets/ads
+
+      - name: Cache fonts
+        id: cache-fonts
+        uses: actions/cache@v4
+        with:
+          path: assets/google_fonts
+          key: fonts-${{ runner.os }}
+          restore-keys: |
+            fonts-
+
+      - name: Download fonts from google
+        if: steps.cache-fonts.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p assets/google_fonts
+          curl -O "https://download.5vnetwork.com/Noto_Sans_SC.zip"
+          unzip -j Noto_Sans_SC.zip "*/NotoSansSC-Medium.ttf" "*/NotoSansSC-Regular.ttf" -d assets/google_fonts
+          rm Noto_Sans_SC.zip
+
+      - name: Download geo
+        shell: bash
+        run: |
+          curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geoip.dat"
+          mv simplified_geoip.dat assets/geo/simplified_geoip.dat
+          curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geosite.dat"
+          mv simplified_geosite.dat assets/geo/simplified_geosite.dat
+
+      - name: Download from release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        shell: bash
+        run: |
+          gh release download build \
+            -R 5VNetwork/vx-core \
+            -p "x_win_arm64.zip" \
+            -p "x_win_x86_64.zip"
+
+      - name: unzip files
+        shell: powershell
+        run: |
+          Expand-Archive -Path x_win_arm64.zip -DestinationPath ./x_win_arm64 -Force
+          Expand-Archive -Path x_win_x86_64.zip -DestinationPath ./x_win_x86_64 -Force
+
+      - name: copy files to tm_plugin
+        run: |
+          cp x_win_x86_64/x.dll ../tm-plugin/tm_windows/assets/x.dll
+          cp x_win_x86_64/vx_service.exe vx_service.exe
+          cp x_win_x86_64/service_install.exe service_install.exe
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Extract version from pubspec.yaml
+        id: get_version
+        shell: bash
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+          echo "version=v$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: v$VERSION"
+
+      - name: Set version in inno/install_github_action.iss
+        shell: pwsh
+        run: |
+          $version = "${{ steps.get_version.outputs.version }}" -replace '^v', ''
+          (Get-Content inno/install_github_action.iss -Raw) -replace '__REPLACE_WITH_NEW_VERSION__', $version | Set-Content inno/install_github_action.iss -NoNewline
+
+      - name: Set version in pubspec.yaml
+        shell: pwsh
+        run: |
+          $version = "${{ steps.get_version.outputs.version }}" -replace '^v', ''
+          $msixVersion = "$version.0"
+          (Get-Content pubspec.yaml -Raw) -replace 'msix_version: [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+', "msix_version: $msixVersion" | Set-Content pubspec.yaml -NoNewline
+
+      - name: Copy files to inno compiler
+        shell: pwsh
+        run: |
+          Copy-Item -Path "inno/Chinese.isl" -Destination "C:\Program Files (x86)\Inno Setup 6\Languages\Chinese.isl" -Force
+      # x64
+      - name: Build Windows
+        env:
+          LOG_KEY: ${{ secrets.LOG_KEY }}
+        run: flutter build windows --dart-define=LOG_KEY=$env:LOG_KEY --release --obfuscate --split-debug-info=symbols
+
+      - name: Compile .ISS to .EXE Installer
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+        with:
+          path: inno/install_github_action.iss
+          options: /O+
+      # - name: Rename Installer
+      #   shell: bash
+      #   run: |
+      #     mv inno/Output/VXInstaller.exe inno/Output/VXInstaller-x64.exe
+      - name: Upload Installer to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        shell: bash
+        run: |
+          gh release upload ${{ steps.get_version.outputs.version }} \
+            inno/Output/VXInstaller.exe \
+            --repo ${{ github.repository_owner }}/vx \
+            --clobber
+
+      - uses: microsoft/setup-msstore-cli@v1
+
+      - name: Configure the Microsoft Store CLI
+        env:
+          TENANT_ID: ${{ secrets.TENANT_ID }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          SELLER_ID: ${{ secrets.SELLER_ID }}
+        shell: pwsh
+        run: msstore reconfigure --tenantId $env:TENANT_ID --clientId $env:CLIENT_ID --clientSecret $env:CLIENT_SECRET --sellerId $env:SELLER_ID
+
+      - name: Create MSIX package
+        env:
+          LOG_KEY: ${{ secrets.LOG_KEY }}
+        run: |
+          dart run msix:create --store --windows-build-args "--obfuscate --split-debug-info=symbols --dart-define=STORE=true --dart-define=LOG_KEY=$env:LOG_KEY" -n store
+
+      - name: Publish MSIX to the Microsoft Store
+        run: msstore publish -v
+
+  # build-windows-arm64:
+  #   runs-on: windows-11-arm
+  #   environment: win
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v5
+
+  #     - name: Cache dependencies repositories
+  #       id: cache-deps
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: |
+  #           ../tm-plugin
+  #         key: deps-repos-${{ runner.os }}-${{ github.sha }}
+  #         restore-keys: |
+  #           deps-repos-${{ runner.os }}-
+
+  #     - name: Checkout dependencies
+  #       if: steps.cache-deps.outputs.cache-hit != 'true'
+  #       env:
+  #         GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+  #       shell: bash
+  #       run: |
+  #         cd ..
+  #         git clone https://x-access-token:${GH_TOKEN}@github.com/5VNetwork/tm-plugin.git tm-plugin
+
+  #     - name: create files in tm_plugin and folders
+  #       run: |
+  #         touch ../tm-plugin/tm_linux/assets/x.so
+  #         touch ../tm-plugin/tm_linux/assets/x
+  #         mkdir -p assets/google_fonts
+  #         mkdir -p assets/geo
+  #         mkdir -p assets/ads
+
+  #     - name: Cache fonts
+  #       id: cache-fonts
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: asset/google_fonts
+  #         key: fonts-${{ runner.os }}
+  #         restore-keys: |
+  #           fonts-
+
+  #     - name: Cache geo files
+  #       id: cache-geo
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: |
+  #           assets/geo/simplified_geoip.dat
+  #           assets/geo/simplified_geosite.dat
+  #         key: geo-files-${{ runner.os }}
+  #         restore-keys: |
+  #           geo-files-
+
+  #     - name: Download fonts from google
+  #       if: steps.cache-fonts.outputs.cache-hit != 'true'
+  #       shell: bash
+  #       run: |
+  #         mkdir -p asset/google_fonts
+  #         curl -O "https://download.5vnetwork.com/Noto_Sans_SC.zip"
+  #         unzip -j Noto_Sans_SC.zip "*/NotoSansSC-Medium.ttf" "*/NotoSansSC-Regular.ttf" -d asset/google_fonts
+  #         rm Noto_Sans_SC.zip
+
+  #     - name: Download geo
+  #       if: steps.cache-geo.outputs.cache-hit != 'true'
+  #       shell: bash
+  #       run: |
+  #         curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geoip.dat"
+  #         mv simplified_geoip.dat assets/geo/simplified_geoip.dat
+  #         curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geosite.dat"
+  #         mv simplified_geosite.dat assets/geo/simplified_geosite.dat
+
+  #     - name: Download from release
+  #       env:
+  #         GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+  #       shell: bash
+  #       run: |
+  #         gh release download build \
+  #           -R 5VNetwork/vx-core \
+  #           -p "x_win_arm64.zip"
+
+  #     - name: unzip files
+  #       if: steps.cache-x-releases.outputs.cache-hit != 'true'
+  #       shell: powershell
+  #       run: |
+  #         Expand-Archive -Path x_win_arm64.zip -DestinationPath ./x_win_arm64 -Force
+
+  #     - name: copy files to tm_plugin
+  #       run: |
+  #         cp x_win_arm64/x.dll ../tm-plugin/tm_windows/assets/x.dll
+  #         cp x_win_arm64/vx_service.exe vx_service.exe
+  #         cp x_win_arm64/service_install.exe service_install.exe
+
+  #     - name: Setup Flutter
+  #       uses: subosito/flutter-action@v2
+  #       with:
+  #         channel: master
+  #         flutter-version: 3.38.3
+  #         cache: true
+
+  #     - name: Flutter version
+  #       run: flutter --version
+
+  #     - name: Get dependencies
+  #       run: flutter pub get
+
+  #     - name: Extract version from pubspec.yaml
+  #       id: get_version
+  #       shell: bash
+  #       run: |
+  #         VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+  #         echo "version=v$VERSION" >> $GITHUB_OUTPUT
+  #         echo "Extracted version: v$VERSION"
+
+  #     - name: Set version in inno/install_github_action_arm.iss
+  #       shell: pwsh
+  #       run: |
+  #         $version = "${{ steps.get_version.outputs.version }}" -replace '^v', ''
+  #         (Get-Content inno/install_github_action_arm.iss -Raw) -replace '__REPLACE_WITH_NEW_VERSION__', $version | Set-Content inno/install_github_action_arm.iss -NoNewline
+
+  #     - name: Set version in pubspec.yaml
+  #       shell: pwsh
+  #       run: |
+  #         $version = "${{ steps.get_version.outputs.version }}" -replace '^v', ''
+  #         $msixVersion = "$version.0"
+  #         (Get-Content pubspec.yaml -Raw) -replace 'msix_version: [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+', "msix_version: $msixVersion" | Set-Content pubspec.yaml -NoNewline
+
+  #     - name: Copy files to inno compiler
+  #       shell: pwsh
+  #       run: |
+  #         Copy-Item -Path "inno/Chinese.isl" -Destination "C:\Program Files (x86)\Inno Setup 6\Languages\Chinese.isl" -Force
+  #     # arm64
+  #     - name: Build Windows
+  #       env:
+  #         LOG_KEY: ${{ secrets.LOG_KEY }}
+  #       run: flutter build windows --dart-define=LOG_KEY=$env:LOG_KEY --release --obfuscate --split-debug-info=symbols
+
+  #     - name: Compile .ISS to .EXE Installer
+  #       uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+  #       with:
+  #         path: inno/install_github_action_arm.iss
+  #         options: /O+
+  #     - name: Rename Installer
+  #       shell: bash
+  #       run: |
+  #         mv inno/Output/VXInstaller-arm64.exe inno/Output/VXInstaller-arm64.exe || mv inno/Output/VXInstaller.exe inno/Output/VXInstaller-arm64.exe
+  #     - name: Upload Installer to GitHub Release
+  #       env:
+  #         GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+  #       shell: bash
+  #       run: |
+  #         gh release upload ${{ steps.get_version.outputs.version }} \
+  #           inno/Output/VXInstaller-arm64.exe \
+  #           --repo ${{ github.repository_owner }}/vx \
+  #           --clobber
+
+  #     - uses: microsoft/setup-msstore-cli@v1
+
+  #     - name: Configure the Microsoft Store CLI
+  #       env:
+  #         TENANT_ID: ${{ secrets.TENANT_ID }}
+  #         CLIENT_ID: ${{ secrets.CLIENT_ID }}
+  #         CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+  #         SELLER_ID: ${{ secrets.SELLER_ID }}
+  #       shell: pwsh
+  #       run: msstore reconfigure --tenantId $env:TENANT_ID --clientId $env:CLIENT_ID --clientSecret $env:CLIENT_SECRET --sellerId $env:SELLER_ID
+
+  #     - name: Create MSIX package
+  #       env:
+  #         LOG_KEY: ${{ secrets.LOG_KEY }}
+  #       run: |
+  #         dart run msix:create --store --windows-build-args "--obfuscate --split-debug-info=symbols --dart-define=STORE=true --dart-define=LOG_KEY=$env:LOG_KEY" -n store
+
+  #     - name: Publish MSIX to the Microsoft Store
+  #       run: msstore publish -v
+
+  upload-windows-installer-to-r2:
+    needs: [build-windows]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Extract version
+        id: get_version
+        shell: bash
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            # If triggered by tag, use the tag name
+            VERSION="${{ github.ref_name }}"
+          else
+            # If triggered manually or by push, extract from pubspec.yaml
+            VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+            VERSION="v$VERSION"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Using version: $VERSION"
+
+      - name: Install AWS CLI
+        uses: unfor19/install-aws-cli-action@v1
+        with:
+          version: 2
+          verbose: false
+          arch: amd64
+
+      - name: Configure AWS CLI for R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID" --profile r2
+          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile r2
+          aws configure set region auto --profile r2
+
+      - name: Download Windows Installer from Release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          gh release download ${{ steps.get_version.outputs.version }} \
+            -R 5VNetwork/vx \
+            -p "VXInstaller.exe" 
+
+      - name: Upload Windows Installer to R2
+        run: |
+          aws s3 cp VXInstaller.exe s3://vproxy/ \
+            --profile r2 \
+            --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
+       

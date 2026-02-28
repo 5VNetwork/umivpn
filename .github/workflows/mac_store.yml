@@ -1,0 +1,175 @@
+name: Build Mac Store
+
+on:
+  # push:
+  #   tags:
+  #     - "v*"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [trigger-vx-release]
+
+jobs:
+  build-mac-store:
+    runs-on: macos-latest
+    environment: mac
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Codemagic
+        run: pip install codemagic-cli-tools
+
+      - name: Checkout dependencies
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          cd ..
+          git clone https://${GH_TOKEN}@github.com/5VNetwork/tm-plugin.git tm-plugin
+
+      - name: create files
+        run: |
+          touch ../tm-plugin/tm_windows/assets/x.dll
+          touch ../tm-plugin/tm_linux/assets/x.so
+          touch ../tm-plugin/tm_linux/assets/x
+          mkdir -p assets/google_fonts
+          mkdir -p assets/ads
+
+      - name: Download geo
+        run: |
+          mkdir -p assets/geo
+          curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geoip.dat" 
+          mv simplified_geoip.dat assets/geo/simplified_geoip.dat
+          curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geosite.dat" 
+          mv simplified_geosite.dat assets/geo/simplified_geosite.dat
+
+      - name: Download library from release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          gh release download build \
+            -R 5VNetwork/vx-core \
+            -p "tm-macos.xcframework.zip"
+          unzip tm-macos.xcframework.zip 
+          mv tm.xcframework macos/tm.xcframework
+          ls -la macos/tm.xcframework
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ${{ github.workspace }}/.dart_tool
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
+        with:
+          path: macos/Pods
+          key: pods-${{ runner.os }}-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            pods-${{ runner.os }}-
+
+      - name: Fetch signing files
+        env:
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+          CERTIFICATE_PRIVATE_KEY: ${{ secrets.CERTIFICATE_PRIVATE_KEY }}
+        run: |
+          app-store-connect fetch-signing-files com.5vnetwork.x --platform MAC_OS --type MAC_APP_STORE --create
+          app-store-connect certificates list --type MAC_INSTALLER_DISTRIBUTION --save
+
+      - name: Init Keychain
+        run: |
+          keychain initialize
+          keychain add-certificates
+          xcode-project use-profiles
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Pod
+        run: |
+          cd macos && pod install
+
+      - name: Set version
+        id: get_version
+        run: |
+          BUILD_NUMBER=$(grep '^version:' pubspec.yaml | sed 's/version: .*+\(.*\)/\1/')
+          VERSION_NAME=$(grep '^version:' pubspec.yaml | sed 's/version: \(.*\)+.*/\1/')
+          echo "version=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION_NAME"
+          echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+          echo "Extracted build number: $BUILD_NUMBER"
+
+      - name: Update Xcode project versions
+        run: |
+          cd macos
+          VERSION="${{ steps.get_version.outputs.version }}"
+          BUILD_NUMBER="${{ steps.get_version.outputs.build_number }}"
+          
+          # Update all CURRENT_PROJECT_VERSION entries (format: CURRENT_PROJECT_VERSION = value;)
+          sed -i '' "s/\(CURRENT_PROJECT_VERSION = \)[^;]*/\1$BUILD_NUMBER/g" \
+            Runner.xcodeproj/project.pbxproj
+          
+          # Update all MARKETING_VERSION entries (format: MARKETING_VERSION = value;)
+          sed -i '' "s/\(MARKETING_VERSION = \)[^;]*/\1$VERSION/g" \
+            Runner.xcodeproj/project.pbxproj
+          
+          echo "Updated all CURRENT_PROJECT_VERSION to $BUILD_NUMBER"
+          echo "Updated all MARKETING_VERSION to $VERSION"
+
+      - name: Build
+        env:
+          LOG_KEY: ${{ secrets.LOG_KEY }}
+        run: |
+          flutter build macos --dart-define=LOG_KEY=$LOG_KEY --flavor production --release --obfuscate \
+          --split-debug-info=symbols/darwin --build-name ${{ steps.get_version.outputs.version }} \
+          --build-number ${{ steps.get_version.outputs.build_number }}
+
+      # - name: Set version
+      #   run: |
+      #     BUILD_NUMBER=$(grep '^version:' pubspec.yaml | sed 's/version: .*+\(.*\)/\1/')
+      #     VERSION_NAME=$(grep '^version:' pubspec.yaml | sed 's/version: \(.*\)+.*/\1/')
+      #     /usr/libexec/PlistBuddy -c  "Set :CFBundleShortVersionString $VERSION_NAME" \
+      #     "build/macos/Build/Products/Release-production/VX.app/Contents/PlugIns/PacketTunnel.appex/Contents/Info.plist"
+      #     /usr/libexec/PlistBuddy -c  "Set :CFBundleVersion $BUILD_NUMBER" \
+      #     "build/macos/Build/Products/Release-production/VX.app/Contents/PlugIns/PacketTunnel.appex/Contents/Info.plist"
+
+      - name: Package
+        run: |
+          APP_NAME=build/macos/Build/Products/Release-production/VX.app
+          PACKAGE_NAME=VX.pkg
+          xcrun productbuild --component "$APP_NAME" /Applications/ unsigned.pkg
+          INSTALLER_CERT_NAME=$(keychain list-certificates \
+            | jq '[.[]
+              | select(.common_name
+              | contains("Mac Developer Installer"))
+              | .common_name][0]' \
+            | xargs)
+          xcrun productsign --sign "$INSTALLER_CERT_NAME" unsigned.pkg "$PACKAGE_NAME"
+          rm -f unsigned.pkg
+
+      - name: Upload to App Store
+        env:
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+        run: |
+          app-store-connect publish --path VX.pkg
+
+      - name: Reset keychain
+        if: always()
+        run: |
+          keychain use-login

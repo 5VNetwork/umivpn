@@ -1,0 +1,684 @@
+name: Build Linux
+
+on:
+  # push:
+  # tags:
+  #   - "v*"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [trigger-vx-release]
+
+jobs:
+  build-linux-x64:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Checkout dependencies
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          cd ..
+          git clone https://${GH_TOKEN}@github.com/5VNetwork/tm-plugin.git tm-plugin
+
+      - name: Download library from release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          gh release download build \
+            -R 5VNetwork/vx-core \
+            -p "x-linux-amd64" \
+            -p "x-linux-amd64.so"
+
+        # uses: dawidd6/action-download-artifact@v6
+        # with:
+        #   repo: 5VNetwork/x
+        #   workflow: build.yml # Just specify the workflow file
+        #   name: linux-builds # Artifact name
+        #   path: ./downloads
+        #   github_token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Cache fonts
+        id: cache-fonts
+        uses: actions/cache@v4
+        with:
+          path: assets/google_fonts
+          key: fonts-${{ runner.os }}
+          restore-keys: |
+            fonts-
+
+      - name: Download fonts from google
+        if: steps.cache-fonts.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p assets/google_fonts
+          wget "https://download.5vnetwork.com/Noto_Sans_SC.zip" -O NotoSansSC.zip
+          unzip -j NotoSansSC.zip "*/NotoSansSC-Medium.ttf" "*/NotoSansSC-Regular.ttf" -d assets/google_fonts
+          rm NotoSansSC.zip
+
+      - name: Download geo
+        run: |
+          mkdir -p assets/geo
+          curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geoip.dat" 
+          mv simplified_geoip.dat assets/geo/simplified_geoip.dat
+          curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geosite.dat" 
+          mv simplified_geosite.dat assets/geo/simplified_geosite.dat
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev \
+            libglib2.0-dev libcairo2-dev libpango1.0-dev libgdk-pixbuf2.0-dev \
+            libatk1.0-dev libx11-dev libsecret-1-dev libjsoncpp-dev \
+            libayatana-appindicator3-dev rpm patchelf
+
+      - name: Install AWS CLI
+        uses: unfor19/install-aws-cli-action@v1
+        with:
+          version: 2
+          verbose: false
+          arch: amd64
+
+      - name: Configure AWS CLI for R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID" --profile r2
+          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile r2
+          aws configure set region auto --profile r2
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ${{ github.workspace }}/.dart_tool
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Install fastforge
+        run: dart pub global activate fastforge
+
+      - name: Copy .so and executable from artifact to tm-plugin/tm_linux/assets
+        run: |
+          cp ./x-linux-amd64.so ../tm-plugin/tm_linux/assets/x.so
+          cp ./x-linux-amd64 ../tm-plugin/tm_linux/assets/x
+
+      - name: create x.dll in tm_windows
+        run: |
+          touch ../tm-plugin/tm_windows/assets/x.dll
+          mkdir -p assets/ads
+
+      - name: Package DEB
+        env:
+          LOG_KEY: ${{ secrets.LOG_KEY }}
+        run: |
+          fastforge package --platform linux --build-dart-define=LOG_KEY=$LOG_KEY \
+          --targets deb
+
+      - name: Rename DEB file
+        run: |
+          DEB_FILE=$(find dist -name "*.deb" -type f | head -n 1)
+          mv "$DEB_FILE" dist/vx-x64.deb
+
+      - name: Upload DEB to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          VERSION_NAME=$(grep '^version:' pubspec.yaml | sed 's/version: \(.*\)+.*/\1/')
+          gh release upload v$VERSION_NAME \
+            dist/vx-x64.deb \
+            --repo ${{ github.repository_owner }}/vx \
+            --clobber
+
+      - name: Upload deb to R2
+        run: |
+          aws s3 cp dist/vx-x64.deb s3://vproxy/ \
+            --profile r2 \
+            --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
+
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          ref: rpm
+
+      - name: Cache fonts (RPM)
+        id: cache-fonts-rpm
+        uses: actions/cache@v4
+        with:
+          path: assets/google_fonts
+          key: fonts-${{ runner.os }}
+          restore-keys: |
+            fonts-
+
+      - name: Download fonts from google
+        if: steps.cache-fonts-rpm.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p assets/google_fonts
+          wget "https://download.5vnetwork.com/Noto_Sans_SC.zip" -O NotoSansSC.zip
+          unzip -j NotoSansSC.zip "*/NotoSansSC-Medium.ttf" "*/NotoSansSC-Regular.ttf" -d assets/google_fonts
+          rm NotoSansSC.zip
+
+      - name: Cache pub dependencies (RPM)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ${{ github.workspace }}/.dart_tool
+          key: pub-rpm-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            pub-rpm-${{ runner.os }}-
+            pub-${{ runner.os }}-
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Package RPM
+        env:
+          LOG_KEY: ${{ secrets.LOG_KEY }}
+        run: |
+          fastforge package --platform linux --build-dart-define=LOG_KEY=$LOG_KEY \
+          --build-dart-define=RPM=true --targets rpm
+
+      - name: Rename RPM file
+        run: |
+          RPM_FILE=$(find dist -name "*.rpm" -type f | head -n 1)
+          mv "$RPM_FILE" dist/vx-x64.rpm
+
+      - name: Upload RPM to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          VERSION_NAME=$(grep '^version:' pubspec.yaml | sed 's/version: \(.*\)+.*/\1/')
+          gh release upload v$VERSION_NAME \
+            dist/vx-x64.rpm \
+            --repo ${{ github.repository_owner }}/vx \
+            --clobber
+
+      - name: Upload rpm to R2
+        run: |
+          aws s3 cp dist/vx-x64.rpm s3://vproxy/ \
+            --profile r2 \
+            --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
+
+  build-linux-arm64:
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Checkout dependencies
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          cd ..
+          git clone https://${GH_TOKEN}@github.com/5VNetwork/tm-plugin.git tm-plugin
+
+      - name: Download library from release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          gh release download build \
+            -R 5VNetwork/vx-core \
+            -p "x-linux-arm64" \
+            -p "x-linux-arm64.so"
+
+      - name: Cache fonts
+        id: cache-fonts
+        uses: actions/cache@v4
+        with:
+          path: assets/google_fonts
+          key: fonts-${{ runner.os }}
+          restore-keys: |
+            fonts-
+
+      - name: Download fonts from google
+        if: steps.cache-fonts.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p assets/google_fonts
+          wget "https://download.5vnetwork.com/Noto_Sans_SC.zip" -O NotoSansSC.zip
+          unzip -j NotoSansSC.zip "*/NotoSansSC-Medium.ttf" "*/NotoSansSC-Regular.ttf" -d assets/google_fonts
+          rm NotoSansSC.zip
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+          build-essential \
+          clang \
+          cmake \
+          ninja-build \
+          pkg-config \
+          curl \
+          git \
+          unzip \
+          xz-utils \
+          zip \
+          libgtk-3-dev \
+          libglib2.0-dev \
+          libcairo2-dev \
+          libpango1.0-dev \
+          libgdk-pixbuf2.0-dev \
+          libatk1.0-dev \
+          libx11-dev \
+          libxcomposite-dev \
+          libxcursor-dev \
+          libxdamage-dev \
+          libxext-dev \
+          libxfixes-dev \
+          libxi-dev \
+          libxrandr-dev \
+          libxrender-dev \
+          libxss-dev \
+          libxtst-dev \
+          libasound2-dev \
+          libatspi2.0-dev \
+          libdrm-dev \
+          libxkbcommon-dev \
+          libxkbcommon-x11-dev \
+          libsecret-1-dev \
+          libjsoncpp-dev \
+          libayatana-appindicator3-dev \
+          rpm \
+          patchelf 
+
+      - name: Install AWS CLI
+        uses: unfor19/install-aws-cli-action@v1
+        with:
+          version: 2
+          verbose: false
+          arch: arm64
+
+      - name: Configure AWS CLI for R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID" --profile r2
+          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile r2
+          aws configure set region auto --profile r2
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: master
+          flutter-version: 3.38.3
+          cache: true
+          
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ${{ github.workspace }}/.dart_tool
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Install fastforge
+        run: dart pub global activate fastforge
+
+      - name: Copy .so and executable from artifact to tm-plugin/tm_linux/assets
+        run: |
+          cp ./x-linux-arm64.so ../tm-plugin/tm_linux/assets/x.so
+          cp ./x-linux-arm64 ../tm-plugin/tm_linux/assets/x
+
+      - name: create x.dll in tm_windows
+        run: |
+          touch ../tm-plugin/tm_windows/assets/x.dll
+          mkdir -p assets/ads
+
+      - name: Package DEB
+        env:
+          LOG_KEY: ${{ secrets.LOG_KEY }}
+        run: |
+          fastforge package --platform linux --build-dart-define=LOG_KEY=$LOG_KEY \
+          --targets deb
+
+      - name: Rename DEB file
+        run: |
+          DEB_FILE=$(find dist -name "*.deb" -type f | head -n 1)
+          mv "$DEB_FILE" dist/vx-arm64.deb
+
+      - name: Upload DEB to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          VERSION_NAME=$(grep '^version:' pubspec.yaml | sed 's/version: \(.*\)+.*/\1/')
+          gh release upload v$VERSION_NAME \
+            dist/vx-arm64.deb \
+            --repo ${{ github.repository_owner }}/vx \
+            --clobber
+
+      - name: Upload deb to R2
+        run: |
+          aws s3 cp dist/vx-arm64.deb s3://vproxy/ \
+            --profile r2 \
+            --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
+
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          ref: rpm
+
+      - name: Cache fonts (RPM)
+        id: cache-fonts-rpm
+        uses: actions/cache@v4
+        with:
+          path: assets/google_fonts
+          key: fonts-${{ runner.os }}
+          restore-keys: |
+            fonts-
+
+      - name: Download fonts from google
+        if: steps.cache-fonts-rpm.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p assets/google_fonts
+          wget "https://download.5vnetwork.com/Noto_Sans_SC.zip" -O NotoSansSC.zip
+          unzip -j NotoSansSC.zip "*/NotoSansSC-Medium.ttf" "*/NotoSansSC-Regular.ttf" -d assets/google_fonts
+          rm NotoSansSC.zip
+
+      - name: Cache pub dependencies (RPM)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ${{ github.workspace }}/.dart_tool
+          key: pub-rpm-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            pub-rpm-${{ runner.os }}-
+            pub-${{ runner.os }}-
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Package RPM
+        env:
+          LOG_KEY: ${{ secrets.LOG_KEY }}
+        run: |
+          fastforge package --platform linux --build-dart-define=LOG_KEY=$LOG_KEY \
+          --build-dart-define=RPM=true --targets rpm
+
+      - name: Rename RPM file
+        run: |
+          RPM_FILE=$(find dist -name "*.rpm" -type f | head -n 1)
+          mv "$RPM_FILE" dist/vx-arm64.rpm
+
+      - name: Upload RPM to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          VERSION_NAME=$(grep '^version:' pubspec.yaml | sed 's/version: \(.*\)+.*/\1/')
+          gh release upload v$VERSION_NAME \
+            dist/vx-arm64.rpm \
+            --repo ${{ github.repository_owner }}/vx \
+            --clobber
+
+      - name: Upload rpm to R2
+        run: |
+          aws s3 cp dist/vx-arm64.rpm s3://vproxy/ \
+            --profile r2 \
+            --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
+
+    # steps:
+    #   - name: Checkout code
+    #     uses: actions/checkout@v4
+
+    #   - name: Checkout dependencies
+    #     env:
+    #       GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+    #     run: |
+    #       cd ..
+    #       git clone https://${GH_TOKEN}@github.com/5VNetwork/tm-plugin.git tm-plugin
+
+    #   - name: Free up disk space
+    #     run: |
+    #       echo "Disk space before cleanup:"
+    #       df -h
+    #       sudo rm -rf /usr/share/dotnet
+    #       sudo rm -rf /opt/ghc
+    #       sudo rm -rf /usr/local/share/boost
+    #       sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+    #       sudo docker system prune -af --volumes
+    #       echo "Disk space after cleanup:"
+    #       df -h
+
+    #   - name: Set up QEMU
+    #     uses: docker/setup-qemu-action@v3
+    #     with:
+    #       platforms: arm64
+
+    #   - name: Install AWS CLI
+    #     uses: unfor19/install-aws-cli-action@v1
+    #     with:
+    #       version: 2
+    #       verbose: false
+    #       arch: amd64
+
+    #   - name: Configure AWS CLI for R2
+    #     env:
+    #       AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+    #       AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+    #     run: |
+    #       aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID" --profile r2
+    #       aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile r2
+    #       aws configure set region auto --profile r2
+
+    #   - name: Set up Docker Buildx
+    #     uses: docker/setup-buildx-action@v3
+
+    #   - name: Cache Docker layers
+    #     uses: actions/cache@v4
+    #     with:
+    #       path: /tmp/.buildx-cache
+    #       key: ${{ runner.os }}-buildx-arm64-${{ hashFiles('Dockerfile.arm64.simple') }}-${{ hashFiles('**/pubspec.lock') }}-${{ github.run_id }}
+    #       restore-keys: |
+    #         ${{ runner.os }}-buildx-arm64-${{ hashFiles('Dockerfile.arm64.simple') }}-${{ hashFiles('**/pubspec.lock') }}-
+    #         ${{ runner.os }}-buildx-arm64-${{ hashFiles('Dockerfile.arm64.simple') }}-
+    #         ${{ runner.os }}-buildx-arm64-
+
+    #   - name: Download library from release
+    #     env:
+    #       GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+    #     run: |
+    #       gh release download latest \
+    #         -R 5VNetwork/x \
+    #         -p "x-linux-arm64" \
+    #         -p "x-linux-arm64.so"
+
+    #   # - name: Download artifact from workflow
+    #   #   uses: dawidd6/action-download-artifact@v6
+    #   #   with:
+    #   #     repo: 5VNetwork/x
+    #   #     workflow: build.yml # Just specify the workflow file
+    #   #     name: linux-builds # Artifact name
+    #   #     path: ./downloads
+    #   #     github_token: ${{ secrets.PAT_TOKEN }}
+
+    #   - name: create x.dll in tm_windows
+    #     run: |
+    #       touch ../tm-plugin/tm_windows/assets/x.dll
+
+    #   - name: copy artifacts
+    #     run: |
+    #       cp ./x-linux-arm64.so ../tm-plugin/tm_linux/assets/x.so
+    #       cp ./x-linux-arm64 ../tm-plugin/tm_linux/assets/x
+
+    #   - name: Checkout code
+    #     uses: actions/checkout@v5
+    #     with:
+    #       ref: rpm
+
+    #   - name: Prepare packages
+    #     run: |
+    #       mkdir -p packages
+    #       cp -r ../tm-plugin packages/tm-plugin
+    #       cp -r ../system-proxy packages/system-proxy
+    #       cp -r ../installed_apps packages/installed_apps
+    #       cp -r ../google-sign-in packages/google-sign-in
+
+    #   - name: Download fonts from google
+    #     run: |
+    #       mkdir -p asset/google_fonts
+    #       wget "https://download.5vnetwork.com/Noto_Sans_SC.zip" -O NotoSansSC.zip
+    #       unzip -j NotoSansSC.zip "*/NotoSansSC-Medium.ttf" "*/NotoSansSC-Regular.ttf" -d asset/google_fonts
+    #       rm NotoSansSC.zip
+
+    #   - name: Build ARM64 RPM with Docker
+    #     run: |
+    #       docker buildx build \
+    #         --platform linux/arm64 \
+    #         --build-arg DART_DEFINE="--build-dart-define=RPM=true" \
+    #         --build-arg PACKAGE_TARGETS=rpm \
+    #         --cache-from type=local,src=/tmp/.buildx-cache \
+    #         --cache-to type=local,dest=/tmp/.buildx-cache-new,mode=max \
+    #         -f Dockerfile.arm64.simple \
+    #         -t vx-arm64-simple \
+    #         --load \
+    #         .
+    #       docker create --platform linux/arm64 --name vx-arm64-container vx-arm64-simple
+    #       docker cp vx-arm64-container:/app/dist ./dist-arm64
+    #       docker rm vx-arm64-container
+
+    #   - name: Move cache
+    #     run: |
+    #       rm -rf /tmp/.buildx-cache
+    #       mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+    #   - name: Clean up Docker resources
+    #     run: |
+    #       docker rm vx-arm64-container 2>/dev/null || true
+    #       docker image prune -af
+    #       docker buildx prune -af
+    #       echo "Disk space after build:"
+    #       df -h
+
+    #   - name: Rename ARM64 RPM file
+    #     run: |
+    #       RPM_FILE=$(find dist-arm64 -name "*.rpm" -type f | head -n 1)
+    #       mv "$RPM_FILE" dist-arm64/vx-arm64.rpm
+
+    #   - name: Upload ARM64 RPM to GitHub Release
+    #     env:
+    #       GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+    #     run: |
+    #       VERSION_NAME=$(grep '^version:' pubspec.yaml | sed 's/version: \(.*\)+.*/\1/')
+    #       gh release upload v$VERSION_NAME \
+    #         dist-arm64/vx-arm64.rpm \
+    #         --repo ${{ github.repository_owner }}/vx \
+    #         --clobber
+
+    #   - name: Upload rp, to R2
+    #     run: |
+    #       aws s3 cp dist-arm64/vx-arm64.rpm s3://vproxy/ \
+    #         --profile r2 \
+    #         --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
+
+    #   - name: Checkout code
+    #     uses: actions/checkout@v5
+    #     with:
+    #       ref: main
+
+    #   - name: Prepare packages
+    #     run: |
+    #       mkdir -p packages
+    #       cp -r ../tm-plugin packages/tm-plugin
+    #       cp -r ../system-proxy packages/system-proxy
+    #       cp -r ../installed_apps packages/installed_apps
+    #       cp -r ../google-sign-in packages/google-sign-in
+
+    #   - name: Download fonts from google
+    #     run: |
+    #       mkdir -p asset/google_fonts
+    #       wget "https://download.5vnetwork.com/Noto_Sans_SC.zip" -O NotoSansSC.zip
+    #       unzip -j NotoSansSC.zip "*/NotoSansSC-Medium.ttf" "*/NotoSansSC-Regular.ttf" -d asset/google_fonts
+    #       rm NotoSansSC.zip
+
+    #   - name: Build ARM64 DEB with Docker
+    #     run: |
+    #       docker buildx build \
+    #         --platform linux/arm64 \
+    #         --build-arg PACKAGE_TARGETS=deb \
+    #         --cache-from type=local,src=/tmp/.buildx-cache \
+    #         --cache-to type=local,dest=/tmp/.buildx-cache-new,mode=max \
+    #         -f Dockerfile.arm64.simple \
+    #         -t vx-arm64-simple \
+    #         --load \
+    #         .
+    #       docker create --platform linux/arm64 --name vx-arm64-container vx-arm64-simple
+    #       docker cp vx-arm64-container:/app/dist ./dist-arm64
+    #       docker rm vx-arm64-container
+
+    #   - name: Move cache
+    #     run: |
+    #       rm -rf /tmp/.buildx-cache
+    #       mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+    #   - name: Clean up Docker resources
+    #     run: |
+    #       docker rm vx-arm64-container 2>/dev/null || true
+    #       docker image prune -af
+    #       docker buildx prune -af
+    #       echo "Disk space after build:"
+    #       df -h
+
+    #   - name: Rename ARM64 DEB file
+    #     run: |
+    #       DEB_FILE=$(find dist-arm64 -name "*.deb" -type f | head -n 1)
+    #       mv "$DEB_FILE" dist-arm64/vx-arm64.deb
+
+    #   - name: Upload ARM64 DEB to GitHub Release
+    #     env:
+    #       GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+    #     run: |
+    #       VERSION_NAME=$(grep '^version:' pubspec.yaml | sed 's/version: \(.*\)+.*/\1/')
+    #       gh release upload v$VERSION_NAME \
+    #         dist-arm64/vx-arm64.deb \
+    #         --repo ${{ github.repository_owner }}/vx \
+    #         --clobber
+
+    #   - name: Upload deb to R2
+    #     run: |
+    #       aws s3 cp dist-arm64/vx-arm64.deb s3://vproxy/ \
+    #         --profile r2 \
+    #         --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
+    #   # - name: Upload ARM64 DEB
+    #   #   uses: actions/upload-artifact@v4
+    #   #   with:
+    #   #     name: linux-arm64-deb
+    #   #     path: dist-arm64/**/*.deb
+    #   #     retention-days: 30
+
+    #   # - name: Create Release
+    #   #   if: startsWith(github.ref, 'refs/tags/v')
+    #   #   uses: softprops/action-gh-release@v1
+    #   #   with:
+    #   #     files: |
+    #   #       dist-arm64/**/*.deb
+    #   #       dist-arm64/**/*.rpm
+    #   #     draft: false
+    #   #     prerelease: false
+    #   #   env:
+    #   #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
