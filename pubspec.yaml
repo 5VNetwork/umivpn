@@ -34,7 +34,7 @@ dependencies:
   protobuf: ^6.0.0
   tm:
     path: ../umivpn-plugin/tm
-  google_fonts: ^6.2.1
+  google_fonts: ^8.0.2
   provider: ^6.1.2
   equatable: ^2.0.5
   flutter_localizations:
