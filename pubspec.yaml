@@ -94,9 +94,12 @@ dependencies:
   file_saver: ^0.3.1
   launch_at_startup: ^0.5.1
   flutter_common:
-    path: ../flutter_common
+    git:
+      url: https://github.com/5vnetwork/flutter_common.git
   country:
-    path: ../flutter_common/packages/country
+    git:
+      url: https://github.com/5vnetwork/flutter_common.git
+      path: packages/country
   in_app_purchase_android: ^0.4.0+8
   cryptography: ^2.9.0
   google_mobile_ads: ^7.0.0
