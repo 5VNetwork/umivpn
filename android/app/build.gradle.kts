@@ -63,8 +63,8 @@ android {
             resValue(
                 type = "string",
                 name = "app_name",
-                value = "Example")
-            applicationIdSuffix = ""
+                value = "VX")
+            applicationIdSuffix = ".staging"
         }
         create("production") {
             dimension = "default"

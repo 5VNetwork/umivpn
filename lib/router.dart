@@ -107,7 +107,7 @@ void initRouter(AuthProvider authProvider) {
         GoRoute(
           path: '/sign-in',
           builder: (context, state) => Scaffold(
-            floatingActionButton: !isProduction()
+            floatingActionButton: dev
                 ? FloatingActionButton(
                     onPressed: () async {
                       await supabase.auth.signInWithPassword(

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
+import 'package:umivpn/common/common.dart';
 import 'package:umivpn/main.dart';
 import 'package:umivpn/utils/path.dart';
 
@@ -49,32 +50,12 @@ class MultiOutput extends LogOutput {
   }
 }
 
-bool isProduction() {
-  if (Platform.isWindows || Platform.isLinux) {
-    return kReleaseMode;
-  }
-  return (appFlavor == "production" ||
-          appFlavor == "pkg" ||
-          appFlavor == "apk") &&
-      kReleaseMode;
-}
-
 Future<void> startShareLog() async {
   // if (Platform.isWindows) {
   await setReportLogger();
   // } else {
   //   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   //   // Pass all uncaught "fatal" errors from the framework to Crashlytics
-  FlutterError.onError = (FlutterErrorDetails e) {
-    logger.e(
-        "FlutterError: ${e.exception}. line: ${e.library}. summary: ${e.summary}.",
-        error: e,
-        stackTrace: e.stack);
-    reportLogger.e(
-        "FlutterError: ${e.exception}. line: ${e.library}. summary: ${e.summary}.",
-        error: e,
-        stackTrace: e.stack);
-  };
   // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
   // PlatformDispatcher.instance.onError = (error, stack) {
   //   if (error is SqliteException) {
@@ -124,20 +105,25 @@ Future<void> stopShareLog() async {
 
 Future<void> initLogger() async {
   if (isProduction()) {
+    await setDebugLoggerInDevlopmentEnv();
   } else {
     final redirectStdErr = !kDebugMode && (Platform.isIOS || Platform.isMacOS);
-
     if (redirectStdErr) {
       final logDirPath = getFlutterLogDir().path;
       logger.d("redirectStdErr: $logDirPath");
       await darwinHostApi!.redirectStdErr(join(logDirPath, "redirect.txt"));
     }
-    await setDebugLoggerDevlopment();
-    // In debug mode, output to both console and file
+    await setDebugLoggerInDevlopmentEnv();
   }
+  FlutterError.onError = (FlutterErrorDetails e) {
+    logger.e(
+        "FlutterError: ${e.exception}. line: ${e.library}. summary: ${e.summary}.",
+        error: e,
+        stackTrace: e.stack);
+  };
 }
 
-Future<void> setDebugLoggerDevlopment() async {
+Future<void> setDebugLoggerInDevlopmentEnv() async {
   final logDirPath = getFlutterLogDir().path;
   logger = Logger(
     filter: ProductionFilter(),
@@ -185,7 +171,7 @@ Future<void> setReportLogger() async {
   );
 }
 
-Future<void> unsetDebugLoggerProduction() async {
+Future<void> unsetDebugLoggerInProductionEnc() async {
   final oldLogger = logger;
   logger = Logger(
     level: Level.off,

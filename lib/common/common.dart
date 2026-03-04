@@ -8,33 +8,43 @@ final desktopPlatforms =
     Platform.isMacOS || Platform.isWindows || Platform.isLinux;
 
 const androidPackageNme =
-    appFlavor == 'staging' ? 'com.example.app' : 'com5vnetwork.umi';
+    appFlavor == 'staging' ? 'com5vnetwork.umi.staging' : 'com5vnetwork.umi';
 const darwinBundleId = 'com.5vnetwork.umivpn';
 
-const supabaseUrl = kDebugMode
+const supabaseUrl = dev
     ? String.fromEnvironment('SUPABASE_URL')
     : 'https://tvssabmjinwlwtodgjza.supabase.co';
-const supabaseApiKey = kDebugMode
+const supabaseApiKey = dev
     ? 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH'
     : 'sb_publishable_bSVb6AH8NMt461D2zIqSjA_Ty5tfHhZ';
+
+const dev = appFlavor == 'staging' || (appFlavor == null && kDebugMode);
 
 const websiteUrl = 'https://www.umivpn.com';
 const privacyPolicyUrl = 'https://www.umivpn.com/privacy';
 const termOfServiceUrl = 'https://www.umivpn.com/terms';
 
-final androidApkRelease =
-    Platform.isAndroid && !const bool.fromEnvironment('PLAY_STORE');
 const logKey = String.fromEnvironment('LOG_KEY', defaultValue: '1234567890');
 
 final useStripe = Platform.isWindows ||
-    (androidApkRelease) ||
+    (Platform.isAndroid && appFlavor != 'production') ||
     appFlavor == "pkg" ||
     Platform.isLinux;
 
-const isStore = bool.fromEnvironment('STORE');
-final autoUpdateSupported = (Platform.isAndroid && !isStore) ||
-    (Platform.isWindows && !isStore) ||
-    Platform.isLinux;
+final androidNonStore = Platform.isAndroid && appFlavor != 'production';
+const isWinStore = bool.fromEnvironment('STORE');
+final autoUpdateSupported =
+    androidNonStore || (Platform.isWindows && !isWinStore) || Platform.isLinux;
+
+bool isProduction() {
+  if (Platform.isWindows || Platform.isLinux) {
+    return kReleaseMode;
+  }
+  return (appFlavor == "production" ||
+          appFlavor == "pkg" ||
+          appFlavor == "apk") &&
+      kReleaseMode;
+}
 
 List<int> generateUniqueNumbers(int count, {int min = 1, int max = 100}) {
   final random = Random();

@@ -23,6 +23,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tm/tm.dart';
 import 'package:flutter_common/util/compress.dart';
+import 'package:umivpn/common/common.dart';
 import 'package:umivpn/utils/logger.dart';
 import 'package:flutter_common/util/crypto.dart';
 import 'package:umivpn/utils/path.dart';
@@ -192,7 +193,7 @@ class LogUploadService {
     if (isProduction()) {
       await setReportLogger();
     } else {
-      await setDebugLoggerDevlopment();
+      await setDebugLoggerInDevlopmentEnv();
     }
   }
 

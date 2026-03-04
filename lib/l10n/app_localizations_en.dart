@@ -2136,4 +2136,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get vpnServiceDesc => 'UmiVPN uses VPNService to make your internet experience more secure, private, and stable. During the use of VPNService, we will provide you with the best server based on your IP address, and we will not share or store your IP address.';
+
+  @override
+  String get autoCheck => '自动检查新版本';
+
+  @override
+  String get autoCheckDesc => '自动检查新版本并提醒您';
 }

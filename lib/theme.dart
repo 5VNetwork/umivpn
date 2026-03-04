@@ -25,7 +25,7 @@ TextTheme? getTextTheme(Locale? locale, {bool isDark = false}) {
 extension AppColors on ColorScheme {
   // Background color (very dark blue - app-specific, since background is deprecated)
   Color get bgColor => const Color(0xFF0F172A);
-  
+
   // Secondary background color (slate)
   Color get bgSecondary => surface;
 
@@ -71,6 +71,7 @@ ThemeData darkTheme(Locale? locale) {
     onSurface: Colors.white,
     onBackground: Colors.white,
     onError: Colors.white,
+    
     secondaryContainer: const Color(0xFF1E3A3A),
     onSecondaryContainer: const Color(0xFF00FFCB),
   );
@@ -124,7 +125,10 @@ ThemeData darkTheme(Locale? locale) {
       style: FilledButton.styleFrom(
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
-        elevation: 1,
+        // shape: RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.circular(12),
+        // ),
+        // padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
         textStyle: const TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w700,

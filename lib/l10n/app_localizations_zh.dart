@@ -2086,4 +2086,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get vpnServiceDesc => 'UmiVPN利用VPNService使您的上网体验更加安全，私密与稳定。在使用VPNService的过程中，我们会根据您的IP地址来为您提供最优服务器，我们不会分享或储存您的IP地址。';
+
+  @override
+  String get autoCheck => '自动检查新版本';
+
+  @override
+  String get autoCheckDesc => '自动检查新版本并提醒您';
 }

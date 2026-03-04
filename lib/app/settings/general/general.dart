@@ -57,14 +57,6 @@ class GeneralSettingPage extends StatelessWidget {
                 }));
               },
             ),
-            if (autoUpdateSupported)
-              const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Divider(),
-                  AutoUpdateSettings(),
-                ],
-              ),
             if (Platform.isAndroid)
               const Column(children: [
                 Divider(),
@@ -92,80 +84,6 @@ class GeneralSettingPage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class AutoUpdateSettings extends StatelessWidget {
-  const AutoUpdateSettings({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<AutoUpdateService>(
-      builder: (context, autoUpdateService, child) {
-        return Padding(
-          padding:
-              const EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(AppLocalizations.of(context)!.autoUpdate,
-                      style: Theme.of(context).textTheme.bodyLarge),
-                  Switch(
-                    value: autoUpdateService.autoUpdate,
-                    onChanged: autoUpdateService.setAutoUpdate,
-                  ),
-                ],
-              ),
-              const Gap(10),
-              Text(AppLocalizations.of(context)!.autoUpdateDescription,
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      )),
-              if (autoUpdateService.downloadingVersion != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Row(
-                    children: [
-                      const Gap(2),
-                      smallCircularProgressIndicator(),
-                      const Gap(10),
-                      Text(
-                          AppLocalizations.of(context)!.downloading(
-                              autoUpdateService.downloadingVersion ?? ''),
-                          style:
-                              Theme.of(context).textTheme.bodySmall!.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                                  ))
-                    ],
-                  ),
-                ),
-              // if (!isProduction())
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: TextButton(
-                  onPressed: () async {
-                    final result = await autoUpdateService.checkForUpdates(
-                      (await PackageInfo.fromPlatform()).version,
-                    );
-                    if (result == null) {
-                      snack(AppLocalizations.of(context)!.noNewVersion);
-                    } else {
-                      autoUpdateService.checkAndUpdate();
-                    }
-                  },
-                  child: Text(AppLocalizations.of(context)!.checkAndUpdate),
-                ),
-              )
-            ],
-          ),
-        );
-      },
     );
   }
 }

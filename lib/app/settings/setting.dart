@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_common/services/auto_update.dart';
+import 'package:flutter_common/widgets/progress.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -175,7 +178,10 @@ List<Widget> _getBottomButtons(BuildContext context, User? user) {
         ),
       ],
     ),
+    Gap(5),
     const Version(),
+    const Gap(5),
+    if (autoUpdateSupported) const CheckUpdateButton(),
     if (!isProduction())
       Row(
         children: [
@@ -187,7 +193,6 @@ List<Widget> _getBottomButtons(BuildContext context, User? user) {
             onPressed: clearDatabase,
             icon: Icon(Icons.delete),
           ),
-          
         ],
       )
   ];
@@ -282,4 +287,45 @@ AppBar getAdaptiveAppBar(BuildContext context, Widget? title) {
         ),
     ],
   );
+}
+
+class CheckUpdateButton extends StatefulWidget {
+  const CheckUpdateButton({super.key});
+
+  @override
+  State<CheckUpdateButton> createState() => _CheckUpdateButtonState();
+}
+
+class _CheckUpdateButtonState extends State<CheckUpdateButton> {
+  bool _checkingUpdate = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () async {
+        setState(() {
+          _checkingUpdate = true;
+        });
+        try {
+          final autoUpdateService = context.read<AutoUpdateService>();
+          final release = await autoUpdateService.getLatestRelease();
+          if (release != null) {
+            autoUpdateService.updateToRelease(release);
+          } else {
+            snack(AppLocalizations.of(context)!.noNewVersion);
+          }
+        } catch (e, stackTrace) {
+          logger.e('Error checking update', error: e, stackTrace: stackTrace);
+          snack(e.toString());
+        } finally {
+          setState(() {
+            _checkingUpdate = false;
+          });
+        }
+      },
+      child: _checkingUpdate
+          ? smallCircularProgressIndicator()
+          : Text(AppLocalizations.of(context)!.checkUpdate),
+    );
+  }
 }

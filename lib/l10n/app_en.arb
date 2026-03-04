@@ -886,5 +886,10 @@
   "privacyAssurance0": "We do not collect other personal data, such as browsing history, IP address.",
   "privacyAssurance1": "We do not sell, trade, or rent your personal data to third parties.",
   "personalDataWeCollect": "The personal data we collect:",
-  "vpnServiceDesc": "UmiVPN uses VPNService to make your internet experience more secure, private, and stable. During the use of VPNService, we will provide you with the best server based on your IP address, and we will not share or store your IP address."
+  "vpnServiceDesc": "UmiVPN uses VPNService to make your internet experience more secure, private, and stable. During the use of VPNService, we will provide you with the best server based on your IP address, and we will not share or store your IP address.",
+  "autoCheck": "Auto Check",
+  "autoCheck": "Automatically Check New Version",
+  "autoCheckDesc": "Automatically check for newer versions and remind you when there is one",
+  "autoCheck": "自动检查新版本",
+  "autoCheckDesc": "自动检查新版本并提醒您"
 }

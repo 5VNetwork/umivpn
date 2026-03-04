@@ -7,6 +7,8 @@ import 'package:app_links/app_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_common/widgets/dialog.dart';
+import 'package:flutter_common/widgets/progress.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_api_availability/google_api_availability.dart';
@@ -235,23 +237,86 @@ void main() async {
           },
           lazy: false,
         ),
-      if (androidApkRelease ||
-          (Platform.isWindows && !isStore) ||
-          Platform.isLinux)
-        ChangeNotifierProvider(
+      if (autoUpdateSupported)
+        Provider(
             lazy: false,
             create: (ctx) {
               final a = AutoUpdateService(
-                  pref: pref,
-                  downloader: directDownloadToFile,
-                  currentVersion: version,
-                  assetName: githubAssetName,
-                  repository: '5vnetwork/umivpn',
-                  exitCurrentApp: () {
-                    return exitCurrentApp(ctx.read<XController>());
-                  },
-                  cacheDir: cacheDirectory);
-              a.addListener(a.getListener(rootNavigationKey));
+                pref: pref,
+                downloader: directDownloadToFile,
+                currentVersion: version,
+                assetName: githubAssetName,
+                repository: '5vnetwork/umivpn',
+                exitCurrentApp: () {
+                  return exitCurrentApp(ctx.read<XController>());
+                },
+                autoCheck: true,
+                autoDownload: true,
+                cacheDir: cacheDirectory,
+                downloadUrl: kDebugMode
+                    ? 'https://localhost:21451'
+                    : 'https://umivpn.r2.5vnetwork.com',
+                onNewVersionAvailable: (release) {
+                  if (rootNavigationKey.currentContext == null) {
+                    return;
+                  }
+                  showDialog(
+                    context: rootNavigationKey.currentContext!,
+                    builder: (context) => HasNewerVersionDialog(
+                        release: release,
+                        setSkipCurrentVersion: () {
+                          rootNavigationKey.currentContext!
+                              .read<AutoUpdateService>()
+                              .setSkipCurrentVersion();
+                        },
+                        updateToRelease: (release) async {
+                          final ctx = rootNavigationKey.currentContext!;
+                          final messenger = ScaffoldMessenger.of(ctx);
+                          final snackBarController = messenger.showSnackBar(
+                            SnackBar(
+                              persist: true,
+                              content: Row(
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(ctx)!
+                                        .downloading(release.version),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  smallCircularProgressIndicator(),
+                                ],
+                              ),
+                            ),
+                          );
+                          try {
+                            await ctx
+                                .read<AutoUpdateService>()
+                                .updateToRelease(release);
+                          } finally {
+                            snackBarController.close();
+                          }
+                        }),
+                  );
+                },
+                onDownloadComplete: (downloadedInstaller) {
+                  if (rootNavigationKey.currentContext == null) {
+                    return;
+                  }
+                  showDialog(
+                    context: rootNavigationKey.currentContext!,
+                    builder: (context) => InstallNewerVersionDialog(
+                        downloadedInstaller: downloadedInstaller,
+                        setSkipCurrentInstaller: rootNavigationKey
+                            .currentContext!
+                            .read<AutoUpdateService>()
+                            .setSkipCurrentVersion,
+                        installLocalInstaller: () {
+                          rootNavigationKey.currentContext!
+                              .read<AutoUpdateService>()
+                              .installLocalInstaller();
+                        }),
+                  );
+                },
+              );
               return a;
             }),
     ],
