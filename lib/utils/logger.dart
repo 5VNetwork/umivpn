@@ -105,7 +105,6 @@ Future<void> stopShareLog() async {
 
 Future<void> initLogger() async {
   if (isProduction()) {
-    await setDebugLoggerInDevlopmentEnv();
   } else {
     final redirectStdErr = !kDebugMode && (Platform.isIOS || Platform.isMacOS);
     if (redirectStdErr) {
