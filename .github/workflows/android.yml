@@ -20,6 +20,7 @@ jobs:
         run: |
           cd ..
           git clone https://${GH_TOKEN}@github.com/5VNetwork/umivpn-plugin.git umivpn-plugin
+          git clone https://github.com/5VNetwork/flutter_common.git flutter_common
 
       - name: create files
         run: |
