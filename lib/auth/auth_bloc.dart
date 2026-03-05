@@ -81,7 +81,7 @@ class AuthRepo extends ChangeNotifier {
     try {
       final response =
           await supabase.from('profiles').select().eq('id', userId).single();
-      print(response);
+      debugPrint(response.toString());
       final remainingData = response['remaining_data'] as int;
       final plan = _parseSubscriptionPlan(response['plan'] as String);
 

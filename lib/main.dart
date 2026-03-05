@@ -7,6 +7,7 @@ import 'package:app_links/app_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_common/widgets/dialog.dart';
 import 'package:flutter_common/widgets/progress.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -61,6 +62,7 @@ import 'package:flutter_common/util/os.dart';
 import 'package:flutter_common/auth/auth_provider.dart';
 import 'package:flutter_common/services/periodic.dart';
 import 'firebase_options.dart';
+import 'firebase_options_staging.dart' as staging;
 import 'package:umivpn/utils/logger.dart';
 import 'package:umivpn/pref_helper.dart';
 import 'package:umivpn/utils/path.dart';
@@ -94,9 +96,7 @@ void main() async {
   }
 
   if (enableFirebase) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    await initializeFirebaseApp();
   }
 
   final pref = await SharedPreferences.getInstance();
@@ -198,45 +198,6 @@ void main() async {
         },
         lazy: false,
       ),
-      BlocProvider(
-        create: (context) => ChoiceCubit(
-          pref: context.read<SharedPreferences>(),
-          storage: context.read<FlutterSecureStorage>(),
-          xApiClient: context.read<XApiClient>(),
-          xController: context.read<XController>(),
-          authRepo: context.read<AuthRepo>(),
-        ),
-      ),
-      BlocProvider(
-        create: (context) => StatusCubit(
-          xController: context.read<XController>(),
-          authBloc: context.read<AuthRepo>(),
-          pref: context.read<SharedPreferences>(),
-        ),
-      ),
-      if (Platform.isAndroid)
-        ChangeNotifierProvider(
-          create: (context) {
-            final vpnMonitor =
-                DefaultNetworkMonitor(androidHostApi: androidHostApi);
-            return vpnMonitor;
-          },
-          lazy: false,
-        ),
-      if (Platform.isAndroid || Platform.isIOS)
-        Provider<OpenAdManager>(
-          create: (context) {
-            final adManager = OpenAdManager(
-              isTest: !isProduction(),
-              enabledOpenAd: context.read<SharedPreferences>().enableAppOpenAds,
-              authRepo: context.read<AuthRepo>(),
-              xController: context.read<XController>(),
-              defaultNetworkMonitor: context.read<DefaultNetworkMonitor>(),
-            );
-            return adManager;
-          },
-          lazy: false,
-        ),
       if (autoUpdateSupported)
         Provider(
             lazy: false,
@@ -319,6 +280,47 @@ void main() async {
               );
               return a;
             }),
+      BlocProvider(
+        create: (context) => ChoiceCubit(
+          pref: context.read<SharedPreferences>(),
+          storage: context.read<FlutterSecureStorage>(),
+          xApiClient: context.read<XApiClient>(),
+          xController: context.read<XController>(),
+          authRepo: context.read<AuthRepo>(),
+        ),
+      ),
+      BlocProvider(
+        create: (context) => StatusCubit(
+          xController: context.read<XController>(),
+          authBloc: context.read<AuthRepo>(),
+          pref: context.read<SharedPreferences>(),
+          autoUpdateService:
+              autoUpdateSupported ? context.read<AutoUpdateService>() : null,
+        ),
+      ),
+      if (Platform.isAndroid)
+        ChangeNotifierProvider(
+          create: (context) {
+            final vpnMonitor =
+                DefaultNetworkMonitor(androidHostApi: androidHostApi);
+            return vpnMonitor;
+          },
+          lazy: false,
+        ),
+      if (Platform.isAndroid || Platform.isIOS)
+        Provider<OpenAdManager>(
+          create: (context) {
+            final adManager = OpenAdManager(
+              isTest: !isProduction(),
+              enabledOpenAd: context.read<SharedPreferences>().enableAppOpenAds,
+              authRepo: context.read<AuthRepo>(),
+              xController: context.read<XController>(),
+              defaultNetworkMonitor: context.read<DefaultNetworkMonitor>(),
+            );
+            return adManager;
+          },
+          lazy: false,
+        ),
     ],
     child: const App(),
   ));
@@ -613,4 +615,14 @@ Future<String> assetName() async {
     }
     return 'umivpn-x64.deb';
   }
+}
+
+Future<void> initializeFirebaseApp() async {
+  // Determine which Firebase options to use based on the flavor
+  final firebaseOptions = switch (appFlavor) {
+    'produdction' || 'pkg' || 'apk' => DefaultFirebaseOptions.currentPlatform,
+    'staging' => staging.DefaultFirebaseOptions.currentPlatform,
+    _ => throw UnsupportedError('Invalid flavor: $appFlavor'),
+  };
+  await Firebase.initializeApp(options: firebaseOptions);
 }
