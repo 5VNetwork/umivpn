@@ -1980,10 +1980,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dataRefresh => 'Data Refresh';
 
   @override
-  String get renewalDate => 'Renewal Date';
+  String get renewalDate => 'Renewal';
 
   @override
-  String get endDate => 'End Date';
+  String get endDate => 'End';
 
   @override
   String get subscribe => 'Subscribe';

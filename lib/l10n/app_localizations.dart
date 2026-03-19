@@ -3718,13 +3718,13 @@ abstract class AppLocalizations {
   /// No description provided for @renewalDate.
   ///
   /// In en, this message translates to:
-  /// **'Renewal Date'**
+  /// **'Renewal'**
   String get renewalDate;
 
   /// No description provided for @endDate.
   ///
   /// In en, this message translates to:
-  /// **'End Date'**
+  /// **'End'**
   String get endDate;
 
   /// No description provided for @subscribe.

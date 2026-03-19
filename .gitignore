@@ -76,3 +76,4 @@ dist/
 test.pfx
 Makefile
 .vscode/
+assets/plans.json

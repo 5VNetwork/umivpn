@@ -18,7 +18,6 @@ class TopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     late final Widget child;
     if (Platform.isMacOS || Platform.isIOS || Platform.isAndroid) {
-      // final isPro = context.watch<AuthBloc>().state.pro;
       child = SizedBox(
         height: 50,
         child: Row(

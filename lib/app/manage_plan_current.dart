@@ -152,7 +152,7 @@ class _CurrentPlan extends StatelessWidget {
                   ],
                 ],
               ),
-              ...[
+              if (currentPlan != SubscriptionPlan.free) ...[
                 const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.all(12),
@@ -163,12 +163,12 @@ class _CurrentPlan extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildDateRow(
-                        context,
-                        Icons.refresh_rounded,
-                        AppLocalizations.of(context)!.dataRefresh,
-                        value.refreshDate,
-                      ),
+                      // _buildDateRow(
+                      //   context,
+                      //   Icons.refresh_rounded,
+                      //   AppLocalizations.of(context)!.dataRefresh,
+                      //   value.refreshDate,
+                      // ),
                       if (currentPlan != SubscriptionPlan.free &&
                           renewalDate != null)
                         Padding(

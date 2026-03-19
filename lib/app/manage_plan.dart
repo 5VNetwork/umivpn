@@ -29,7 +29,7 @@ import 'dart:convert';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 part 'manage_plan_current.dart';
-part 'manage_plan_all_stripe.dart';
+part 'manage_plan_all.dart';
 
 class ManagePlanPage extends StatelessWidget {
   const ManagePlanPage({super.key});
@@ -37,32 +37,43 @@ class ManagePlanPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       backgroundColor: colorScheme.bgColor,
       appBar: adaptiveClosableAppBar(context,
           title: AppLocalizations.of(context)!.managePlan),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: ListView(
-          children: [
-            // Current Plan Section
-            const _CurrentPlan(),
-            const SizedBox(height: 16),
-            // Available Plans Section
-            Text(
-              '${AppLocalizations.of(context)!.availablePlans}',
-              style: textTheme.titleLarge?.copyWith(
-                color: colorScheme.onSurface,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            const AllPlans(),
-          ],
-        ),
+      body: const Padding(
+        padding: EdgeInsets.all(24),
+        child: ManagePlanBody(),
       ),
+    );
+  }
+}
+
+class ManagePlanBody extends StatelessWidget {
+  const ManagePlanBody({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return ListView(
+      children: [
+        // Current Plan Section
+        const _CurrentPlan(),
+        const SizedBox(height: 16),
+        // Available Plans Section
+        Text(
+          '${AppLocalizations.of(context)!.availablePlans}',
+          style: textTheme.titleLarge?.copyWith(
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 16),
+        const AllPlans(),
+      ],
     );
   }
 }
@@ -139,7 +150,7 @@ class ManagePlanViewModel extends ChangeNotifier {
     notifyListeners();
     try {
       final fetchedPlans = await PlanService.fetchPlans(
-          'https://pub-ffc1bef2c4eb4b8fb433f0706418dabe.r2.dev/plans/${locale}.json');
+          'https://umivpn.r2.5vnetwork.com/plans/${locale}.json');
       inspect(fetchedPlans);
       plans = proPurchases != null
           ? _convertToIAPPlans(fetchedPlans, proPurchases!)
@@ -479,6 +490,7 @@ Future<void> _createCheckoutSession(
       'create-stripe-checkout-session',
       headers: {
         'Authorization': 'Bearer $token',
+        "User-Agent": "UmiVPN/${version}",
       },
       body: {
         'price_id': priceOption.priceId,

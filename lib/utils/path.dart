@@ -5,9 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:umivpn/common/common.dart';
 import 'package:umivpn/main.dart';
-import 'package:umivpn/utils/logger.dart';
 
 final macPkg = Platform.isMacOS && appFlavor == 'pkg';
 
@@ -117,7 +115,6 @@ String getDllPath() {
       'data', 'flutter_assets', 'packages', 'tm_windows', 'assets', 'x.dll');
   String pathToLib =
       join(Directory(Platform.resolvedExecutable).parent.path, localLibPath);
-  logger.d('pathToLib: $pathToLib');
   return pathToLib;
   // } else {
   // return join(Directory.current.parent.path, 'umivpn-plugin', 'tm_windows',
@@ -130,7 +127,6 @@ String getSoPath() {
       join('data', 'flutter_assets', 'packages', 'tm_linux', 'assets', 'x.so');
   String pathToLib =
       join(Directory(Platform.resolvedExecutable).parent.path, localLibPath);
-  logger.d('pathToLib: $pathToLib');
   return pathToLib;
 }
 

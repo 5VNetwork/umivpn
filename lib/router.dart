@@ -44,17 +44,19 @@ void initRouter(AuthProvider authProvider) {
               GoRoute(
                 parentNavigatorKey: rootNavigationKey,
                 path: 'manage-plan',
-                pageBuilder: (context, state) => CupertinoPage(
-                    child: ChangeNotifierProvider(
-                        create: (context) => ManagePlanViewModel(
-                              proPurchases: useStripe
-                                  ? null
-                                  : context.read<ProPurchases>(),
-                              authRepo: context.read<AuthRepo>(),
-                              locale:
-                                  Localizations.localeOf(context).languageCode,
-                            ),
-                        child: const ManagePlanPage())),
+                pageBuilder: (context, state) {
+                  final locale = Localizations.localeOf(context).languageCode;
+                  return CupertinoPage(
+                      child: ChangeNotifierProvider(
+                          create: (context) => ManagePlanViewModel(
+                                proPurchases: useStripe
+                                    ? null
+                                    : context.read<ProPurchases>(),
+                                authRepo: context.read<AuthRepo>(),
+                                locale: locale,
+                              ),
+                          child: const ManagePlanPage()));
+                },
               ),
               GoRoute(
                 path: 'setting',

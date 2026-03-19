@@ -29,7 +29,7 @@ class HomeAdProvider with ChangeNotifier {
     super.dispose();
   }
 
-  bool showAd = false;
+  bool canShowAdmobAds = false;
   // (BannerAd, AdSize)? _bannerAd;
   // (BannerAd, AdSize)? get bannerAd {
   //   if (_showAd) {
@@ -62,12 +62,12 @@ class HomeAdProvider with ChangeNotifier {
       newValue = false;
     }
 
-    if (showAd == newValue) {
+    if (canShowAdmobAds == newValue) {
       return;
     }
-    showAd = newValue;
+    canShowAdmobAds = newValue;
     logger.d(
-        'showAd: $showAd. status: ${xController.status}. physical: ${defaultNetworkMonitor.isPhysical}');
+        'showAd: $canShowAdmobAds. status: ${xController.status}. physical: ${defaultNetworkMonitor.isPhysical}');
     // _showAd = newValue;
     // if (_showAd) {
     //   _bannerAd ??= await adManager.bannerAd;

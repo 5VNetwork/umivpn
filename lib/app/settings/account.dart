@@ -156,16 +156,16 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                // SizedBox(
-                //   width: double.infinity,
-                //   child: OutlinedButton.icon(
-                //     onPressed: () {
-                //       context.go('/manage-plan');
-                //     },
-                //     icon: const Icon(Icons.credit_card_rounded),
-                //     label: Text(AppLocalizations.of(context)!.managePlan),
-                //   ),
-                // ),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      context.go('/manage-plan');
+                    },
+                    icon: const Icon(Icons.credit_card_rounded),
+                    label: Text(AppLocalizations.of(context)!.managePlan),
+                  ),
+                ),
               ],
             ),
           );

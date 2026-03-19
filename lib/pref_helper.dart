@@ -22,7 +22,7 @@ extension PrefHelperExtension on SharedPreferences {
   bool get hasShownVpnServiceInfo {
     return getBool('hasShownVpnServiceInfo') ?? false;
   }
-  
+
   void setHasShownVpnServiceInfo(bool value) {
     setBool('hasShownVpnServiceInfo', value);
   }
@@ -46,14 +46,6 @@ extension PrefHelperExtension on SharedPreferences {
 
   void setRoutingMode(DefaultRouteMode mode) {
     setInt('routingMode', mode.index);
-  }
-
-  bool get enableDebugLog {
-    return getBool('enableDebugLog') ?? false;
-  }
-
-  void setEnableDebugLog(bool enable) {
-    setBool('enableDebugLog', enable);
   }
 
   bool get showApp {

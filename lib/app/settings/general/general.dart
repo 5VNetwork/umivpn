@@ -57,7 +57,7 @@ class GeneralSettingPage extends StatelessWidget {
                 }));
               },
             ),
-            if (Platform.isAndroid)
+            if (isAdPlatforms)
               const Column(children: [
                 Divider(),
                 Padding(

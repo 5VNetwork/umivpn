@@ -97,10 +97,13 @@ dependencies:
     path: ../flutter_common
   country:
     path: ../flutter_common/packages/country
+  ads:
+    path: ../flutter_common/packages/ads
   in_app_purchase_android: ^0.4.0+8
   cryptography: ^2.9.0
   google_mobile_ads: ^7.0.0
   retry: ^3.1.2
+  logging: ^1.3.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.3

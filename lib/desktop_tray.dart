@@ -83,7 +83,7 @@ class _DesktopTrayState extends State<DesktopTray>
       if (status == XStatus.connected ||
           status == XStatus.connecting ||
           status == XStatus.preparing) {
-        iconPath = 'assets/icons/windows_icon.ico';
+        iconPath = 'assets/icons/umi_glass.ico';
       } else {
         iconPath = 'assets/icons/windows_icon_outline.ico';
       }

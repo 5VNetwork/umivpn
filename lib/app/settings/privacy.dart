@@ -5,6 +5,7 @@ import 'package:umivpn/common/common.dart';
 import 'package:umivpn/l10n/app_localizations.dart';
 import 'package:gap/gap.dart';
 import 'package:umivpn/pref_helper.dart';
+import 'package:umivpn/utils/upload_log.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:umivpn/app/settings/setting.dart';
 import 'package:umivpn/main.dart';
@@ -65,7 +66,11 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                             setState(() {
                               _shareLog = value;
                             });
-                            setShareLog(_shareLog);
+                            setShareLog(
+                              _shareLog,
+                              context.read<SharedPreferences>(),
+                              context.read<LogUploadService>(),
+                            );
                           }),
               ],
             ),
@@ -80,5 +85,20 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> setShareLog(
+    bool value,
+    SharedPreferences pref,
+    LogUploadService logUploadService,
+  ) async {
+    pref.setShareLog(value);
+    if (value) {
+      await startShareLog();
+      logUploadService.start();
+    } else {
+      await stopShareLog();
+      logUploadService.stopPeriodicUpload();
+    }
   }
 }

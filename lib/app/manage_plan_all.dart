@@ -5,7 +5,7 @@ class AllPlans extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (true) {
+    if (!useStripe) {
       return Consumer<ProPurchases>(builder: (context, proPurchases, child) {
         if (proPurchases.purchaseDetails != null) {
           if (proPurchases.purchaseDetails!.status == PurchaseStatus.pending ||
@@ -134,6 +134,7 @@ class AllPlansList extends StatelessWidget {
         }
 
         if (value.errorFetchingPlans != null) {
+          final l10n = AppLocalizations.of(context)!;
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(24),
@@ -147,14 +148,14 @@ class AllPlansList extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "Failed to load plans",
+                    l10n.failedToLoadPlans,
                     style: textTheme.titleMedium?.copyWith(
                       color: colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Please visit our website to view available plans.",
+                    l10n.failedToLoadPlansMessage,
                     style: TextStyle(
                       color: colorScheme.onSurface.withOpacity(0.7),
                       fontSize: 14,
@@ -171,8 +172,7 @@ class AllPlansList extends StatelessWidget {
                       }
                     },
                     icon: const Icon(Icons.open_in_new),
-                    label: Text(
-                        AppLocalizations.of(context)!.visitOfficialWebsite),
+                    label: Text(l10n.visitOfficialWebsite),
                   ),
                 ],
               ),
@@ -260,7 +260,7 @@ class AllPlansList extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final consistentSub = subscriptionInfo?.source == _source();
     final userHasNoSub = userProfile.subscriptionPlan == SubscriptionPlan.free;
-    final isNotAppleStoreSub = _source() != SubscriptionSource.appStore;
+    final canChangePeriod = _source() == SubscriptionSource.playStore;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -315,7 +315,20 @@ class AllPlansList extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 4),
-              if (userHasNoSub || consistentSub) _getPriceWidget(context, planData),
+              if (userHasNoSub || consistentSub) ...[
+                _getPriceWidget(context, planData),
+                if (plan != SubscriptionPlan.free)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      '3-day free trial for first-time customers',
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+              ],
             ],
           ),
           const SizedBox(height: 15),
@@ -366,7 +379,7 @@ class AllPlansList extends StatelessWidget {
                 )),
           ],
           if (plan != SubscriptionPlan.free &&
-              (userHasNoSub || (isNotAppleStoreSub && consistentSub))) ...[
+              (userHasNoSub || (canChangePeriod && consistentSub))) ...[
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
@@ -378,7 +391,7 @@ class AllPlansList extends StatelessWidget {
               ),
             ),
           ],
-        ],
+        ],  
       ),
     );
   }
@@ -614,7 +627,7 @@ class AllPlansList extends StatelessWidget {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              "Cancel",
+              AppLocalizations.of(context)!.cancel,
               style: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
             ),
           ),
@@ -680,17 +693,24 @@ class PlanService {
       return _cachedPlans!;
     }
 
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body) as Map<String, dynamic>;
-      final plans = _parsePlansFromJson(data);
-
-      // Cache the plans
-      _cachedPlans = plans;
-      return plans;
+    String jsonString;
+    if (isProduction()) {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        jsonString = response.body;
+      } else {
+        throw Exception('Failed to fetch plans: ${response.statusCode}');
+      }
     } else {
-      throw Exception('Failed to fetch plans: ${response.statusCode}');
+      jsonString = await rootBundle.loadString('assets/plans.json');
     }
+
+    final data = json.decode(jsonString) as Map<String, dynamic>;
+    final plans = _parsePlansFromJson(data);
+
+    // Cache the plans
+    _cachedPlans = plans;
+    return plans;
   }
 
   /// Parses JSON data into PlanMetadata map

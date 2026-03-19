@@ -19,8 +19,10 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/rendering.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tm/tm.dart';
 import 'package:flutter_common/util/compress.dart';
 import 'package:umivpn/common/common.dart';
@@ -37,17 +39,19 @@ class LogUploadService {
   static const int _maxRetryAttempts = 2;
   static const Duration _retryDelay = Duration(seconds: 30);
 
-    LogUploadService({
+  LogUploadService({
     required String uploadUrl,
     required Directory flutterLogDir,
     required Directory tunnelLogDir,
     required String secret,
     required HttpClient httpClient,
+    required ValueGetter<bool> useReportLogger,
   })  : _flutterLogDir = flutterLogDir,
         _tunnelLogDir = tunnelLogDir,
         _uploadUrl = uploadUrl,
         _secret = secret,
-        _httpClient = httpClient;
+        _httpClient = httpClient,
+        _useReportLogger = useReportLogger;
 
   Timer? _uploadTimer;
   final Directory _flutterLogDir;
@@ -55,6 +59,7 @@ class LogUploadService {
   final String _uploadUrl;
   final String _secret;
   final HttpClient _httpClient;
+  final ValueGetter<bool> _useReportLogger;
 
   /// Initialize the log upload service with configuration
   Future<void> start() async {
@@ -171,29 +176,19 @@ class LogUploadService {
 
   Future<void> _closeFlutterLogger() async {
     if (isProduction()) {
-      if (reportLogger != diabledLogger) {
-        final logger = reportLogger;
-        reportLogger = diabledLogger;
-        if (!logger.isClosed()) {
-          await logger.close();
-        }
-      }
+      reportLogger.logger = null;
     } else {
-      if (logger != diabledLogger) {
-        final toBeClosed = logger;
-        logger = diabledLogger;
-        if (!toBeClosed.isClosed()) {
-          await toBeClosed.close();
-        }
-      }
+      logger.logger = null;
     }
   }
 
   Future<void> _openFlutterLogger() async {
     if (isProduction()) {
-      await setReportLogger();
+      if (_useReportLogger()) {
+        await setReportLogger();
+      }
     } else {
-      await setDebugLoggerInDevlopmentEnv();
+      await setDebugLoggerDevlopment();
     }
   }
 

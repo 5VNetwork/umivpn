@@ -14,7 +14,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   Locale? _locale;
   late final AppLifecycleListener _listener;
   final appLinks = AppLinks();
-  late AppLifecycleReactor _appLifecycleReactor;
+  AppLifecycleReactor? _appLifecycleReactor;
 
   void setLocale(Locale? value) {
     setState(() {
@@ -40,6 +40,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       localizationsDelegates: [
         ...AppLocalizations.localizationsDelegates,
         ...xv_app_localizations.AppLocalizations.localizationsDelegates,
+        ...ads_app_localizations.AppLocalizations.localizationsDelegates,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
     );
@@ -49,9 +50,12 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     final pref = context.read<SharedPreferences>();
-    _appLifecycleReactor =
-        AppLifecycleReactor(appOpenAdManager: context.read<OpenAdManager>())
-          ..listenToAppStateChanges();
+    if (isAdPlatforms) {
+      _appLifecycleReactor =
+          AppLifecycleReactor(appOpenAdManager: context.read<OpenAdManager>())
+            ..listenToAppStateChanges();
+    }
+
     if (pref.initialLaunch) {
       pref.setInitialLaunch();
       androidHostApi?.requestAddTile();
@@ -155,6 +159,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       logger.d('Auth callback received: $uri');
       snack(AppLocalizations.of(context)?.loginSuccess);
       // The Supabase client should handle this automatically
+    } else if (uri.host == 'order-success') {
+      context.read<AuthRepo>().fetchSubscriptionInfo();
     }
   }
 }

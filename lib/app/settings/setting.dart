@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_common/services/auto_update.dart';
 import 'package:flutter_common/widgets/progress.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:tm/common.dart';
 import 'package:umivpn/app/settings/general/general.dart';
 import 'package:umivpn/common/common.dart';
 import 'package:umivpn/iap/pro.dart';
@@ -183,7 +185,7 @@ List<Widget> _getBottomButtons(BuildContext context, User? user) {
     const Gap(5),
     if (autoUpdateSupported) const CheckUpdateButton(),
     if (!isProduction())
-      Row(
+      Column(
         children: [
           IconButton(
             onPressed: saveLogToApplicationDocumentsDir,
@@ -192,6 +194,12 @@ List<Widget> _getBottomButtons(BuildContext context, User? user) {
           IconButton(
             onPressed: clearDatabase,
             icon: Icon(Icons.delete),
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<FlutterSecureStorage>().delete(key: fetchResultKey);
+            },
+            child: Text('Clear Fetch Result'),
           ),
         ],
       )

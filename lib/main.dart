@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:ads/ads_provider.dart';
 import 'package:app_links/app_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -30,6 +31,7 @@ import 'package:tm/status_cubit.dart';
 import 'package:tm/ads/app_lifecycle.dart';
 import 'package:tm/ads/start_ad.dart';
 import 'package:umivpn/app/privacy.dart';
+import 'package:umivpn/auth/user.dart';
 import 'package:umivpn/utils/android_host_api.g.dart';
 import 'package:umivpn/app/choice_cubit.dart';
 import 'package:umivpn/utils/darwin_host_api.g.dart';
@@ -76,10 +78,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_common/services/auto_update.dart';
 import 'package:flutter_common/l10n/app_localizations.dart'
     as xv_app_localizations;
+import 'package:ads/l10n/app_localizations.dart' as ads_app_localizations;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:tm/secure_storage.dart';
 import 'package:tm/xapi_client.dart';
 import 'package:tm/http.dart';
+import 'package:path/path.dart' as path;
 
 part 'desktop_tray.dart';
 part 'router.dart';
@@ -102,22 +106,12 @@ void main() async {
   final pref = await SharedPreferences.getInstance();
   resourceDirectory = await resourceDir();
   cacheDirectory = await getCacheDir();
+  await initLogger(pref);
+
   version = (await PackageInfo.fromPlatform()).version;
 
   FlutterSecureStorage storage = await getSecureStorage();
-  // storage.deleteAll();
   final githubAssetName = await assetName();
-
-  final apiClient = XApiClient()..init();
-  await initLogger();
-  final httpClient = HttpClient0(
-    crts: crt,
-    logger: logger,
-    xApiClient: apiClient,
-  );
-  // await _initFcm();
-  await _initSupabase(storage, httpClient);
-  await setStartOnBoot(pref);
 
   await Future.wait([
     _initWindow(pref),
@@ -131,11 +125,21 @@ void main() async {
     }),
   ]);
 
+  final apiClient = XApiClient()..init();
+  final httpClient = HttpClient0(
+    crts: crt,
+    logger: logger,
+    xApiClient: apiClient,
+  );
+  // await _initFcm();
+  await _initSupabase(storage, httpClient);
+  await setStartOnBoot(pref);
+
   final authProvider = SupabaseAuth(
       webClientId: webClientId,
       iosClientId: iosClientId,
       loginCallbackUrl: 'umivpn://login-callback');
-  final proPurchases = false
+  final proPurchases = useStripe
       ? null
       : ProPurchases(
           applePlatform ? iosProductData : androidProductData, authProvider);
@@ -149,7 +153,7 @@ void main() async {
   periodicFetchCountries(pref);
   periodicFetchGeo(pref);
 
-  runApp(MultiProvider(
+  final app = MultiProvider(
     providers: [
       Provider.value(value: apiClient),
       if (proPurchases != null)
@@ -166,6 +170,7 @@ void main() async {
                 tunnelLogDir: getTunnelLogDir(),
                 secret: logKey,
                 httpClient: HttpClient(),
+                useReportLogger: () => pref.shareLog,
                 uploadUrl: kDebugMode
                     ? 'https://127.0.0.1:11111/api/upload-logs'
                     : 'https://umibackend.5vnetwork.com/api/upload-logs');
@@ -307,7 +312,7 @@ void main() async {
           },
           lazy: false,
         ),
-      if (Platform.isAndroid || Platform.isIOS)
+      if (isAdPlatforms)
         Provider<OpenAdManager>(
           create: (context) {
             final adManager = OpenAdManager(
@@ -321,9 +326,34 @@ void main() async {
           },
           lazy: false,
         ),
+      ChangeNotifierProxyProvider<AuthRepo, AdsProvider>(
+          create: (context) {
+            final adsProvider = AdsProvider(
+                adsDirectory: path.join(resourceDirectory.path, 'ads'),
+                sharedPreferences: context.read<SharedPreferences>(),
+                downloadFunction: directDownloadToFile,
+                logger: logger);
+            if (context.read<AuthRepo>().userProfile?.subscriptionPlan ==
+                SubscriptionPlan.pro) {
+              adsProvider.start();
+            }
+            return adsProvider;
+          },
+          update: (context, authRepo, adsProvider) {
+            if (authRepo.userProfile?.subscriptionPlan ==
+                SubscriptionPlan.pro) {
+              adsProvider?.stop();
+            } else {
+              adsProvider?.start();
+            }
+            return adsProvider!;
+          },
+          lazy: false),
     ],
     child: const App(),
-  ));
+  );
+
+  runApp(app);
 }
 
 final bool enableFirebase = !Platform.isWindows && !Platform.isLinux;
