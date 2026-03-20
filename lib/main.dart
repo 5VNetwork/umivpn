@@ -84,6 +84,7 @@ import 'package:tm/secure_storage.dart';
 import 'package:tm/xapi_client.dart';
 import 'package:tm/http.dart';
 import 'package:path/path.dart' as path;
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'desktop_tray.dart';
 part 'router.dart';
@@ -353,7 +354,21 @@ void main() async {
     child: const App(),
   );
 
-  runApp(app);
+  if (isProduction()) {
+    await SentryFlutter.init(
+      (options) {
+        options.dsn =
+            'https://3b64b5f02480e50ed036c90fd3b94d00@o4511072442449920.ingest.us.sentry.io/4511072457850880';
+        options.sendDefaultPii = false;
+      },
+      appRunner: () => runApp(SentryWidget(child: app)),
+    );
+  } else {
+    runApp(app);
+  }
+
+  // TODO: Remove this line after sending the first sample event to sentry.
+  await Sentry.captureException(Exception('This is a sample exception.'));
 }
 
 final bool enableFirebase = !Platform.isWindows && !Platform.isLinux;

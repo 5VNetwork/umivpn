@@ -9,12 +9,14 @@ list(APPEND FLUTTER_PLUGIN_LIST
   gtk
   pasteboard
   screen_retriever_linux
+  sentry_flutter
   tray_manager
   url_launcher_linux
   window_manager
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  jni
   tm_linux
 )
 

@@ -27,6 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  sentry_flutter: ^9.15.0
   flutter:
     sdk: flutter
   ffi: ^2.1.2
@@ -106,6 +107,7 @@ dependencies:
   logging: ^1.3.0
 
 dev_dependencies:
+  sentry_dart_plugin: ^3.2.1
   flutter_launcher_icons: ^0.14.3
   json_annotation: ^4.9.0
   pigeon: ^22.6.2
@@ -193,3 +195,9 @@ msix_config:
   trim_logo: false
   language: zh-cn, en-us
   output_path: build/windows/msix
+
+sentry:
+  upload_debug_symbols: true
+  upload_source_maps: true
+  project: flutter
+  org: v-9r
