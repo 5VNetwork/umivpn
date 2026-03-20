@@ -201,3 +201,5 @@ sentry:
   upload_source_maps: true
   project: flutter
   org: v-9r
+  dart_symbol_map_path: build/app/obfuscation.map.json
+  upload_sources: true
