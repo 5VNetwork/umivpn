@@ -41,6 +41,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         ...AppLocalizations.localizationsDelegates,
         ...xv_app_localizations.AppLocalizations.localizationsDelegates,
         ...ads_app_localizations.AppLocalizations.localizationsDelegates,
+        ...country_app_localizations.AppLocalizations.localizationsDelegates,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
     );

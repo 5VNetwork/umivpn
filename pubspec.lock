@@ -318,7 +318,7 @@ packages:
       path: "../flutter_common/packages/country"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.1.0"
   cross_file:
     dependency: transitive
     description:
@@ -538,7 +538,7 @@ packages:
       path: "../flutter_common"
       relative: true
     source: path
-    version: "0.0.3"
+    version: "0.0.4"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:

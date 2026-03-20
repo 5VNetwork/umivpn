@@ -767,7 +767,7 @@
   "sniff": "嗅探",
   "skipSniff": "不嗅探",
   "resolve": "解析域名",
-  "skipResolve": "不解析域名", 
+  "skipResolve": "不解析域名",
   "defaultSelectorTag": "代理",
   "describeTheProblem": "请描述您遇到的问题，如果您已于客服沟通，可以不填",
   "debugLogNotAvailable": "开发者日志功能在非商店版本中不可用",
@@ -896,5 +896,13 @@
   "privacyAssurance0": "我们不收集其他个人信息，比如浏览历史、IP地址等。",
   "privacyAssurance1": "我们不会向第三方出售、交易或出租您的个人信息。",
   "personalDataWeCollect": "我们收集的个人数据：",
-  "vpnServiceDesc": "UmiVPN利用VPNService使您的上网体验更加安全，私密与稳定。在使用VPNService的过程中，我们会根据您的IP地址来为您提供最优服务器，我们不会分享或储存您的IP地址。"
+  "vpnServiceDesc": "UmiVPN利用VPNService使您的上网体验更加安全，私密与稳定。在使用VPNService的过程中，我们会根据您的IP地址来为您提供最优服务器，我们不会分享或储存您的IP地址。",
+  "failedToFetchProfile": "Failed to fetch profile {error}",
+  "@failedToFetchProfile": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
 }

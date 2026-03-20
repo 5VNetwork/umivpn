@@ -102,11 +102,7 @@ Future<String> getSimplifiedGeoIPPath() async {
 }
 
 Future<String> getFallbackDomainPath() async {
-  String path;
-  final fallbackDomainFile =
-      File(join((resourceDirectory).path, 'fallback_domain.list'));
-  path = fallbackDomainFile.path;
-  return path;
+  return join((resourceDirectory).path, 'fallback_domain.list');
 }
 
 Future<String> getWintunDir() async {

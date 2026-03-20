@@ -890,6 +890,12 @@
   "autoCheck": "Auto Check",
   "autoCheck": "Automatically Check New Version",
   "autoCheckDesc": "Automatically check for newer versions and remind you when there is one",
-  "autoCheck": "自动检查新版本",
-  "autoCheckDesc": "自动检查新版本并提醒您"
+  "failedToFetchProfile": "Failed to fetch profile {error}",
+  "@failedToFetchProfile": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
 }

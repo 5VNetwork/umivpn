@@ -23,6 +23,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
+import 'package:tm/common.dart';
 import 'package:tm/root_certs.dart';
 import 'package:tm/tm.dart';
 import 'package:tm/x_controller.dart';
@@ -79,6 +80,8 @@ import 'package:flutter_common/services/auto_update.dart';
 import 'package:flutter_common/l10n/app_localizations.dart'
     as xv_app_localizations;
 import 'package:ads/l10n/app_localizations.dart' as ads_app_localizations;
+import 'package:country/l10n/app_localizations.dart'
+    as country_app_localizations;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:tm/secure_storage.dart';
 import 'package:tm/xapi_client.dart';
@@ -357,18 +360,16 @@ void main() async {
   if (isProduction()) {
     await SentryFlutter.init(
       (options) {
-        options.dsn =
-            'https://3b64b5f02480e50ed036c90fd3b94d00@o4511072442449920.ingest.us.sentry.io/4511072457850880';
+        options.dsn = sentryDsn;
         options.sendDefaultPii = false;
       },
       appRunner: () => runApp(SentryWidget(child: app)),
     );
+    // TODO: Remove this line after sending the first sample event to sentry.
+    // await Sentry.captureException(Exception('This is a sample exception.'));
   } else {
     runApp(app);
   }
-
-  // TODO: Remove this line after sending the first sample event to sentry.
-  await Sentry.captureException(Exception('This is a sample exception.'));
 }
 
 final bool enableFirebase = !Platform.isWindows && !Platform.isLinux;

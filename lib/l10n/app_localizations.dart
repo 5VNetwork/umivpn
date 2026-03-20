@@ -4030,14 +4030,20 @@ abstract class AppLocalizations {
   /// No description provided for @autoCheck.
   ///
   /// In en, this message translates to:
-  /// **'自动检查新版本'**
+  /// **'Automatically Check New Version'**
   String get autoCheck;
 
   /// No description provided for @autoCheckDesc.
   ///
   /// In en, this message translates to:
-  /// **'自动检查新版本并提醒您'**
+  /// **'Automatically check for newer versions and remind you when there is one'**
   String get autoCheckDesc;
+
+  /// No description provided for @failedToFetchProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to fetch profile {error}'**
+  String failedToFetchProfile(String error);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

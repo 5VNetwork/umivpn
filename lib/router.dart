@@ -14,7 +14,6 @@ void initRouter(AuthProvider authProvider) {
             state.matchedLocation != '/privacy') {
           return '/privacy';
         }
-
         final authProvider = context.read<AuthProvider>();
         if (authProvider.currentSession == null) {
           return '/sign-in';

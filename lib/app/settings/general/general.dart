@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_common/util/country.dart';
 import 'package:flutter_common/widgets/app_bar.dart';
 import 'package:gap/gap.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
@@ -9,6 +10,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:umivpn/app/settings/general/language.dart';
+import 'package:umivpn/app/settings/general/country.dart';
 import 'package:umivpn/common/common.dart';
 import 'package:tm/ads/start_ad.dart';
 import 'package:umivpn/l10n/app_localizations.dart';
@@ -16,6 +18,7 @@ import 'package:umivpn/main.dart';
 import 'package:umivpn/pref_helper.dart';
 import 'package:flutter_common/services/auto_update.dart';
 import 'package:flutter_common/widgets/progress.dart';
+import 'package:country/country.dart';
 
 class GeneralSettingPage extends StatelessWidget {
   const GeneralSettingPage({super.key, this.showAppBar = true});
@@ -57,6 +60,25 @@ class GeneralSettingPage extends StatelessWidget {
                 }));
               },
             ),
+            // ListTile(
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.circular(10),
+            //   ),
+            //   leading: const Icon(Icons.flag_outlined),
+            //   title: Text(AppLocalizations.of(context)!.currentLocation,
+            //       style: Theme.of(context).textTheme.bodyLarge),
+            //   subtitle: Text(
+            //     _countryLabel(context, context.read<SharedPreferences>()),
+            //   ),
+            //   trailing: const Icon(Icons.keyboard_arrow_right_rounded),
+            //   onTap: () {
+            //     Navigator.of(context).push(
+            //       CupertinoPageRoute(
+            //         builder: (ctx) => const CountrySelectionPage(),
+            //       ),
+            //     );
+            //   },
+            // ),
             if (isAdPlatforms)
               const Column(children: [
                 Divider(),
@@ -86,6 +108,14 @@ class GeneralSettingPage extends StatelessWidget {
       ),
     );
   }
+}
+
+String _countryLabel(BuildContext context, SharedPreferences pref) {
+  final selectedCountry = pref.userCountry;
+  if (selectedCountry == null || selectedCountry.isEmpty) {
+    return AppLocalizations.of(context)!.auto;
+  }
+  return getLocalizedCountryName(context, selectedCountry);
 }
 
 class StartOnBootSetting extends StatefulWidget {

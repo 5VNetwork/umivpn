@@ -2088,8 +2088,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get vpnServiceDesc => 'UmiVPN利用VPNService使您的上网体验更加安全，私密与稳定。在使用VPNService的过程中，我们会根据您的IP地址来为您提供最优服务器，我们不会分享或储存您的IP地址。';
 
   @override
-  String get autoCheck => '自动检查新版本';
+  String get autoCheck => 'Automatically Check New Version';
 
   @override
-  String get autoCheckDesc => '自动检查新版本并提醒您';
+  String get autoCheckDesc => 'Automatically check for newer versions and remind you when there is one';
+
+  @override
+  String failedToFetchProfile(String error) {
+    return 'Failed to fetch profile $error';
+  }
 }

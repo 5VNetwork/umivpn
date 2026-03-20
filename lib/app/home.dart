@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -11,10 +12,11 @@ import 'package:tm/x_controller.dart';
 import 'package:tm/status_cubit.dart';
 import 'package:umivpn/app/choice_cubit.dart';
 import 'package:umivpn/app/manage_plan.dart';
+import 'package:umivpn/app/settings/general/country.dart';
 import 'package:umivpn/auth/auth_bloc.dart';
 import 'package:umivpn/auth/user.dart';
 import 'package:flutter_common/util/net.dart';
-import 'package:umivpn/app/home_ad_provider.dart';
+import 'package:tm/ads/home_ad_provider.dart';
 import 'package:umivpn/common/common.dart';
 import 'package:umivpn/iap/pro.dart';
 import 'package:umivpn/l10n/app_localizations.dart';
@@ -91,6 +93,13 @@ class _VpnHomePageState extends State<VpnHomePage> {
               );
             });
       });
+    } else if (pref.userCountry == null) {
+      // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      //   Navigator.of(context).push(CupertinoPageRoute(
+      //       builder: (context) => const CountrySelectionPage(
+      //             firstLaunch: true,
+      //           )));
+      // });
     }
   }
 
@@ -224,8 +233,6 @@ class _ProfileLoaderState extends State<_ProfileLoader> {
                     colorScheme.primary,
                   ),
                 ),
-                const SizedBox(height: 16),
-                CircularProgressIndicator.adaptive(),
               ],
             );
           }
@@ -249,7 +256,7 @@ class _ProfileLoaderState extends State<_ProfileLoader> {
               const SizedBox(height: 8),
               Text(
                 AppLocalizations.of(context)!
-                    .failedToDownloadGeoData('network'),
+                    .failedToFetchProfile(snapshot.error.toString()),
                 textAlign: TextAlign.center,
                 style: textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,

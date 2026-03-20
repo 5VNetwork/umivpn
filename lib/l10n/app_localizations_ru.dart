@@ -2138,8 +2138,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get vpnServiceDesc => 'UmiVPN uses VPNService to make your internet experience more secure, private, and stable. During the use of VPNService, we will provide you with the best server based on your IP address, and we will not share or store your IP address.';
 
   @override
-  String get autoCheck => '自动检查新版本';
+  String get autoCheck => 'Automatically Check New Version';
 
   @override
-  String get autoCheckDesc => '自动检查新版本并提醒您';
+  String get autoCheckDesc => 'Automatically check for newer versions and remind you when there is one';
+
+  @override
+  String failedToFetchProfile(String error) {
+    return 'Failed to fetch profile $error';
+  }
 }

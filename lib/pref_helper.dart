@@ -249,6 +249,14 @@ extension PrefHelperExtension on SharedPreferences {
     setString('selectedCountry', country);
   }
 
+  String? get userCountry {
+    return getString('userCountry');
+  }
+
+  void setUserCountry(String country) {
+    setString('userCountry', country);
+  }
+
   bool get enableAppOpenAds {
     return getBool('enableAppOpenAds') ?? true;
   }

@@ -57,10 +57,6 @@ List<int> generateUniqueNumbers(int count, {int min = 1, int max = 100}) {
   return numbers.toList();
 }
 
-String getUserCountryFromLocale() {
-  final locale = PlatformDispatcher.instance.locale;
-  return locale.countryCode ?? 'Unknown';
-}
 
 final emailRegExp = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 final numericRegExp = RegExp(r'^\d+$');
