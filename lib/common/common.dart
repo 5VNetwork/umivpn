@@ -3,22 +3,28 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_common/common.dart';
 
 final desktopPlatforms =
     Platform.isMacOS || Platform.isWindows || Platform.isLinux;
 
-const androidPackageNme =
-    appFlavor == 'staging' ? 'com5vnetwork.umi.staging' : 'com5vnetwork.umi';
+const androidPackageNme = appFlavor == 'staging'
+    ? 'com5vnetwork.umi.staging'
+    : appFlavor == 'dev'
+        ? 'com5vnetwork.umi.dev'
+        : 'com5vnetwork.umi';
 const darwinBundleId = 'com.5vnetwork.umivpn';
 
-const supabaseUrl = dev
-    ? String.fromEnvironment('SUPABASE_URL')
+final supabaseUrl = dev
+    ? const String.fromEnvironment('SUPABASE_URL')
     : 'https://tvssabmjinwlwtodgjza.supabase.co';
-const supabaseApiKey = dev
+final supabaseApiKey = dev
     ? 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH'
     : 'sb_publishable_bSVb6AH8NMt461D2zIqSjA_Ty5tfHhZ';
 
-const dev = appFlavor == 'staging' || (appFlavor == null && kDebugMode);
+final dev = (Platform.isAndroid && appFlavor == 'dev') ||
+    (applePlatform && appFlavor == 'staging') ||
+    (appFlavor == null && kDebugMode);
 
 const websiteUrl = 'https://www.umivpn.com';
 const privacyPolicyUrl = 'https://www.umivpn.com/privacy';
@@ -56,7 +62,6 @@ List<int> generateUniqueNumbers(int count, {int min = 1, int max = 100}) {
 
   return numbers.toList();
 }
-
 
 final emailRegExp = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 final numericRegExp = RegExp(r'^\d+$');

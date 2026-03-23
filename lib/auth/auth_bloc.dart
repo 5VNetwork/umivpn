@@ -23,21 +23,20 @@ class AuthRepo extends ChangeNotifier {
     _userSubscription = _authProvider.sessionStreams.listen(
       (user) {
         _user = user?.toUser;
-        _fetchProfile();
         notifyListeners();
       },
     );
-    _startPeriodicProfileFetch();
   }
 
   User? get user => _user;
   User? _user;
 
-  UserProfile? get userProfile => _userProfile;
-  UserProfile? _userProfile;
-
   void setTestUser() {
-    _user = const User(id: 'test', email: 'test@test.com');
+    _user = const User(
+        id: 'test',
+        email: 'test@test.com',
+        plan: SubscriptionPlan.free,
+        cycleEndAt: null);
     notifyListeners();
     // after 5 minutes, set the user to unauthenticated
     Future.delayed(const Duration(minutes: 5), () {
@@ -55,50 +54,6 @@ class AuthRepo extends ChangeNotifier {
     return _authProvider.currentSession?.accessToken;
   }
 
-  void _startPeriodicProfileFetch() async {
-    // Fetch immediately if user is authenticated
-    if (_user != null) {
-      unawaited(
-          retry(() => _fetchProfile(), retryIf: (_) => true, maxAttempts: 5));
-    }
-    // Then fetch every 5 minutes
-    _profileFetchTimer = Timer.periodic(
-      const Duration(minutes: 5),
-      (_) {
-        if (_user != null) {
-          _fetchProfile();
-        }
-      },
-    );
-  }
-
-  Future<void> _fetchProfile() async {
-    if (_user == null) {
-      return;
-    }
-
-    final userId = _user!.id;
-    try {
-      final response =
-          await supabase.from('profiles').select().eq('id', userId).single();
-      debugPrint(response.toString());
-      final remainingData = response['remaining_data'] as int;
-      final plan = _parseSubscriptionPlan(response['plan'] as String);
-
-      _userProfile = UserProfile(
-        subscriptionPlan: plan,
-        remainingData: remainingData,
-        cycleEndAt: response['cycle_end_at'] != null
-            ? DateTime.parse(response['cycle_end_at'] as String)
-            : null,
-      );
-      notifyListeners();
-    } catch (e, stackTrace) {
-      logger.e('Error fetching profile', error: e, stackTrace: stackTrace);
-      rethrow;
-    }
-  }
-
   Future<SubscriptionInfo?> fetchSubscriptionInfo() async {
     if (_user == null) {
       return null;
@@ -112,23 +67,6 @@ class AuthRepo extends ChangeNotifier {
           .select('*, subscriptions(*)')
           .eq('id', userId)
           .single();
-
-      // --- Parse profile data ---
-      final remainingData = response['remaining_data'] as int;
-      final plan = _parseSubscriptionPlan(response['plan'] as String);
-      final cycleEndAt = response['cycle_end_at'] != null
-          ? DateTime.parse(response['cycle_end_at'] as String)
-          : null;
-      final subscriptionId = response['subscription_id'] as String?;
-
-      _userProfile = UserProfile(
-        subscriptionPlan: plan,
-        remainingData: remainingData,
-        cycleEndAt: cycleEndAt,
-        subscriptionId: subscriptionId,
-      );
-      notifyListeners();
-
       // --- Parse subscription data (active subscription) ---
       SubscriptionInfo? subInfo;
       final subscriptionsData = response['subscriptions'];
@@ -240,25 +178,4 @@ class SubscriptionInfo {
   final DateTime periodEndAt;
   final bool isCanceled;
   final (SubscriptionPlan, Period)? nextPlanAndPeriod;
-}
-
-class UserProfile {
-  const UserProfile({
-    required this.subscriptionPlan,
-    required this.remainingData,
-    required this.cycleEndAt,
-    this.subscriptionId,
-  });
-
-  final SubscriptionPlan subscriptionPlan;
-  final int remainingData;
-  final DateTime? cycleEndAt;
-  final String? subscriptionId;
-
-  DateTime get refreshDate {
-    if (subscriptionPlan == SubscriptionPlan.free) {
-      return DateTime(DateTime.now().year, DateTime.now().month + 1, 1);
-    }
-    return cycleEndAt!;
-  }
 }

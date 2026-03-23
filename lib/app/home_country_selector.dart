@@ -106,7 +106,7 @@ class _CountryListState extends State<_CountryList> {
     final countries = pref.countries ?? defaultCountries;
     _recentlyUsedCountries = pref.getStringList('recentlyUsedCountries') ?? [];
     setState(() {});
-    final userPlan = context.read<AuthRepo>().userProfile!.subscriptionPlan;
+    final userPlan = context.read<AuthRepo>().user!.plan;
 
     if (userPlan == SubscriptionPlan.free) {
       _unselectableCountries = countries.popular..addAll(countries.others);

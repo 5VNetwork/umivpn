@@ -123,7 +123,7 @@ class AllPlansList extends StatelessWidget {
       builder: (context, value, child) {
         final colorScheme = Theme.of(context).colorScheme;
         final textTheme = Theme.of(context).textTheme;
-        final userProfile = context.watch<AuthRepo>().userProfile!;
+        final userProfile = context.watch<AuthRepo>().user!;
 
         if (value.loadingPlans || value.loadingSubscriptionInfo) {
           return Center(
@@ -204,7 +204,7 @@ class AllPlansList extends StatelessWidget {
                   context,
                   plan,
                   planData,
-                  userProfile.subscriptionPlan,
+                  userProfile.plan,
                   userProfile,
                   value.subscriptionInfo,
                 ),
@@ -253,13 +253,13 @@ class AllPlansList extends StatelessWidget {
     SubscriptionPlan plan,
     PlanMetadata planData,
     SubscriptionPlan currentPlan,
-    UserProfile userProfile,
+    User userProfile,
     SubscriptionInfo? subscriptionInfo,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final consistentSub = subscriptionInfo?.source == _source();
-    final userHasNoSub = userProfile.subscriptionPlan == SubscriptionPlan.free;
+    final userHasNoSub = userProfile.plan == SubscriptionPlan.free;
     final canChangePeriod = _source() == SubscriptionSource.playStore;
     return Container(
       padding: const EdgeInsets.all(20),
@@ -391,7 +391,7 @@ class AllPlansList extends StatelessWidget {
               ),
             ),
           ],
-        ],  
+        ],
       ),
     );
   }
@@ -400,7 +400,7 @@ class AllPlansList extends StatelessWidget {
     BuildContext context,
     SubscriptionPlan plan,
     PlanMetadata planData,
-    UserProfile userProfile,
+    User userProfile,
     SubscriptionInfo? subscriptionInfo,
   ) async {
     final colorScheme = Theme.of(context).colorScheme;
@@ -418,7 +418,7 @@ class AllPlansList extends StatelessWidget {
     // Check if user has a non-canceled subscription
     // TODO: handle subsciption change
     final hasSubscriptionFromOtherSouce =
-        userProfile.subscriptionPlan != SubscriptionPlan.free &&
+        userProfile.plan != SubscriptionPlan.free &&
             subscriptionInfo?.source != source;
     if (hasSubscriptionFromOtherSouce) {
       if (subscriptionInfo?.isCanceled == true) {

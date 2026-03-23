@@ -20,7 +20,7 @@ class _CurrentPlan extends StatelessWidget {
         }
 
         final subscriptionInfo = value.subscriptionInfo;
-        final currentPlan = value.userProfile.subscriptionPlan;
+        final currentPlan = value.userProfile.plan;
         // Subscription renewal date (only for paid plans)
         final renewalDate = subscriptionInfo?.periodEndAt;
         final isPaidPlan = currentPlan != SubscriptionPlan.free;

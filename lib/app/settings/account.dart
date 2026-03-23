@@ -103,11 +103,11 @@ class _AccountPageState extends State<AccountPage> {
                                         AppLocalizations.of(context)!.cancel)),
                                 TextButton(
                                     onPressed: () async {
-                                      final userProfile = authRepo.userProfile;
+                                      final userProfile = authRepo.user;
 
                                       // Check if user has a non-canceled subscription
                                       final hasSubscription =
-                                          userProfile!.subscriptionPlan !=
+                                          userProfile!.plan !=
                                               SubscriptionPlan.free;
 
                                       if (hasSubscription) {

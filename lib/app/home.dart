@@ -165,12 +165,11 @@ class _VpnHomePageState extends State<VpnHomePage> {
       body: SafeArea(
         child: Consumer<AuthRepo>(
           builder: (context, authRepo, child) {
-            final userProfile = authRepo.userProfile;
+            final userProfile = authRepo.user;
             if (userProfile == null) {
               return const _ProfileLoader();
             }
-            if (!isAdPlatforms &&
-                userProfile.subscriptionPlan == SubscriptionPlan.free) {
+            if (!isAdPlatforms && userProfile.plan == SubscriptionPlan.free) {
               final locale = Localizations.localeOf(context).languageCode;
               return ChangeNotifierProvider(
                   create: (context) => ManagePlanViewModel(
@@ -310,11 +309,10 @@ class _HomeBody extends StatelessWidget {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Consumer<AuthRepo>(builder: (context, authRepo, child) {
-                if (authRepo.userProfile == null) {
+                if (authRepo.user == null) {
                   return const SizedBox.shrink();
                 }
-                if (authRepo.userProfile!.subscriptionPlan !=
-                    SubscriptionPlan.pro) {
+                if (authRepo.user!.plan != SubscriptionPlan.pro) {
                   return ChangeNotifierProvider(
                     create: (context) => HomeAdProvider(
                       defaultNetworkMonitor:
@@ -361,7 +359,7 @@ class _HomeBody extends StatelessWidget {
                       SizedBox(height: 15),
                       CountrySelector(),
                       SizedBox(height: 15),
-                      _TrafficCard(),
+                      // _TrafficCard(),
                     ],
                   ),
                 );

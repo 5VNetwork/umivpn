@@ -114,9 +114,9 @@ class ManagePlanViewModel extends ChangeNotifier {
     }
   }
 
-  UserProfile get userProfile => authRepo.userProfile!;
+  User get userProfile => authRepo.user!;
   DateTime get refreshDate {
-    if (userProfile.subscriptionPlan == SubscriptionPlan.free) {
+    if (userProfile.plan == SubscriptionPlan.free) {
       return DateTime(DateTime.now().year, DateTime.now().month + 1, 1);
     }
     return userProfile.cycleEndAt!;

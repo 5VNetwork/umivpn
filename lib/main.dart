@@ -337,15 +337,13 @@ void main() async {
                 sharedPreferences: context.read<SharedPreferences>(),
                 downloadFunction: directDownloadToFile,
                 logger: logger);
-            if (context.read<AuthRepo>().userProfile?.subscriptionPlan ==
-                SubscriptionPlan.pro) {
+            if (context.read<AuthRepo>().user?.plan == SubscriptionPlan.pro) {
               adsProvider.start();
             }
             return adsProvider;
           },
           update: (context, authRepo, adsProvider) {
-            if (authRepo.userProfile?.subscriptionPlan ==
-                SubscriptionPlan.pro) {
+            if (authRepo.user?.plan == SubscriptionPlan.pro) {
               adsProvider?.stop();
             } else {
               adsProvider?.start();
