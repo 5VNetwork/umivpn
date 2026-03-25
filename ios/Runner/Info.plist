@@ -28,17 +28,18 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.5vnetwork</string>
+			<string>com.umivpn</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.952575395446-dts29lpnn4gnn9dbgu2aule8ja6ba7sn</string>
+				<string>com.googleusercontent.apps.952575395446-8gumjqa4av8akh8cralh8ug8kb2dckci</string>
 			</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.5vnetwork</string>
+			<string>com.umivpn</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>umivpn</string>

@@ -68,23 +68,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       _register('umivpn');
     }
     appLinks.uriLinkStream.listen(handlerAppLinks);
-    if (fcmEnabled) {
-      // fcm foreground messages
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        logger.d('Got a message whilst in the foreground! ${message.data}');
-
-        if (message.notification != null) {
-          logger.d(
-              'Message also contained a notification: ${message.notification}');
-          final notification = message.notification;
-          final android = message.notification?.android;
-          if (notification != null && android != null) {}
-        }
-      });
-      // Run code required to handle interacted messages in an async function
-      // as initState() must not be async
-      setupInteractedMessage();
-    }
+    _setupFcm();
 
     _listener = AppLifecycleListener(
       onExitRequested: () async {
@@ -98,27 +82,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       // specific state transitions.
       // onStateChange: (state) => logger.d('state change: $state'),
     );
-  }
-
-  // It is assumed that all messages contain a data field with the key 'type'
-  Future<void> setupInteractedMessage() async {
-    // Get any messages which caused the application to open from
-    // a terminated state.
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-
-    // If the message also contains a data property with a "type" of "chat",
-    // navigate to a chat screen
-    if (initialMessage != null) {
-      _handleMessage(initialMessage);
-    }
-    // Also handle any interaction when the app is in the background via a
-    // Stream listener
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
-  }
-
-  void _handleMessage(RemoteMessage message) {
-    logger.d('FCM message: ${message.data}');
   }
 
   Future<void> _register(String scheme) async {

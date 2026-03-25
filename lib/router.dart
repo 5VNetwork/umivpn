@@ -8,20 +8,19 @@ void initRouter(AuthProvider authProvider) {
       initialLocation: '/',
       redirect: (context, state) {
         final pref = context.read<SharedPreferences>();
+        final location = state.matchedLocation;
         // Check if privacy page should be shown
-        if (Platform.isIOS &&
-            !pref.hasShownPrivacyInfo &&
-            state.matchedLocation != '/privacy') {
+        if (applePlatform && !pref.hasShownPrivacyInfo) {
           return '/privacy';
         }
         final authProvider = context.read<AuthProvider>();
         if (authProvider.currentSession == null) {
           return '/sign-in';
         }
-        if (state.matchedLocation == '/sign-in') {
-          return '/';
+        if (location == '/sign-in') {
+          return pref.hasShownWelcome ? '/' : '/welcome';
         }
-        if (!pref.hasShownWelcome && state.matchedLocation != '/welcome') {
+        if (!pref.hasShownWelcome) {
           return '/welcome';
         }
         return null;
@@ -108,7 +107,7 @@ void initRouter(AuthProvider authProvider) {
         GoRoute(
           path: '/sign-in',
           builder: (context, state) => Scaffold(
-            floatingActionButton: dev
+            floatingActionButton: debug
                 ? FloatingActionButton(
                     onPressed: () async {
                       await supabase.auth.signInWithPassword(
@@ -119,11 +118,11 @@ void initRouter(AuthProvider authProvider) {
                     child: const Icon(Icons.arrow_back),
                   )
                 : null,
-            body: const Center(
+            body: Center(
               child: SignInPage(
                   showGoogle: true,
                   showMicrosoft: false,
-                  showApple: false,
+                  showApple: applePlatform,
                   termOfServiceUrl: termOfServiceUrl,
                   privacyPolicyUrl: privacyPolicyUrl),
             ),

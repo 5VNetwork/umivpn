@@ -10,7 +10,7 @@
 	<true/>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>$(TeamIdentifierPrefix)com.5vnetwork.umivpn</string>
+		<string>$(TeamIdentifierPrefix)com.umivpn</string>
 	</array>
 	<key>com.apple.security.network.client</key>
 	<true/>
@@ -18,7 +18,7 @@
 	<true/>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)com.5vnetwork.umivpn</string>
+		<string>$(AppIdentifierPrefix)com.umivpn</string>
 	</array>
 </dict>
 </plist>

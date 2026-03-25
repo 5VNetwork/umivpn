@@ -16,7 +16,7 @@
 	<true/>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>$(TeamIdentifierPrefix)com.5vnetwork.umivpn</string>
+		<string>$(TeamIdentifierPrefix)com.umivpn</string>
 	</array>
 	<key>com.apple.security.cs.allow-jit</key>
 	<true/>
@@ -28,7 +28,7 @@
 	<true/>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)com.5vnetwork.umivpn</string>
+		<string>$(AppIdentifierPrefix)com.umivpn</string>
 		<string>$(AppIdentifierPrefix)com.google.GIDSignIn</string>
 	</array>
 </dict>

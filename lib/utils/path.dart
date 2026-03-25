@@ -144,7 +144,7 @@ Future<Directory> getClashRulesDir() async {
 
 Future<String> getClashRulesPath(String url, {bool isPkg = false}) async {
   final dir = isPkg
-      ? Directory('/tmp/com.5vnetwork.umivpn/geo')
+      ? Directory('/tmp/com.umivpn/geo')
       : await getClashRulesDir();
   if (!dir.existsSync()) {
     dir.createSync(recursive: true);

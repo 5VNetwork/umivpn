@@ -69,6 +69,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '772250867140',
     projectId: 'umivpn-staging',
     storageBucket: 'umivpn-staging.firebasestorage.app',
-    iosBundleId: 'com.5vnetwork.umivpn',
+    iosBundleId: 'com.umivpn',
   );
 }

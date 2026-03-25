@@ -19,14 +19,13 @@ import Cocoa
 @available(macOSApplicationExtension 11.0, *)
 #endif
 class DarwinHostApiImpl: DarwinHostApi {
-    
-    private let monitor = NWPathMonitor(prohibitedInterfaceTypes: [NWInterface.InterfaceType.other])
+    private let monitorForDefaultPhysicalNIC = NWPathMonitor(prohibitedInterfaceTypes: [NWInterface.InterfaceType.other])
     private var flutterApi: DarwinFlutterApi?
     
     func appGroupPath() throws -> String {
 #if os(iOS)
         let path = FileManager.default.containerURL(
-            forSecurityApplicationGroupIdentifier: "group.com.5vnetwork.umivpn")?
+            forSecurityApplicationGroupIdentifier: "group." + Bundle.main.bundleIdentifier!)?
             .relativePath
 #else
         let path = FileManager.default.containerURL(
@@ -45,7 +44,7 @@ class DarwinHostApiImpl: DarwinHostApi {
         config: FlutterStandardTypedData,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        self.setDefaultNIC(path: self.monitor.currentPath)
+        self.setDefaultNIC(path: self.monitorForDefaultPhysicalNIC.currentPath)
         DispatchQueue.global().async {
             var error: NSError?
             X_darwinStartApiServer(config.data, &error)
@@ -59,10 +58,10 @@ class DarwinHostApiImpl: DarwinHostApi {
                 completion(.success(()))
             }
         }
-        self.monitor.pathUpdateHandler = { path in
+        self.monitorForDefaultPhysicalNIC.pathUpdateHandler = { path in
             self.setDefaultNIC(path: path)
         }
-        self.monitor.start(queue: DispatchQueue.global())
+        self.monitorForDefaultPhysicalNIC.start(queue: DispatchQueue.global())
     }
     
         private func setDefaultNIC(path: Network.NWPath) {

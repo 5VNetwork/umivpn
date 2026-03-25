@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "772250867140",
+    "project_id": "umivpn-staging",
+    "storage_bucket": "umivpn-staging.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772250867140:android:80ac8630f01acb3bb78091",
+        "android_client_info": {
+          "package_name": "com5vnetwork.umi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVYdcTEnA3JKL03LoOgIjbPjm_Gippmxk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772250867140:android:77975346cd058ef7b78091",
+        "android_client_info": {
+          "package_name": "com5vnetwork.umi.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVYdcTEnA3JKL03LoOgIjbPjm_Gippmxk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772250867140:android:3546dae79c4756a4b78091",
+        "android_client_info": {
+          "package_name": "com5vnetwork.umi.staging"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVYdcTEnA3JKL03LoOgIjbPjm_Gippmxk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

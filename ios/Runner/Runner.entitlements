@@ -10,7 +10,7 @@
 	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.5vnetwork.umivpn</string>
+		<string>group.com.umivpn.dev</string>
 	</array>
 </dict>
 </plist>

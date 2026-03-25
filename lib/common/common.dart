@@ -13,17 +13,17 @@ const androidPackageNme = appFlavor == 'staging'
     : appFlavor == 'dev'
         ? 'com5vnetwork.umi.dev'
         : 'com5vnetwork.umi';
-const darwinBundleId = 'com.5vnetwork.umivpn';
+const darwinBundleId = 'com.umivpn';
 
-final supabaseUrl = dev
+final supabaseUrl = debug
     ? const String.fromEnvironment('SUPABASE_URL')
     : 'https://tvssabmjinwlwtodgjza.supabase.co';
-final supabaseApiKey = dev
+final supabaseApiKey = debug
     ? 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH'
     : 'sb_publishable_bSVb6AH8NMt461D2zIqSjA_Ty5tfHhZ';
 
-final dev = (Platform.isAndroid && appFlavor == 'dev') ||
-    (applePlatform && appFlavor == 'staging') ||
+final debug = (Platform.isAndroid && appFlavor == 'dev') ||
+    (applePlatform && appFlavor == null) ||
     (appFlavor == null && kDebugMode);
 
 const websiteUrl = 'https://www.umivpn.com';

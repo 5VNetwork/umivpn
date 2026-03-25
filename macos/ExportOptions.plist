@@ -8,9 +8,9 @@
 	<string>developer-id</string>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>com.5vnetwork.umivpn.system</key>
+		<key>com.umivpn.system</key>
 		<string>pkg</string>
-		<key>com.5vnetwork.umivpn.system.se</key>
+		<key>com.umivpn.system.se</key>
 		<string>pkg se</string>
 	</dict>
 	<key>signingCertificate</key>

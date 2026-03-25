@@ -11,11 +11,13 @@ case $1 in
   dev)
     flutterfire config \
       --project=umivpn-staging \
-      --out=lib/firebase_options_staging.dart \
-      --ios-bundle-id=com.umivpn.staging \
-      --ios-out=ios/flavors/staging/GoogleService-Info.plist \
-      --android-package-name=com5vnetwork.umi.staging \
-      --android-out=android/app/src/staging/google-services.json
+      --out=lib/firebase_options_dev.dart \
+      --ios-bundle-id=com.umivpn.dev \
+      --ios-out=ios/flavors/dev/GoogleService-Info.plist \
+      --macos-bundle-id=com.umivpn.dev \
+      --macos-out=macos/flavors/dev/GoogleService-Info.plist \
+      --android-package-name=com5vnetwork.umi.dev \
+      --android-out=android/app/src/debug/google-services.json 
     ;;
   staging)
     flutterfire config \

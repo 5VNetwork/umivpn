@@ -47,7 +47,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     private static var defaultSharedDirectory: URL! {
         let groupIdentifier =
-            "K4FDLB3LLD.com.5vnetwork.umivpn.system"
+            "K4FDLB3LLD.com.umivpn.system"
             
         return FileManager.default
             .containerURL(
@@ -65,7 +65,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 "protocolConfiguration \(String(describing: (protocolConfiguration as! NETunnelProviderProtocol).providerConfiguration))"
         )
         
-        ///Users/shan/Library/Group Containers/K4FDLB3LLD.com.5vnetwork.umivpn/Library/Caches/stderr.log
+        ///Users/shan/Library/Group Containers/K4FDLB3LLD.com.umivpn/Library/Caches/stderr.log
         ///
         var map: [String: NSObject]? = options
 

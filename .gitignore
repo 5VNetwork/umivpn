@@ -79,3 +79,4 @@ Makefile
 assets/plans.json
 
 sentry.properties
+ios/tm.xcframework/

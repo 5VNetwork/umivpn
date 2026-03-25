@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:ads/ads_provider.dart';
@@ -20,6 +22,7 @@ import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:macos_window_utils/macos/ns_window_button_type.dart';
 import 'package:macos_window_utils/window_manipulator.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
@@ -66,6 +69,7 @@ import 'package:flutter_common/auth/auth_provider.dart';
 import 'package:flutter_common/services/periodic.dart';
 import 'firebase_options.dart';
 import 'firebase_options_staging.dart' as staging;
+import 'firebase_options_dev.dart' as dev;
 import 'package:umivpn/utils/logger.dart';
 import 'package:umivpn/pref_helper.dart';
 import 'package:umivpn/utils/path.dart';
@@ -92,11 +96,11 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 part 'desktop_tray.dart';
 part 'router.dart';
 part 'app.dart';
+part 'fcm.dart';
 
 void main() async {
   final startTime = DateTime.now();
   WidgetsFlutterBinding.ensureInitialized();
-  // unawaited(MobileAds.instance.initialize());
 
   // fonts are bundled, disable runtime fetching
   if (Platform.isLinux || Platform.isWindows) {
@@ -105,6 +109,7 @@ void main() async {
 
   if (enableFirebase) {
     await initializeFirebaseApp();
+    await _initFcm();
   }
 
   final pref = await SharedPreferences.getInstance();
@@ -135,7 +140,6 @@ void main() async {
     logger: logger,
     xApiClient: apiClient,
   );
-  // await _initFcm();
   await _initSupabase(storage, httpClient);
   await setStartOnBoot(pref);
 
@@ -371,8 +375,6 @@ void main() async {
 }
 
 final bool enableFirebase = !Platform.isWindows && !Platform.isLinux;
-bool googleApiAvailable = false;
-bool fcmEnabled = false;
 late final AndroidNotificationChannel androidChannel;
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -390,7 +392,7 @@ late final String version;
 // Router
 final rootNavigationKey = GlobalKey<NavigatorState>();
 final supabase = Supabase.instance.client;
-final isAdPlatforms = Platform.isAndroid || Platform.isIOS;
+final isAdPlatforms = Platform.isAndroid;
 
 void snack(
   String? message, {
@@ -519,92 +521,6 @@ Future<void> setStartOnBoot(SharedPreferences pref) async {
   }
 }
 
-Future<void> _initFcm() async {
-  // set fcm enabled
-  if (Platform.isAndroid) {
-    GooglePlayServicesAvailability availability = await GoogleApiAvailability
-        .instance
-        .checkGooglePlayServicesAvailability();
-    googleApiAvailable = availability == GooglePlayServicesAvailability.success;
-    fcmEnabled = googleApiAvailable;
-  } else if (Platform.isIOS || Platform.isMacOS) {
-    fcmEnabled = true;
-  }
-
-  // fcm
-  if (fcmEnabled) {
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    if (Platform.isAndroid) {
-      // Android applications are not required to request permission.
-      // enable foreground notification
-      androidChannel = const AndroidNotificationChannel(
-        'high_importance_channel', // id
-        'High Importance Notifications', // title
-        description:
-            'This channel is used for important notifications.', // description
-        importance: Importance.defaultImportance,
-        enableVibration: false,
-        showBadge: false,
-        playSound: false,
-      );
-      try {
-        await flutterLocalNotificationsPlugin
-            .resolvePlatformSpecificImplementation<
-                AndroidFlutterLocalNotificationsPlugin>()
-            ?.createNotificationChannel(androidChannel);
-      } catch (e) {
-        logger.e('createNotificationChannel', error: e);
-      }
-    } else if (Platform.isIOS || Platform.isMacOS) {
-      // You may set the permission requests to "provisional" which allows the user to choose what type
-      // of notifications they would like to receive once the user receives a notification.
-      try {
-        final notificationSettings = await FirebaseMessaging.instance
-            .requestPermission(provisional: true);
-        logger.d('FCM permission: ${notificationSettings.authorizationStatus}');
-      } catch (e) {
-        logger.e('requestPermission', error: e);
-      }
-      try {
-        await FirebaseMessaging.instance
-            .setForegroundNotificationPresentationOptions(
-          alert: true, // Required to display a heads up notification
-          badge: true,
-          sound: true,
-        );
-      } catch (e) {
-        logger.e('setForegroundNotificationPresentationOptions', error: e);
-      }
-    }
-    if (!isProduction()) {
-      FirebaseMessaging.instance.getToken().then((token) {
-        logger.d('FCM token: $token');
-      }).catchError((err) {
-        logger.e('Error getting FCM token', error: err);
-      });
-      FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) {
-        // TODO: If necessary send token to application server.
-        logger.d('FCM token: $fcmToken');
-        // Note: This callback is fired at each app startup and whenever a new
-        // token is generated.
-      }).onError((err) {
-        // Error getting token.
-        logger.e('Error getting FCM token', error: err);
-      });
-      if (Platform.isIOS || Platform.isMacOS) {
-        // For apple platforms, ensure the APNS token is available before making any FCM plugin API calls
-        final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-        if (apnsToken != null) {
-          // APNS token is available, make FCM plugin API requests...
-          logger.d('APNS token: $apnsToken');
-        } else {
-          logger.d('APNS token is not available');
-        }
-      }
-    }
-  }
-}
-
 void periodicFetchCountries(SharedPreferences pref) async {
   PeriodicTask(
           task: () async {
@@ -629,15 +545,6 @@ void periodicFetchGeo(SharedPreferences pref) {
           hour: 8,
           lastRunKey: 'last_geo_fetch')
       .start();
-}
-
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  // await Firebase.initializeApp();
-
-  print("Handling a background message: ${message.messageId}");
 }
 
 Future<String> assetName() async {
@@ -666,7 +573,7 @@ Future<void> initializeFirebaseApp() async {
   final firebaseOptions = switch (appFlavor) {
     'produdction' || 'pkg' || 'apk' => DefaultFirebaseOptions.currentPlatform,
     'staging' => staging.DefaultFirebaseOptions.currentPlatform,
-    _ => throw UnsupportedError('Invalid flavor: $appFlavor'),
+    _ => dev.DefaultFirebaseOptions.currentPlatform,
   };
   await Firebase.initializeApp(options: firebaseOptions);
 }

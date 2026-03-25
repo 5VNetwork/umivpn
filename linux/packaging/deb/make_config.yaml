@@ -1,5 +1,5 @@
 display_name: UmiVPN
-package_name: com.5vnetwork.umivpn
+package_name: com.umivpn
 maintainer:
   name: 5vnetworkllc
   email: contactumivpn@proton.me
@@ -16,7 +16,7 @@ postinstall_scripts:
   #- echo "Setting up network permissions..."
   #- setcap cap_net_admin,cap_net_raw,cap_dac_override+ep /usr/bin/umivpn 
   #- echo "Installing PolicyKit policy..."
-  #- cp /usr/share/polkit-1/actions/com.5vnetwork.umivpn.policy /usr/share/polkit-1/actions/ || echo "PolicyKit policy installation failed"
+  #- cp /usr/share/polkit-1/actions/com.umivpn.policy /usr/share/polkit-1/actions/ || echo "PolicyKit policy installation failed"
 postuninstall_scripts:
   - echo "UmiVPN has been removed from your system"
 
