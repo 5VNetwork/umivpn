@@ -29,7 +29,6 @@ import sign_in_with_apple
 import tm_macos
 import tray_manager
 import url_launcher_macos
-import webview_flutter_wkwebview
 import window_manager
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
@@ -57,6 +56,5 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   TmMacosPlugin.register(with: registry.registrar(forPlugin: "TmMacosPlugin"))
   TrayManagerPlugin.register(with: registry.registrar(forPlugin: "TrayManagerPlugin"))
   UrlLauncherPlugin.register(with: registry.registrar(forPlugin: "UrlLauncherPlugin"))
-  WebViewFlutterPlugin.register(with: registry.registrar(forPlugin: "WebViewFlutterPlugin"))
   WindowManagerPlugin.register(with: registry.registrar(forPlugin: "WindowManagerPlugin"))
 }

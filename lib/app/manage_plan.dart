@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_common/common.dart';
 import 'package:flutter_common/widgets/app_bar.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:pasteboard/pasteboard.dart';
@@ -21,7 +20,6 @@ import 'package:umivpn/theme.dart';
 import 'package:umivpn/utils/logger.dart';
 import 'package:umivpn/iap/pro.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_common/auth/auth_provider.dart';
 import 'package:flutter_common/widgets/dialog.dart';
 import 'package:flutter_common/widgets/progress.dart';
 import 'package:http/http.dart' as http;
@@ -129,6 +127,7 @@ class ManagePlanViewModel extends ChangeNotifier {
     loadingSubscriptionInfo = true;
     notifyListeners();
     try {
+      await authRepo.refreshUser();
       subscriptionInfo = await authRepo.fetchSubscriptionInfo();
     } catch (e) {
       errorFetchingSubscriptionInfo = e.toString();
@@ -156,9 +155,9 @@ class ManagePlanViewModel extends ChangeNotifier {
           ? _convertToIAPPlans(fetchedPlans, proPurchases!)
           : fetchedPlans;
       loadingPlans = false;
-    } catch (e) {
+    } catch (e, stackTrace) {
       errorFetchingPlans = e.toString();
-      logger.e('Failed to load plans', error: e);
+      logger.e('Failed to load plans', error: e, stackTrace: stackTrace);
     } finally {
       loadingPlans = false;
       notifyListeners();
@@ -307,7 +306,10 @@ class ManagePlanViewModel extends ChangeNotifier {
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Failed to reactivate subscription: $e'),
+                  content: Text(
+                    AppLocalizations.of(context)!
+                        .failedToReactivateSubscription,
+                  ),
                 ),
               );
             } finally {
@@ -326,12 +328,27 @@ class ManagePlanViewModel extends ChangeNotifier {
     areYouSureDialog(
         ctx: context,
         title: Text(
-          "Are you sure you want to cancel?",
+          AppLocalizations.of(context)!.areYouSureCancel,
           style: textTheme.titleMedium?.copyWith(color: colorScheme.onSurface),
         ),
-        content: Text(
-          "After cancellation, you will continue to have access until the end of your current billing period. ${subscriptionInfo?.source == SubscriptionSource.stripe ? 'You can reactivate your subscription at any time.' : ''}",
-          style: TextStyle(color: colorScheme.onSurface.withOpacity(0.87)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppLocalizations.of(context)!.subscriptionCancelDialogBody,
+              style: TextStyle(color: colorScheme.onSurface.withOpacity(0.87)),
+            ),
+            if (subscriptionInfo?.source == SubscriptionSource.stripe) ...[
+              const SizedBox(height: 4),
+              Text(
+                AppLocalizations.of(context)!
+                    .subscriptionCancelDialogStripeReactivationInfo,
+                style:
+                    TextStyle(color: colorScheme.onSurface.withOpacity(0.87)),
+              ),
+            ],
+          ],
         ),
         onNo: () => Navigator.pop(context),
         onYes: () async {
@@ -351,7 +368,8 @@ class ManagePlanViewModel extends ChangeNotifier {
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Failed to cancel subscription: $e'),
+                content: Text(
+                    AppLocalizations.of(context)!.failedToCancelSubscription),
               ),
             );
           } finally {
@@ -373,7 +391,7 @@ class ManagePlanViewModel extends ChangeNotifier {
         if (token == null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("No token found"),
+              content: Text(AppLocalizations.of(context)!.noTokenFound),
             ),
           );
           return;
@@ -403,7 +421,11 @@ class ManagePlanViewModel extends ChangeNotifier {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("Error: $e"),
+              content: Text(
+                AppLocalizations.of(context)!.failedToOpenCustomerPortal(
+                  e.toString(),
+                ),
+              ),
             ),
           );
         }
@@ -534,7 +556,11 @@ Future<void> _createCheckoutSession(
     Navigator.pop(context); // Close loading dialog
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("Error: $e"),
+        content: Text(
+          AppLocalizations.of(context)!.failedToCreateCheckoutSession(
+            e.toString(),
+          ),
+        ),
       ),
     );
   }

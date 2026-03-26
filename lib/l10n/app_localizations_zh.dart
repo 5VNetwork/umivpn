@@ -1924,6 +1924,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get areYouSureReactivate => '您确定要重新激活吗？';
 
   @override
+  String get areYouSureCancel => '您确定要取消订阅吗？';
+
+  @override
+  String get subscriptionCancelDialogBody => '取消后，您将继续享有本次账单周期结束前的访问权限。';
+
+  @override
+  String get subscriptionCancelDialogStripeReactivationInfo => '您可以随时重新激活订阅。';
+
+  @override
+  String get failedToReactivateSubscription => '无法重新激活订阅';
+
+  @override
+  String get failedToCancelSubscription => '无法取消订阅';
+
+  @override
   String get cancelled => '已取消';
 
   @override
@@ -2019,12 +2034,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get welcomeToUmiVPN => '欢迎使用 UmiVPN！';
 
   @override
-  String get umivpnIsFreeToUse => 'UmiVPN 免费使用';
-
-  @override
-  String get welcomeConnectionInfo => '每次连接最多持续 30 分钟，之后请返回并重新连接。';
-
-  @override
   String get gotIt => '知道了';
 
   @override
@@ -2097,4 +2106,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String failedToFetchProfile(String error) {
     return 'Failed to fetch profile $error';
   }
+
+  @override
+  String get noDataRemaining => '本月剩余数据已用完';
 }

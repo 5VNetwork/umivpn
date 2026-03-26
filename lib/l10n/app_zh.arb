@@ -832,6 +832,11 @@
     }
   },
   "areYouSureReactivate": "您确定要重新激活吗？",
+  "areYouSureCancel": "您确定要取消订阅吗？",
+  "subscriptionCancelDialogBody": "取消后，您将继续享有本次账单周期结束前的访问权限。",
+  "subscriptionCancelDialogStripeReactivationInfo": "您可以随时重新激活订阅。",
+  "failedToReactivateSubscription": "无法重新激活订阅",
+  "failedToCancelSubscription": "无法取消订阅",
   "cancelled": "已取消",
   "dataRefresh": "数据刷新",
   "renewalDate": "续订日期",
@@ -873,8 +878,6 @@
   "noServersMessage": "抱歉，没有匹配到合适的服务器。请稍后再试。",
   "selectRouteMode": "选择路由模式",
   "welcomeToUmiVPN": "欢迎使用 UmiVPN！",
-  "umivpnIsFreeToUse": "UmiVPN 免费使用",
-  "welcomeConnectionInfo": "每次连接最多持续 30 分钟，之后请返回并重新连接。",
   "gotIt": "知道了",
   "umivpnSlogan": "你的自由，悠咪来守护",
   "enableAppOpenAds": "返回应用广告",
@@ -904,5 +907,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "noDataRemaining": "本月剩余数据已用完"
 }

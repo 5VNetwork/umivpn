@@ -19,7 +19,7 @@ enum SubscriptionPlan {
         pro => 'Pro',
       };
 
-  int get data => 0;
+  int get data => 1024 * 1024 * 1024;
 
   static SubscriptionPlan fromString(String plan) {
     return switch (plan) {
@@ -53,6 +53,20 @@ class User extends Equatable {
   final String email;
   final SubscriptionPlan plan;
   final DateTime? cycleEndAt;
+
+  User copyWith({
+    String? id,
+    String? email,
+    SubscriptionPlan? plan,
+    DateTime? cycleEndAt,
+  }) {
+    return User(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      plan: plan ?? this.plan,
+      cycleEndAt: cycleEndAt ?? this.cycleEndAt,
+    );
+  }
 
   @override
   List<Object?> get props => [

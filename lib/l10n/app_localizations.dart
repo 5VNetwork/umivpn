@@ -3703,6 +3703,36 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to reactivate?'**
   String get areYouSureReactivate;
 
+  /// No description provided for @areYouSureCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel?'**
+  String get areYouSureCancel;
+
+  /// No description provided for @subscriptionCancelDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'After cancellation, you will continue to have access until the end of your current billing period.'**
+  String get subscriptionCancelDialogBody;
+
+  /// No description provided for @subscriptionCancelDialogStripeReactivationInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'You can reactivate your subscription at any time.'**
+  String get subscriptionCancelDialogStripeReactivationInfo;
+
+  /// No description provided for @failedToReactivateSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to reactivate subscription'**
+  String get failedToReactivateSubscription;
+
+  /// No description provided for @failedToCancelSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to cancel subscription'**
+  String get failedToCancelSubscription;
+
   /// No description provided for @cancelled.
   ///
   /// In en, this message translates to:
@@ -3889,18 +3919,6 @@ abstract class AppLocalizations {
   /// **'Welcome to UmiVPN!'**
   String get welcomeToUmiVPN;
 
-  /// No description provided for @umivpnIsFreeToUse.
-  ///
-  /// In en, this message translates to:
-  /// **'UmiVPN is free to use'**
-  String get umivpnIsFreeToUse;
-
-  /// No description provided for @welcomeConnectionInfo.
-  ///
-  /// In en, this message translates to:
-  /// **'Each connection lasts 30 minutes, after that, please come back and connect again.'**
-  String get welcomeConnectionInfo;
-
   /// No description provided for @gotIt.
   ///
   /// In en, this message translates to:
@@ -4044,6 +4062,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to fetch profile {error}'**
   String failedToFetchProfile(String error);
+
+  /// No description provided for @noDataRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'No monthly data remaining'**
+  String get noDataRemaining;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

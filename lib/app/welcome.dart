@@ -49,32 +49,32 @@ class WelcomePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.check_circle,
-                          color: colorScheme.primary,
-                          size: 24,
-                        ),
-                        const Gap(8),
-                        Text(
-                          l10n.umivpnIsFreeToUse,
-                          style: textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: colorScheme.onSurface,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Gap(10),
-                    Text(
-                      l10n.welcomeConnectionInfo,
-                      style: textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurface.withOpacity(0.87),
-                        height: 1.5,
-                      ),
-                    ),
-                    const Gap(16),
+                    // Row(
+                    //   children: [
+                    //     Icon(
+                    //       Icons.check_circle,
+                    //       color: colorScheme.primary,
+                    //       size: 24,
+                    //     ),
+                    //     const Gap(8),
+                    //     Text(
+                    //       l10n.umivpnIsFreeToUse,
+                    //       style: textTheme.titleMedium?.copyWith(
+                    //         fontWeight: FontWeight.bold,
+                    //         color: colorScheme.onSurface,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    // const Gap(10),
+                    // Text(
+                    //   l10n.welcomeConnectionInfo,
+                    //   style: textTheme.bodyMedium?.copyWith(
+                    //     color: colorScheme.onSurface.withOpacity(0.87),
+                    //     height: 1.5,
+                    //   ),
+                    // ),
+                    // const Gap(16),
                     Row(
                       children: [
                         Icon(

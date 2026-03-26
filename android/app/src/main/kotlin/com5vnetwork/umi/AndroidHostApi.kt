@@ -22,7 +22,6 @@ class AndroidHostApiImpl(
     private val flutterApi: PigeonFlutterApi
 ) : AndroidHostApi {
     private var defaultNetworkCallbackObject: ConnectivityManager.NetworkCallback? = null
-    private var networkChangeCallbackObject: ConnectivityManager.NetworkCallback? = null
 
     override fun startXApiServer(config: ByteArray, callback: (Result<Unit>) -> Unit) {
         try {
@@ -55,7 +54,7 @@ class AndroidHostApiImpl(
 
         statusBarService.requestAddTileService(
             ComponentName(context, MyTileService::class.java),
-            "UmiVPN",
+            "Umi",
             icon.toIcon(context),
             {}) { result ->
             Log.d("QS", "requestAddTileService result: $result")

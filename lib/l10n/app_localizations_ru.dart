@@ -1967,17 +1967,32 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     final String countString = countNumberFormat.format(count);
 
-    return '$countString days';
+    return '$countString дней';
   }
 
   @override
   String get areYouSureReactivate => 'Are you sure you want to reactivate?';
 
   @override
+  String get areYouSureCancel => 'Вы уверены, что хотите отменить?';
+
+  @override
+  String get subscriptionCancelDialogBody => 'После отмены вы продолжите иметь доступ до конца текущего периода оплаты.';
+
+  @override
+  String get subscriptionCancelDialogStripeReactivationInfo => 'Вы можете повторно активировать подписку в любое время.';
+
+  @override
+  String get failedToReactivateSubscription => 'Не удалось повторно активировать подписку';
+
+  @override
+  String get failedToCancelSubscription => 'Не удалось отменить подписку';
+
+  @override
   String get cancelled => 'Cancelled';
 
   @override
-  String get dataRefresh => 'Data Refresh';
+  String get dataRefresh => 'Обновление данных';
 
   @override
   String get renewalDate => 'Renewal';
@@ -2069,12 +2084,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get welcomeToUmiVPN => 'Добро пожаловать в UmiVPN!';
 
   @override
-  String get umivpnIsFreeToUse => 'UmiVPN бесплатен для использования';
-
-  @override
-  String get welcomeConnectionInfo => 'Каждое подключение длится максимум 15 минут, после этого вернитесь и подключитесь снова.';
-
-  @override
   String get gotIt => 'Понятно';
 
   @override
@@ -2147,4 +2156,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String failedToFetchProfile(String error) {
     return 'Failed to fetch profile $error';
   }
+
+  @override
+  String get noDataRemaining => 'No monthly data remaining';
 }

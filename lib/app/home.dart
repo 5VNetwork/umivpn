@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tm/x_controller.dart';
@@ -160,6 +159,13 @@ class _VpnHomePageState extends State<VpnHomePage> {
               padding: const EdgeInsets.only(right: 8.0),
               child: settingButton,
             ),
+          IconButton(
+            onPressed: () {
+              context.go('/manage-plan');
+            },
+            icon: Icon(Icons.credit_card_rounded,
+                color: colorScheme.onSurface.withOpacity(0.87)),
+          ),
         ],
       ),
       body: SafeArea(
@@ -169,20 +175,20 @@ class _VpnHomePageState extends State<VpnHomePage> {
             if (userProfile == null) {
               return const _ProfileLoader();
             }
-            if (!isAdPlatforms && userProfile.plan == SubscriptionPlan.free) {
-              final locale = Localizations.localeOf(context).languageCode;
-              return ChangeNotifierProvider(
-                  create: (context) => ManagePlanViewModel(
-                        proPurchases:
-                            useStripe ? null : context.read<ProPurchases>(),
-                        authRepo: context.read<AuthRepo>(),
-                        locale: locale,
-                      ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: const ManagePlanBody(),
-                  ));
-            }
+            // if (userProfile.plan == SubscriptionPlan.free) {
+            //   final locale = Localizations.localeOf(context).languageCode;
+            //   return ChangeNotifierProvider(
+            //       create: (context) => ManagePlanViewModel(
+            //             proPurchases:
+            //                 useStripe ? null : context.read<ProPurchases>(),
+            //             authRepo: context.read<AuthRepo>(),
+            //             locale: locale,
+            //           ),
+            //       child: Padding(
+            //         padding: const EdgeInsets.all(8.0),
+            //         child: const ManagePlanBody(),
+            //       ));
+            // }
             return const _HomeBody();
           },
         ),
@@ -306,64 +312,59 @@ class _HomeBody extends StatelessWidget {
           ),
           const SizedBox(height: 40),
           Expanded(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Consumer<AuthRepo>(builder: (context, authRepo, child) {
-                if (authRepo.user == null) {
-                  return const SizedBox.shrink();
-                }
-                if (authRepo.user!.plan != SubscriptionPlan.pro) {
-                  return ChangeNotifierProvider(
-                    create: (context) => HomeAdProvider(
-                      defaultNetworkMonitor:
-                          context.read<DefaultNetworkMonitor>(),
-                      xController: context.read<XController>(),
-                    ),
-                    child: Column(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Consumer<AuthRepo>(builder: (context, authRepo, child) {
+                  if (authRepo.user == null) {
+                    return const SizedBox.shrink();
+                  }
+                  if (authRepo.user!.plan == SubscriptionPlan.free) {
+                    return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // const Padding(
-                        //   padding:
-                        //       const EdgeInsets.symmetric(horizontal: 10.0),
-                        //   child: Row(
-                        //     children: [
-                        //       Expanded(child: ModeSelector()),
-                        //       Gap(10),
-                        //       Expanded(child: CountrySelector())
-                        //     ],
-                        //   ),
-                        // ),
-                        const SizedBox(height: 40),
                         Expanded(
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: 24, left: 16, right: 16),
-                              child: isAdPlatforms
-                                  ? const BannerAdWidget()
-                                  : const my.BannerAdWidget(),
-                            ),
-                          ),
-                        ),
+                            child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: my.BannerAdWidget())),
+                        const SizedBox(height: 10),
+                        ModeSelector(),
+                        // Row(
+                        //   children: [
+                        //     Expanded(child: ModeSelector()),
+                        //     const SizedBox(width: 10),
+                        //     Expanded(child: CountrySelector())
+                        //   ],
+                        // ),
+                        const SizedBox(height: 10),
+                        const _TrafficCard(),
+                        const SizedBox(height: 10),
                       ],
-                    ),
-                  );
-                }
-                return const SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 10),
-                  child: Column(
+                    );
+                  }
+                  return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      ModeSelector(),
-                      SizedBox(height: 15),
-                      CountrySelector(),
-                      SizedBox(height: 15),
-                      // _TrafficCard(),
+                      if (authRepo.user!.plan == SubscriptionPlan.air)
+                        Expanded(
+                            child: Padding(
+                          padding: const EdgeInsets.only(bottom: 15.0),
+                          child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: my.BannerAdWidget()),
+                        )),
+                      const ModeSelector(),
+                      const SizedBox(height: 15),
+                      if (authRepo.user!.plan == SubscriptionPlan.pro)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: const CountrySelector(),
+                        ),
                     ],
-                  ),
-                );
-              }),
+                  );
+                }),
+              ),
             ),
           )
         ],

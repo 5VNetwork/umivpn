@@ -12,6 +12,7 @@ class ModeSelector extends StatelessWidget {
       onTap: () {
         showModalBottomSheet(
           context: context,
+          
           backgroundColor: colorScheme.surface,
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
@@ -106,12 +107,12 @@ class _ModeList extends StatelessWidget {
           const SizedBox(height: 20),
           Flexible(
             child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: DefaultRouteMode.values.length,
               itemBuilder: (ctx, index) {
                 final mode = DefaultRouteMode.values[index];
                 final isSelected = mode == currentMode;
-
                 return Container(
                   margin: const EdgeInsets.only(bottom: 8),
                   decoration: BoxDecoration(

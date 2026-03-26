@@ -823,6 +823,11 @@
     }
   },
   "areYouSureReactivate": "Are you sure you want to reactivate?",
+  "areYouSureCancel": "Are you sure you want to cancel?",
+  "subscriptionCancelDialogBody": "After cancellation, you will continue to have access until the end of your current billing period.",
+  "subscriptionCancelDialogStripeReactivationInfo": "You can reactivate your subscription at any time.",
+  "failedToReactivateSubscription": "Failed to reactivate subscription",
+  "failedToCancelSubscription": "Failed to cancel subscription",
   "cancelled": "Cancelled",
   "dataRefresh": "Data Refresh",
   "renewalDate": "Renewal",
@@ -864,8 +869,6 @@
   "noServersMessage": "Sorry, no server matching your choice is available now. Please try again later.",
   "selectRouteMode": "Select Route Mode",
   "welcomeToUmiVPN": "Welcome to UmiVPN!",
-  "umivpnIsFreeToUse": "UmiVPN is free to use",
-  "welcomeConnectionInfo": "Each connection lasts 30 minutes, after that, please come back and connect again.",
   "gotIt": "Got It",
   "enableAppOpenAds": "App Open Ads",
   "enableAppOpenAdsDesc": "Once enabled, the connection duration will be 30 minutes instead of 15 minutes. An ad will appear when you open UmiVPN.",
@@ -897,5 +900,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "noDataRemaining": "No monthly data remaining"
 }

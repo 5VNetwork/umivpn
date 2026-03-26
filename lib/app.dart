@@ -14,7 +14,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   Locale? _locale;
   late final AppLifecycleListener _listener;
   final appLinks = AppLinks();
-  AppLifecycleReactor? _appLifecycleReactor;
+  // AppLifecycleReactor? _appLifecycleReactor;
 
   void setLocale(Locale? value) {
     setState(() {
@@ -51,13 +51,13 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     final pref = context.read<SharedPreferences>();
-    if (isAdPlatforms) {
-      _appLifecycleReactor =
-          AppLifecycleReactor(appOpenAdManager: context.read<OpenAdManager>())
-            ..listenToAppStateChanges();
-    }
+    // if (isAdPlatforms) {
+    //   _appLifecycleReactor =
+    //       AppLifecycleReactor(appOpenAdManager: context.read<OpenAdManager>())
+    //         ..listenToAppStateChanges();
+    // }
 
-    if (pref.initialLaunch) {
+    if (pref.initialLaunch || true) {
       pref.setInitialLaunch();
       androidHostApi?.requestAddTile();
     }

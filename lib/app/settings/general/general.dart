@@ -79,15 +79,15 @@ class GeneralSettingPage extends StatelessWidget {
             //     );
             //   },
             // ),
-            if (isAdPlatforms)
-              const Column(children: [
-                Divider(),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
-                  child: AppOpenAdsSetting(),
-                ),
-              ]),
+            // if (isAdPlatforms)
+            //   const Column(children: [
+            //     Divider(),
+            //     Padding(
+            //       padding:
+            //           EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
+            //       child: AppOpenAdsSetting(),
+            //     ),
+            //   ]),
             if (Platform.isWindows)
               const Column(children: [
                 Divider(),
@@ -170,53 +170,53 @@ class _StartOnBootSettingState extends State<StartOnBootSetting> {
   }
 }
 
-class AppOpenAdsSetting extends StatefulWidget {
-  const AppOpenAdsSetting({super.key});
+// class AppOpenAdsSetting extends StatefulWidget {
+//   const AppOpenAdsSetting({super.key});
 
-  @override
-  State<AppOpenAdsSetting> createState() => _AppOpenAdsSettingState();
-}
+//   @override
+//   State<AppOpenAdsSetting> createState() => _AppOpenAdsSettingState();
+// }
 
-class _AppOpenAdsSettingState extends State<AppOpenAdsSetting> {
-  bool _enableAppOpenAds = false;
+// class _AppOpenAdsSettingState extends State<AppOpenAdsSetting> {
+//   bool _enableAppOpenAds = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _enableAppOpenAds = context.read<SharedPreferences>().enableAppOpenAds;
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     _enableAppOpenAds = context.read<SharedPreferences>().enableAppOpenAds;
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(AppLocalizations.of(context)!.enableAppOpenAds,
-                style: Theme.of(context).textTheme.bodyLarge),
-            const Expanded(child: SizedBox()),
-            Switch(
-              value: _enableAppOpenAds,
-              onChanged: (value) {
-                context.read<SharedPreferences>().setEnableAppOpenAds(value);
-                setState(() {
-                  _enableAppOpenAds = value;
-                });
-                context.read<OpenAdManager>().setOpenAdEnabled(value);
-              },
-            ),
-          ],
-        ),
-        const Gap(10),
-        Text(AppLocalizations.of(context)!.enableAppOpenAdsDesc,
-            style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                )),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Row(
+//           children: [
+//             Text(AppLocalizations.of(context)!.enableAppOpenAds,
+//                 style: Theme.of(context).textTheme.bodyLarge),
+//             const Expanded(child: SizedBox()),
+//             Switch(
+//               value: _enableAppOpenAds,
+//               onChanged: (value) {
+//                 context.read<SharedPreferences>().setEnableAppOpenAds(value);
+//                 setState(() {
+//                   _enableAppOpenAds = value;
+//                 });
+//                 context.read<OpenAdManager>().setOpenAdEnabled(value);
+//               },
+//             ),
+//           ],
+//         ),
+//         const Gap(10),
+//         Text(AppLocalizations.of(context)!.enableAppOpenAdsDesc,
+//             style: Theme.of(context).textTheme.bodySmall!.copyWith(
+//                   color: Theme.of(context).colorScheme.onSurfaceVariant,
+//                 )),
+//       ],
+//     );
+//   }
+// }
 
 class AlwaysOnSetting extends StatefulWidget {
   const AlwaysOnSetting({super.key});

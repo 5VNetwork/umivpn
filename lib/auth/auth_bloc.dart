@@ -47,9 +47,41 @@ class AuthRepo extends ChangeNotifier {
     });
   }
 
+  Future<void> refreshUser() async {
+    await _authProvider.refreshUser();
+  }
+
+  Future<UserProfile?> fetchProfile() async {
+    if (_user == null) {
+      return null;
+    }
+    final userId = _user!.id;
+    try {
+      final response =
+          await supabase.from('profiles').select().eq('id', userId).single();
+      debugPrint(response.toString());
+      final profile = UserProfile.fromJson(response);
+      return profile;
+    } catch (e, stackTrace) {
+      logger.e('Error fetching profile', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  void _updateStaleUser(UserProfile profile) {
+    // this means user data is old, so refresh session
+    // This happens when a user upgrades or downgrades their plan, but the session hasn't been refreshed yet
+    if (_user!.plan != profile.plan) {
+      logger.w('User plan has changed, updating user');
+      _user =
+          _user!.copyWith(plan: profile.plan, cycleEndAt: profile.cycleEndAt);
+      notifyListeners();
+      _authProvider.refreshUser();
+    }
+  }
+
   final AuthProvider _authProvider;
   late final StreamSubscription<Session?> _userSubscription;
-  Timer? _profileFetchTimer;
   late String deviceToken;
 
   Future<String?> getAccessToken() async {
@@ -162,7 +194,6 @@ class AuthRepo extends ChangeNotifier {
   @override
   void dispose() {
     _userSubscription.cancel();
-    _profileFetchTimer?.cancel();
     return super.dispose();
   }
 }
@@ -180,4 +211,63 @@ class SubscriptionInfo {
   final DateTime periodEndAt;
   final bool isCanceled;
   final (SubscriptionPlan, Period)? nextPlanAndPeriod;
+}
+
+class UserProfile {
+  const UserProfile({
+    required this.id,
+    required this.email,
+    this.stripeCustomerId,
+    required this.plan,
+    required this.remainingData,
+    this.cycleEndAt,
+    this.subscriptionId,
+    required this.dataUsed,
+  });
+
+  final String id;
+  final String email;
+  final String? stripeCustomerId;
+  final SubscriptionPlan plan;
+  final int remainingData;
+  final DateTime? cycleEndAt;
+  final String? subscriptionId;
+  final int dataUsed;
+
+  static DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    if (value is String) return DateTime.parse(value);
+    return DateTime.tryParse(value.toString());
+  }
+
+  factory UserProfile.fromJson(Map<String, dynamic> json) {
+    final remainingData = json['remaining_data'];
+    final dataUsed = json['data_used'];
+    return UserProfile(
+      id: json['id'] as String,
+      email: json['email'] as String,
+      stripeCustomerId: json['stripe_customer_id'] as String?,
+      plan: SubscriptionPlan.fromString((json['plan'] as String)),
+      remainingData: remainingData is int
+          ? remainingData
+          : int.parse(remainingData.toString()),
+      cycleEndAt: _parseDateTime(json['cycle_end_at']),
+      subscriptionId: json['subscription_id'] as String?,
+      dataUsed: dataUsed is int ? dataUsed : int.parse(dataUsed.toString()),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'stripe_customer_id': stripeCustomerId,
+      'plan': plan.name.toLowerCase(),
+      'remaining_data': remainingData,
+      'cycle_end_at': cycleEndAt?.toIso8601String(),
+      'subscription_id': subscriptionId,
+      'data_used': dataUsed,
+    };
+  }
 }

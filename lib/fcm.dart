@@ -2,13 +2,118 @@ part of 'main.dart';
 
 bool fcmEnabled = false;
 
+Future<void> _initFcm() async {
+  print('Initializing FCM');
+  // set fcm enabled
+  if (Platform.isAndroid) {
+    GooglePlayServicesAvailability availability = await GoogleApiAvailability
+        .instance
+        .checkGooglePlayServicesAvailability();
+    final googleApiAvailable =
+        availability == GooglePlayServicesAvailability.success;
+    fcmEnabled = googleApiAvailable;
+  } else if (Platform.isIOS || Platform.isMacOS) {
+    fcmEnabled = true;
+  }
+
+  // fcm
+  if (fcmEnabled) {
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    print('FCM initialized');
+    await _ensureFcmLocalNotificationsInitialized();
+    print('FCM local notifications initialized');
+    if (Platform.isAndroid) {
+      // enable foreground notification
+      androidChannel = const AndroidNotificationChannel(
+        'high_importance_channel', // id
+        'High Importance Notifications', // title
+        description:
+            'This channel is used for important notifications.', // description
+        importance: Importance.defaultImportance,
+        enableVibration: false,
+        showBadge: false,
+        playSound: false,
+      );
+      try {
+        await flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin>()
+            ?.createNotificationChannel(androidChannel);
+      } catch (e) {
+        logger.e('createNotificationChannel', error: e);
+      }
+      // Android 13+ requires POST_NOTIFICATIONS runtime permission.
+      try {
+        final notificationSettings =
+            await FirebaseMessaging.instance.requestPermission(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+        logger.d(
+          'Android FCM permission: ${notificationSettings.authorizationStatus}',
+        );
+      } catch (e) {
+        logger.e('requestPermission (android)', error: e);
+      }
+    } else if (Platform.isIOS || Platform.isMacOS) {
+      // You may set the permission requests to "provisional" which allows the user to choose what type
+      // of notifications they would like to receive once the user receives a notification.
+      try {
+        final notificationSettings = await FirebaseMessaging.instance
+            .requestPermission(provisional: true);
+        logger.d('FCM permission: ${notificationSettings.authorizationStatus}');
+      } catch (e) {
+        logger.e('requestPermission', error: e);
+      }
+      // Foreground: use flutter_local_notifications so big images work; avoid duplicate system banner.
+      try {
+        await FirebaseMessaging.instance
+            .setForegroundNotificationPresentationOptions(
+          alert: false,
+          badge: false,
+          sound: false,
+        );
+      } catch (e) {
+        logger.e('setForegroundNotificationPresentationOptions', error: e);
+      }
+    }
+    if (!isProduction()) {
+      FirebaseMessaging.instance.getToken().then((token) {
+        logger.d('FCM token: $token');
+      }).catchError((err) {
+        logger.e('Error getting FCM token', error: err);
+      });
+      FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) {
+        // TODO: If necessary send token to application server.
+        logger.d('FCM token: $fcmToken');
+        // Note: This callback is fired at each app startup and whenever a new
+        // token is generated.
+      }).onError((err) {
+        // Error getting token.
+        logger.e('Error getting FCM token', error: err);
+      });
+      if (Platform.isIOS || Platform.isMacOS) {
+        // For apple platforms, ensure the APNS token is available before making any FCM plugin API calls
+        final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+        if (apnsToken != null) {
+          // APNS token is available, make FCM plugin API requests...
+          logger.d('APNS token: $apnsToken');
+        } else {
+          logger.d('APNS token is not available');
+        }
+      }
+    }
+  }
+}
+
 bool _fcmLocalNotificationsInitialized = false;
 
 Future<void> _ensureFcmLocalNotificationsInitialized() async {
   if (_fcmLocalNotificationsInitialized) {
     return;
   }
-  const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+  const androidInit = AndroidInitializationSettings('@drawable/ic_stat_notify');
   const darwinInit = DarwinInitializationSettings();
   await flutterLocalNotificationsPlugin.initialize(
     const InitializationSettings(
@@ -223,95 +328,6 @@ void _presentFcmMessageDialog(RemoteMessage message) {
   ).whenComplete(() {
     _fcmDialogShowing = false;
   });
-}
-
-Future<void> _initFcm() async {
-  // set fcm enabled
-  if (Platform.isAndroid) {
-    GooglePlayServicesAvailability availability = await GoogleApiAvailability
-        .instance
-        .checkGooglePlayServicesAvailability();
-    final googleApiAvailable =
-        availability == GooglePlayServicesAvailability.success;
-    fcmEnabled = googleApiAvailable;
-  } else if (Platform.isIOS || Platform.isMacOS) {
-    fcmEnabled = true;
-  }
-
-  // fcm
-  if (fcmEnabled) {
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    await _ensureFcmLocalNotificationsInitialized();
-    if (Platform.isAndroid) {
-      // Android applications are not required to request permission.
-      // enable foreground notification
-      androidChannel = const AndroidNotificationChannel(
-        'high_importance_channel', // id
-        'High Importance Notifications', // title
-        description:
-            'This channel is used for important notifications.', // description
-        importance: Importance.defaultImportance,
-        enableVibration: false,
-        showBadge: false,
-        playSound: false,
-      );
-      try {
-        await flutterLocalNotificationsPlugin
-            .resolvePlatformSpecificImplementation<
-                AndroidFlutterLocalNotificationsPlugin>()
-            ?.createNotificationChannel(androidChannel);
-      } catch (e) {
-        logger.e('createNotificationChannel', error: e);
-      }
-    } else if (Platform.isIOS || Platform.isMacOS) {
-      // You may set the permission requests to "provisional" which allows the user to choose what type
-      // of notifications they would like to receive once the user receives a notification.
-      try {
-        final notificationSettings = await FirebaseMessaging.instance
-            .requestPermission(provisional: true);
-        logger.d('FCM permission: ${notificationSettings.authorizationStatus}');
-      } catch (e) {
-        logger.e('requestPermission', error: e);
-      }
-      // Foreground: use flutter_local_notifications so big images work; avoid duplicate system banner.
-      try {
-        await FirebaseMessaging.instance
-            .setForegroundNotificationPresentationOptions(
-          alert: false,
-          badge: false,
-          sound: false,
-        );
-      } catch (e) {
-        logger.e('setForegroundNotificationPresentationOptions', error: e);
-      }
-    }
-    if (!isProduction()) {
-      FirebaseMessaging.instance.getToken().then((token) {
-        logger.d('FCM token: $token');
-      }).catchError((err) {
-        logger.e('Error getting FCM token', error: err);
-      });
-      FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) {
-        // TODO: If necessary send token to application server.
-        logger.d('FCM token: $fcmToken');
-        // Note: This callback is fired at each app startup and whenever a new
-        // token is generated.
-      }).onError((err) {
-        // Error getting token.
-        logger.e('Error getting FCM token', error: err);
-      });
-      if (Platform.isIOS || Platform.isMacOS) {
-        // For apple platforms, ensure the APNS token is available before making any FCM plugin API calls
-        final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-        if (apnsToken != null) {
-          // APNS token is available, make FCM plugin API requests...
-          logger.d('APNS token: $apnsToken');
-        } else {
-          logger.d('APNS token is not available');
-        }
-      }
-    }
-  }
 }
 
 Future<void> _setupFcm() async {

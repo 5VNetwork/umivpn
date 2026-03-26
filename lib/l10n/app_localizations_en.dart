@@ -1974,6 +1974,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get areYouSureReactivate => 'Are you sure you want to reactivate?';
 
   @override
+  String get areYouSureCancel => 'Are you sure you want to cancel?';
+
+  @override
+  String get subscriptionCancelDialogBody => 'After cancellation, you will continue to have access until the end of your current billing period.';
+
+  @override
+  String get subscriptionCancelDialogStripeReactivationInfo => 'You can reactivate your subscription at any time.';
+
+  @override
+  String get failedToReactivateSubscription => 'Failed to reactivate subscription';
+
+  @override
+  String get failedToCancelSubscription => 'Failed to cancel subscription';
+
+  @override
   String get cancelled => 'Cancelled';
 
   @override
@@ -2069,12 +2084,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcomeToUmiVPN => 'Welcome to UmiVPN!';
 
   @override
-  String get umivpnIsFreeToUse => 'UmiVPN is free to use';
-
-  @override
-  String get welcomeConnectionInfo => 'Each connection lasts 30 minutes, after that, please come back and connect again.';
-
-  @override
   String get gotIt => 'Got It';
 
   @override
@@ -2147,4 +2156,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String failedToFetchProfile(String error) {
     return 'Failed to fetch profile $error';
   }
+
+  @override
+  String get noDataRemaining => 'No monthly data remaining';
 }

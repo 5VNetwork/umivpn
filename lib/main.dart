@@ -16,7 +16,6 @@ import 'package:flutter_common/widgets/progress.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_api_availability/google_api_availability.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:macos_window_utils/macos/ns_window_button_type.dart';
@@ -26,6 +25,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
+import 'package:tm/activate.dart';
 import 'package:tm/common.dart';
 import 'package:tm/root_certs.dart';
 import 'package:tm/tm.dart';
@@ -107,15 +107,15 @@ void main() async {
     GoogleFonts.config.allowRuntimeFetching = false;
   }
 
-  if (enableFirebase) {
-    await initializeFirebaseApp();
-    await _initFcm();
-  }
-
   final pref = await SharedPreferences.getInstance();
   resourceDirectory = await resourceDir();
   cacheDirectory = await getCacheDir();
   await initLogger(pref);
+
+  if (enableFirebase) {
+    await initializeFirebaseApp();
+    await _initFcm();
+  }
 
   version = (await PackageInfo.fromPlatform()).version;
 
@@ -155,6 +155,7 @@ void main() async {
     Bloc.observer = const AppBlocObserver();
   }
   initRouter(authProvider);
+  boot(storage, authProvider);
   logger
       .d("App start time: ${DateTime.now().difference(startTime).inSeconds}s");
 
@@ -320,20 +321,20 @@ void main() async {
           },
           lazy: false,
         ),
-      if (isAdPlatforms)
-        Provider<OpenAdManager>(
-          create: (context) {
-            final adManager = OpenAdManager(
-              isTest: !isProduction(),
-              enabledOpenAd: context.read<SharedPreferences>().enableAppOpenAds,
-              authRepo: context.read<AuthRepo>(),
-              xController: context.read<XController>(),
-              defaultNetworkMonitor: context.read<DefaultNetworkMonitor>(),
-            );
-            return adManager;
-          },
-          lazy: false,
-        ),
+      // if (isAdPlatforms)
+      //   Provider<OpenAdManager>(
+      //     create: (context) {
+      //       final adManager = OpenAdManager(
+      //         isTest: !isProduction(),
+      //         enabledOpenAd: context.read<SharedPreferences>().enableAppOpenAds,
+      //         authRepo: context.read<AuthRepo>(),
+      //         xController: context.read<XController>(),
+      //         defaultNetworkMonitor: context.read<DefaultNetworkMonitor>(),
+      //       );
+      //       return adManager;
+      //     },
+      //     lazy: false,
+      //   ),
       ChangeNotifierProxyProvider<AuthRepo, AdsProvider>(
           create: (context) {
             final adsProvider = AdsProvider(
@@ -392,7 +393,7 @@ late final String version;
 // Router
 final rootNavigationKey = GlobalKey<NavigatorState>();
 final supabase = Supabase.instance.client;
-final isAdPlatforms = Platform.isAndroid;
+// final isAdPlatforms = Platform.isAndroid;
 
 void snack(
   String? message, {
