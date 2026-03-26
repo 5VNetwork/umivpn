@@ -144,6 +144,13 @@ class _VpnHomePageState extends State<VpnHomePage> {
               )
             : null,
         actions: [
+          IconButton(
+            onPressed: () {
+              context.go('/manage-plan');
+            },
+            icon: Icon(Icons.credit_card_rounded,
+                color: colorScheme.onSurface.withOpacity(0.87)),
+          ),
           if (Platform.isWindows || Platform.isLinux)
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -159,13 +166,6 @@ class _VpnHomePageState extends State<VpnHomePage> {
               padding: const EdgeInsets.only(right: 8.0),
               child: settingButton,
             ),
-          IconButton(
-            onPressed: () {
-              context.go('/manage-plan');
-            },
-            icon: Icon(Icons.credit_card_rounded,
-                color: colorScheme.onSurface.withOpacity(0.87)),
-          ),
         ],
       ),
       body: SafeArea(

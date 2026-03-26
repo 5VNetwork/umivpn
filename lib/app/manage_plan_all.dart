@@ -694,7 +694,7 @@ class PlanService {
     }
 
     String jsonString;
-    if (isProduction()) {
+    if (!debug) {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         jsonString = response.body;

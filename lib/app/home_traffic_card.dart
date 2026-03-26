@@ -60,7 +60,7 @@ class _TrafficCard extends StatelessWidget {
               child: Consumer<TrafficCardViewModel>(
                   builder: (context, viewModel, child) {
                 if (viewModel.userProfile == null) {
-                  return const SizedBox(height: 85);
+                  return const SizedBox(height: 85, width: double.infinity);
                 }
                 final userProfile = viewModel.userProfile;
                 String? remainingData = userProfile != null
