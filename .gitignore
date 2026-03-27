@@ -80,3 +80,4 @@ assets/plans.json
 
 sentry.properties
 ios/tm.xcframework/
+inno/install.iss

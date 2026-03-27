@@ -5,8 +5,6 @@ on:
   #   tags:
   #     - "v*"
   workflow_dispatch:
-  repository_dispatch:
-    types: [trigger-vx-release]
 
 jobs:
   build-windows:
@@ -15,33 +13,28 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-
-      - name: Cache dependencies repositories
-        id: cache-deps
-        uses: actions/cache@v4
         with:
-          path: |
-            ../tm-plugin
-          key: deps-repos-${{ runner.os }}-${{ github.sha }}
-          restore-keys: |
-            deps-repos-${{ runner.os }}-
-
+          # Sentry release commit association needs full git history.
+          fetch-depth: 0
+          
       - name: Checkout dependencies
-        if: steps.cache-deps.outputs.cache-hit != 'true'
         env:
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}
         shell: bash
         run: |
           cd ..
-          git clone https://x-access-token:${GH_TOKEN}@github.com/5VNetwork/tm-plugin.git tm-plugin
+          git clone https://${GH_TOKEN}@github.com/5VNetwork/umivpn-plugin.git umivpn-plugin
+          git clone https://github.com/5VNetwork/flutter_common.git flutter_common
 
-      - name: create files in tm_plugin and folders
+      - name: create files
         run: |
-          touch ../tm-plugin/tm_linux/assets/x.so
-          touch ../tm-plugin/tm_linux/assets/x
+          touch ../umivpn-plugin/tm_linux/assets/x.so
+          touch ../umivpn-plugin/tm_linux/assets/x
           mkdir -p assets/google_fonts
           mkdir -p assets/geo
           mkdir -p assets/ads
+          mkdir ../umivpn-plugin/tm_android/android/libs
+          mkdir -p assets/google_fonts
 
       - name: Cache fonts
         id: cache-fonts
@@ -64,9 +57,9 @@ jobs:
       - name: Download geo
         shell: bash
         run: |
-          curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geoip.dat"
+          curl -OL "https://github.com/5VNetwork/process-geo/releases/latest/download/simplified_geoip.dat"
           mv simplified_geoip.dat assets/geo/simplified_geoip.dat
-          curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geosite.dat"
+          curl -OL "https://github.com/5VNetwork/process-geo/releases/latest/download/simplified_geosite.dat"
           mv simplified_geosite.dat assets/geo/simplified_geosite.dat
 
       - name: Download from release
@@ -75,20 +68,20 @@ jobs:
         shell: bash
         run: |
           gh release download build \
-            -R 5VNetwork/vx-core \
-            -p "x_win_arm64.zip" \
+            -R 5VNetwork/umi-go \
             -p "x_win_x86_64.zip"
+#           -p "x_win_arm64.zip" 
 
       - name: unzip files
         shell: powershell
         run: |
-          Expand-Archive -Path x_win_arm64.zip -DestinationPath ./x_win_arm64 -Force
           Expand-Archive -Path x_win_x86_64.zip -DestinationPath ./x_win_x86_64 -Force
+#          Expand-Archive -Path x_win_arm64.zip -DestinationPath ./x_win_arm64 -Force
 
-      - name: copy files to tm_plugin
+      - name: copy files to umivpn_plugin
         run: |
-          cp x_win_x86_64/x.dll ../tm-plugin/tm_windows/assets/x.dll
-          cp x_win_x86_64/vx_service.exe vx_service.exe
+          cp x_win_x86_64/x.dll ../umivpn-plugin/tm_windows/assets/x.dll
+          cp x_win_x86_64/umi_service.exe umi_service.exe
           cp x_win_x86_64/service_install.exe service_install.exe
 
       - name: Setup Flutter
@@ -149,29 +142,29 @@ jobs:
         shell: bash
         run: |
           gh release upload ${{ steps.get_version.outputs.version }} \
-            inno/Output/VXInstaller.exe \
-            --repo ${{ github.repository_owner }}/vx \
+            inno/Output/UmiVpnInstaller.exe \
+            --repo ${{ github.repository_owner }}/umivpn \
             --clobber
 
-      - uses: microsoft/setup-msstore-cli@v1
+      # - uses: microsoft/setup-msstore-cli@v1
 
-      - name: Configure the Microsoft Store CLI
-        env:
-          TENANT_ID: ${{ secrets.TENANT_ID }}
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-          SELLER_ID: ${{ secrets.SELLER_ID }}
-        shell: pwsh
-        run: msstore reconfigure --tenantId $env:TENANT_ID --clientId $env:CLIENT_ID --clientSecret $env:CLIENT_SECRET --sellerId $env:SELLER_ID
+      # - name: Configure the Microsoft Store CLI
+      #   env:
+      #     TENANT_ID: ${{ secrets.TENANT_ID }}
+      #     CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      #     CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      #     SELLER_ID: ${{ secrets.SELLER_ID }}
+      #   shell: pwsh
+      #   run: msstore reconfigure --tenantId $env:TENANT_ID --clientId $env:CLIENT_ID --clientSecret $env:CLIENT_SECRET --sellerId $env:SELLER_ID
 
-      - name: Create MSIX package
-        env:
-          LOG_KEY: ${{ secrets.LOG_KEY }}
-        run: |
-          dart run msix:create --store --windows-build-args "--obfuscate --split-debug-info=symbols --dart-define=STORE=true --dart-define=LOG_KEY=$env:LOG_KEY" -n store
+      # - name: Create MSIX package
+      #   env:
+      #     LOG_KEY: ${{ secrets.LOG_KEY }}
+      #   run: |
+      #     dart run msix:create --store --windows-build-args "  --split-debug-info=symbols --dart-define=STORE=true --dart-define=LOG_KEY=$env:LOG_KEY" -n store
 
-      - name: Publish MSIX to the Microsoft Store
-        run: msstore publish -v
+      # - name: Publish MSIX to the Microsoft Store
+      #   run: msstore publish -v
 
   # build-windows-arm64:
   #   runs-on: windows-11-arm
@@ -240,9 +233,9 @@ jobs:
   #       if: steps.cache-geo.outputs.cache-hit != 'true'
   #       shell: bash
   #       run: |
-  #         curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geoip.dat"
+  #         curl -OL "https://github.com/5VNetwork/process-geo/releases/latest/download/simplified_geoip.dat"
   #         mv simplified_geoip.dat assets/geo/simplified_geoip.dat
-  #         curl -O "https://github.com/5VNetwork/process-geo/releases/download/latest/simplified_geosite.dat"
+  #         curl -OL "https://github.com/5VNetwork/process-geo/releases/latest/download/simplified_geosite.dat"
   #         mv simplified_geosite.dat assets/geo/simplified_geosite.dat
 
   #     - name: Download from release
@@ -308,7 +301,7 @@ jobs:
   #     - name: Build Windows
   #       env:
   #         LOG_KEY: ${{ secrets.LOG_KEY }}
-  #       run: flutter build windows --dart-define=LOG_KEY=$env:LOG_KEY --release --obfuscate --split-debug-info=symbols
+  #       run: flutter build windows --dart-define=LOG_KEY=$env:LOG_KEY --release   --split-debug-info=symbols
 
   #     - name: Compile .ISS to .EXE Installer
   #       uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
@@ -344,7 +337,7 @@ jobs:
   #       env:
   #         LOG_KEY: ${{ secrets.LOG_KEY }}
   #       run: |
-  #         dart run msix:create --store --windows-build-args "--obfuscate --split-debug-info=symbols --dart-define=STORE=true --dart-define=LOG_KEY=$env:LOG_KEY" -n store
+  #         dart run msix:create --store --windows-build-args "  --split-debug-info=symbols --dart-define=STORE=true --dart-define=LOG_KEY=$env:LOG_KEY" -n store
 
   #     - name: Publish MSIX to the Microsoft Store
   #       run: msstore publish -v
@@ -393,12 +386,20 @@ jobs:
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           gh release download ${{ steps.get_version.outputs.version }} \
-            -R 5VNetwork/vx \
-            -p "VXInstaller.exe" 
+            -R 5VNetwork/umivpn \
+            -p "UmiVpnInstaller.exe"
 
       - name: Upload Windows Installer to R2
         run: |
-          aws s3 cp VXInstaller.exe s3://vproxy/ \
+          aws s3 cp UmiVpnInstaller.exe s3://umivpn/ \
             --profile r2 \
             --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
-       
+
+      - name: Purge CDN cache
+        env:
+          CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
+        run: |
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/1aac9c58b9f5bab79fa16c90ebe2e0c2/purge_cache" \
+                -H "Authorization: Bearer $CLOUDFLARE_TOKEN" \
+                -H "Content-Type: application/json" \
+                --data '{"purge_everything": true}'
