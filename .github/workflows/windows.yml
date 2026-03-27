@@ -34,6 +34,7 @@ jobs:
           mkdir -p assets/geo
           mkdir -p assets/ads
           mkdir ../umivpn-plugin/tm_android/android/libs
+          mkdir -p ../flutter_common/packages/ads/assets/ads
 
       - name: Cache fonts
         id: cache-fonts
