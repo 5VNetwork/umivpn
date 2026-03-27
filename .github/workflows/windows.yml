@@ -16,7 +16,7 @@ jobs:
         with:
           # Sentry release commit association needs full git history.
           fetch-depth: 0
-          
+
       - name: Checkout dependencies
         env:
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}
@@ -34,7 +34,6 @@ jobs:
           mkdir -p assets/geo
           mkdir -p assets/ads
           mkdir ../umivpn-plugin/tm_android/android/libs
-          mkdir -p assets/google_fonts
 
       - name: Cache fonts
         id: cache-fonts
