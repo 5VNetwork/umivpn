@@ -254,9 +254,7 @@ class ManagePlanViewModel extends ChangeNotifier {
     if (subscriptionInfo!.source == SubscriptionSource.appStore) {
       final uri = Uri.parse(
           'https://apps.apple.com/account/subscriptions?app-id=6751115042');
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      }
+      await launchUrl(uri);
     } else {
       final colorScheme = Theme.of(context).colorScheme;
       final textTheme = Theme.of(context).textTheme;
@@ -406,11 +404,7 @@ class ManagePlanViewModel extends ChangeNotifier {
           if (response.status == 200 && response.data != null) {
             final url = response.data['url'] as String;
             final uri = Uri.parse(url);
-            if (await canLaunchUrl(uri)) {
-              await launchUrl(uri, mode: LaunchMode.externalApplication);
-            } else {
-              throw Exception('Could not open customer portal');
-            }
+            await launchUrl(uri);
           } else {
             final errorMessage =
                 response.data?['error'] as String? ?? 'Unknown error';
@@ -437,34 +431,13 @@ class ManagePlanViewModel extends ChangeNotifier {
       // Open Google Play subscriptions center
       final uri = Uri.parse(
           'https://play.google.com/store/account/subscriptions?sku=umivpn_${subscriptionInfo!.planAndPeriod.$1.name.toLowerCase()}&package=${androidPackageNme}');
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!
-                .couldNotOpenPlayStoreSubscriptions),
-          ),
-        );
-      }
+      await launchUrl(uri);
     } else if (subscriptionInfo!.source == SubscriptionSource.appStore) {
       // Open App Store subscription management URL for this specific app
       // Using the app's Apple ID to go directly to this app's subscription page
       final uri = Uri.parse(
           'https://apps.apple.com/account/subscriptions?app-id=6751115042');
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                AppLocalizations.of(context)!.couldNotOpenAppStoreSubscriptions,
-              ),
-            ),
-          );
-        }
-      }
+      await launchUrl(uri);
     }
   }
 }
@@ -525,16 +498,7 @@ Future<void> _createCheckoutSession(
       final url = response.data['url'] as String?;
       if (url != null && url.isNotEmpty) {
         final uri = Uri.parse(url);
-        if (await canLaunchUrl(uri)) {
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content:
-                  Text(AppLocalizations.of(context)!.couldNotOpenCheckoutUrl),
-            ),
-          );
-        }
+        await launchUrl(uri);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

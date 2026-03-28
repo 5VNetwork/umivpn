@@ -166,10 +166,7 @@ class AllPlansList extends StatelessWidget {
                   ElevatedButton.icon(
                     onPressed: () async {
                       final url = Uri.parse('https://umivpn.5vnetwork.com');
-                      if (await canLaunchUrl(url)) {
-                        await launchUrl(url,
-                            mode: LaunchMode.externalApplication);
-                      }
+                      await launchUrl(url);
                     },
                     icon: const Icon(Icons.open_in_new),
                     label: Text(l10n.visitOfficialWebsite),
