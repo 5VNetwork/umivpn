@@ -123,62 +123,20 @@ List<Widget> _getBottomButtons(BuildContext context, User? user) {
     SizedBox(
       height: 5,
     ),
-    Row(
-      children: [
-        // TODO
-        if (!useStripe && (user == null /* || (user.lifetimePro == false) */))
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: OutlinedButton.icon(
-                onPressed: () {
-                  if (user == null) {
-                    showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                              title: Text(AppLocalizations.of(context)!
-                                  .loginBeforePurchase),
-                              actions: [
-                                TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: Text(
-                                        AppLocalizations.of(context)!.close)),
-                              ],
-                            ));
-                  } else {
-                    context.read<ProPurchases>().restore();
-                  }
-                },
-                icon: Icon(Icons.history_rounded,
-                    color: Theme.of(context).colorScheme.primary),
-                label: AutoSizeText(
-                  AppLocalizations.of(context)!.restoreIAP,
-                  maxLines: 1,
-                  minFontSize: 12,
-                ),
-              ),
-            ),
-          ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: OutlinedButton.icon(
-              onPressed: () async {
-                if (await inAppReview.isAvailable()) {
-                  inAppReview.requestReview();
-                } else {
-                  inAppReview.openStoreListing(
-                      appStoreId: '6744701950',
-                      microsoftStoreId: '9PHBCBZ9R1FX');
-                }
-              },
-              label: Text(AppLocalizations.of(context)!.rateApp),
-              icon: const Icon(Icons.rate_review_outlined),
-            ),
-          ),
-        ),
-      ],
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: OutlinedButton.icon(
+        onPressed: () async {
+          if (await inAppReview.isAvailable()) {
+            inAppReview.requestReview();
+          } else {
+            inAppReview.openStoreListing(
+                appStoreId: '6744701950', microsoftStoreId: '9PHBCBZ9R1FX');
+          }
+        },
+        label: Text(AppLocalizations.of(context)!.rateApp),
+        icon: const Icon(Icons.rate_review_outlined),
+      ),
     ),
     Gap(5),
     const Version(),

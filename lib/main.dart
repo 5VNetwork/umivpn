@@ -114,7 +114,7 @@ void main() async {
 
   if (enableFirebase) {
     await initializeFirebaseApp();
-    await _initFcm();
+    _initFcm();
   }
 
   version = (await PackageInfo.fromPlatform()).version;
@@ -569,12 +569,32 @@ Future<String> assetName() async {
   }
 }
 
-Future<void> initializeFirebaseApp() async {
-  // Determine which Firebase options to use based on the flavor
-  final firebaseOptions = switch (appFlavor) {
+FirebaseOptions _firebaseOptionsForCurrentFlavor() {
+  return switch (appFlavor) {
     'produdction' || 'pkg' || 'apk' => DefaultFirebaseOptions.currentPlatform,
     'staging' => staging.DefaultFirebaseOptions.currentPlatform,
     _ => dev.DefaultFirebaseOptions.currentPlatform,
   };
-  await Firebase.initializeApp(options: firebaseOptions);
+}
+
+/// Safe to call from main and from FCM background isolate. Handles hot restart
+/// (Dart state cleared while native `[DEFAULT]` still exists).
+Future<void> ensureFirebaseInitialized() async {
+  if (Firebase.apps.isNotEmpty) {
+    return;
+  }
+  final options = _firebaseOptionsForCurrentFlavor();
+  try {
+    await Firebase.initializeApp(options: options);
+  } on FirebaseException catch (e) {
+    if (e.code != 'duplicate-app') rethrow;
+  } catch (e) {
+    if (!e.toString().contains('duplicate-app')) {
+      throw e;
+    }
+  }
+}
+
+Future<void> initializeFirebaseApp() async {
+  await ensureFirebaseInitialized();
 }

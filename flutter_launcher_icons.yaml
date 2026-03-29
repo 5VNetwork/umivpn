@@ -5,7 +5,7 @@ flutter_launcher_icons:
   min_sdk_android: 21 # android min sdk min:16, default 21
 
   ios: true
-  image_path_ios: "assets/dev/mac_icon.png"
+  image_path_ios: "assets/dev/ios_icon.png"
   #remove_alpha_channel_ios: true
   # image_path_ios_dark_transparent: "assets/icon/icon_dark.png"
   # image_path_ios_tinted_grayscale: "assets/icon/icon_tinted.png"

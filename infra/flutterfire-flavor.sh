@@ -32,8 +32,10 @@ case $1 in
     flutterfire config \
       --project=umivpn \
       --out=lib/firebase_options.dart \
-      --ios-bundle-id=com.umivpn \
+      --ios-bundle-id=com.umivpn.production \
       --ios-out=ios/flavors/production/GoogleService-Info.plist \
+      --macos-bundle-id=com.umivpn.production \
+      --macos-out=macos/flavors/production/GoogleService-Info.plist \
       --android-package-name=com5vnetwork.umi \
       --android-out=android/app/src/production/google-services.json
     ;;

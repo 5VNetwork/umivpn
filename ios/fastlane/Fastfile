@@ -1,0 +1,82 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Fetch match certificates and provisioning profiles"
+
+  lane :fetch_match_files do
+    setup_ci if ENV["IS_CI"]
+    
+    api_key = app_store_connect_api_key(
+      key_id: ENV["FASTLANE_IOS_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: "auth_key.p8",
+      duration: 1200,
+      in_house: false
+    )
+    
+    match(type: "appstore", readonly: ENV["IS_CI"])
+  end
+
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    # increment_build_number(
+    #   build_number: app_store_build_number + 1,  
+    #   xcodeproj: "Runner.xcodeproj")
+    build_app(
+    workspace: "Runner.xcworkspace",
+    skip_build_archive: true,
+    archive_path: "../build/ios/archive/Runner.xcarchive",
+    scheme: "Runner")
+    api_key = app_store_connect_api_key(
+      key_id: ENV["FASTLANE_IOS_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: "auth_key.p8",
+      duration: 1200, # optional (maximum 1200)
+      in_house: false # optional but may be required if using match/sigh
+    )
+    upload_to_testflight
+  end
+
+  lane :release do
+    setup_ci if ENV["IS_CI"]
+    
+    api_key = app_store_connect_api_key(
+      key_id: ENV["FASTLANE_IOS_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: "auth_key.p8",
+      duration: 1200,
+      in_house: false
+    )
+    
+    # capture_screenshots                  # generate new screenshots for the App Store
+    increment_build_number(
+      # build_number: app_store_build_number + 1,
+      build_number: ENV["BUILD_NUMBER"],
+      xcodeproj: "Runner.xcodeproj"
+    )
+
+    sync_code_signing(type: "appstore")
+    build_app(
+      workspace: "Runner.xcworkspace",
+      skip_build_archive: true,
+      archive_path: "../build/ios/archive/Runner.xcarchive",
+      scheme: "Runner")
+      # upload_to_app_store # upload your app to App Store Connect
+      upload_to_testflight(skip_waiting_for_build_processing: true)
+  end
+end

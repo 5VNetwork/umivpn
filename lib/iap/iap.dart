@@ -28,7 +28,8 @@ const androidProductData = <ProductData>[
 ];
 
 const iosProductData = <ProductData>[
+  ProductData('umivpn_air_month', ProductType.subscription),
   ProductData('umivpn_air_year', ProductType.subscription),
-  ProductData('umivpn_pro_month', ProductType.subscription),
-  ProductData('umivpn_pro_year', ProductType.subscription),
+  // ProductData('umivpn_pro_month', ProductType.subscription),
+  // ProductData('umivpn_pro_year', ProductType.subscription),
 ];

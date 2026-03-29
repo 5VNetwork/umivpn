@@ -250,6 +250,30 @@ class _CurrentPlan extends StatelessWidget {
                 //   ),
                 // ),
               ],
+              if (!useStripe)
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        context.read<ProPurchases>().restore();
+                      },
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.5)),
+                      ),
+                      icon: Icon(Icons.history_rounded,
+                          color: Theme.of(context).colorScheme.primary),
+                      label: Text(
+                        AppLocalizations.of(context)!.restoreIAP,
+                      ),
+                    ),
+                  ),
+                )
             ],
           ),
         );
