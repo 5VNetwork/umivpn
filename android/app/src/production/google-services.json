@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "44508252344",
+    "project_id": "umivpn",
+    "storage_bucket": "umivpn.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:44508252344:android:867c0bd2c5cd4cd2364c4d",
+        "android_client_info": {
+          "package_name": "com5vnetwork.umi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXhTg1_VYYlTmC1AAVeizPYJf5LQHxnIA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

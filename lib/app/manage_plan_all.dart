@@ -7,6 +7,7 @@ class AllPlans extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!useStripe) {
       return Consumer<ProPurchases>(builder: (context, proPurchases, child) {
+
         if (proPurchases.purchaseDetails != null) {
           if (proPurchases.purchaseDetails!.status == PurchaseStatus.pending ||
               proPurchases.buying) {

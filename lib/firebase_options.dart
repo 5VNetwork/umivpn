@@ -56,19 +56,20 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBKFsIENEmO-fEgw-_KDf6qGfaQsBbFKU8',
-    appId: '1:44508252344:ios:3c1553784d2b709f364c4d',
+    appId: '1:44508252344:ios:b2b2ea85fb289287364c4d',
     messagingSenderId: '44508252344',
     projectId: 'umivpn',
     storageBucket: 'umivpn.firebasestorage.app',
-    iosBundleId: 'com.5vnetwork.umi',
+    iosBundleId: 'com.umivpn.production',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyBKFsIENEmO-fEgw-_KDf6qGfaQsBbFKU8',
-    appId: '1:44508252344:ios:3c1553784d2b709f364c4d',
+    appId: '1:44508252344:ios:b2b2ea85fb289287364c4d',
     messagingSenderId: '44508252344',
     projectId: 'umivpn',
     storageBucket: 'umivpn.firebasestorage.app',
-    iosBundleId: 'com.5vnetwork.umi',
+    iosBundleId: 'com.umivpn.production',
   );
+
 }

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 import 'package:umivpn/app/manage_plan.dart';
 import 'package:umivpn/auth/user.dart';
@@ -18,7 +19,9 @@ const webClientId =
 
 final iosClientId = debug
     ? "952575395446-8gumjqa4av8akh8cralh8ug8kb2dckci.apps.googleusercontent.com"
-    : "952575395446-dts29lpnn4gnn9dbgu2aule8ja6ba7sn.apps.googleusercontent.com";
+    : appFlavor == "staging"
+        ? "952575395446-2738klk0hmj1mq9mli50lf1u6gkcmcvi.apps.googleusercontent.com"
+        : "952575395446-dts29lpnn4gnn9dbgu2aule8ja6ba7sn.apps.googleusercontent.com";
 
 class AuthRepo extends ChangeNotifier {
   AuthRepo(this._authProvider) {

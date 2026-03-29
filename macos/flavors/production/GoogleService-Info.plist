@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.umivpn</string>
+	<string>com.umivpn.production</string>
 	<key>PROJECT_ID</key>
 	<string>umivpn</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:44508252344:ios:6dd931a102028204364c4d</string>
+	<string>1:44508252344:ios:b2b2ea85fb289287364c4d</string>
 </dict>
 </plist>

@@ -104,10 +104,10 @@ class ProPurchases extends ChangeNotifier {
         'purchaseDetails: status: ${purchaseDetails.status}, orderId: ${purchaseDetails.purchaseID}, verificationData: ${purchaseDetails.verificationData.serverVerificationData}');
     if (purchaseDetails.status == PurchaseStatus.purchased ||
         purchaseDetails.status == PurchaseStatus.restored) {
-      if (!purchaseDetails.pendingCompletePurchase) {
-        logger.w('purchaseDetails is not pending complete purchase');
-        return;
-      }
+      // if (!purchaseDetails.pendingCompletePurchase) {
+      //   logger.w('purchaseDetails is not pending complete purchase');
+      //   return;
+      // }
       await _verifyAndFulfill(purchaseDetails);
     } else if (purchaseDetails.status == PurchaseStatus.canceled) {
       if (purchaseDetails.pendingCompletePurchase) {
@@ -131,6 +131,7 @@ class ProPurchases extends ChangeNotifier {
   }
 
   Future<void> restore() async {
+    logger.d('restoring purchases');
     await iapConnection.restorePurchases();
   }
 

@@ -1,1 +1,133 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"umivpn","appId":"1:44508252344:android:867c0bd2c5cd4cd2364c4d","fileOutput":"android/app/google-services.json"},"buildConfigurations":{"src\\staging":{"projectId":"umivpn-staging","appId":"1:772250867140:android:3546dae79c4756a4b78091","fileOutput":"android/app/src/staging/google-services.json"},"src/debug":{"projectId":"umivpn-staging","appId":"1:772250867140:android:77975346cd058ef7b78091","fileOutput":"android/app/src/debug/google-services.json"}}},"dart":{"lib/firebase_options.dart":{"projectId":"umivpn","configurations":{"android":"1:44508252344:android:867c0bd2c5cd4cd2364c4d","ios":"1:44508252344:ios:3c1553784d2b709f364c4d","macos":"1:44508252344:ios:3c1553784d2b709f364c4d"}},"lib/firebase_options_staging.dart":{"projectId":"umivpn-staging","configurations":{"android":"1:772250867140:android:3546dae79c4756a4b78091","ios":"1:772250867140:ios:6da43acc2920108eb78091","macos":"1:772250867140:ios:1ea36d0040698890b78091"}},"lib/firebase_options_dev.dart":{"projectId":"umivpn-staging","configurations":{"android":"1:772250867140:android:77975346cd058ef7b78091","ios":"1:772250867140:ios:fb9623cf74437dfcb78091","macos":"1:772250867140:ios:fb9623cf74437dfcb78091"}}},"ios":{"default":{"projectId":"umivpn","appId":"1:44508252344:ios:6dd931a102028204364c4d","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"},"buildConfigurations":{"Debug":{"projectId":"umivpn-staging","appId":"1:772250867140:ios:fb9623cf74437dfcb78091","uploadDebugSymbols":false,"fileOutput":"ios/flavors/dev/GoogleService-Info.plist"}}},"macos":{"default":{"projectId":"umivpn","appId":"1:44508252344:ios:6dd931a102028204364c4d","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"},"buildConfigurations":{"Debug":{"projectId":"umivpn-staging","appId":"1:772250867140:ios:fb9623cf74437dfcb78091","uploadDebugSymbols":false,"fileOutput":"macos/flavors/dev/GoogleService-Info.plist"}}}}},"emulators":{"functions":{"port":5001},"ui":{"enabled":true},"singleProjectMode":true}}
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "umivpn",
+                    "appId": "1:44508252344:android:867c0bd2c5cd4cd2364c4d",
+                    "fileOutput": "android/app/google-services.json"
+                },
+                "buildConfigurations": {
+                    "src\\staging": {
+                        "projectId": "umivpn-staging",
+                        "appId": "1:772250867140:android:3546dae79c4756a4b78091",
+                        "fileOutput": "android/app/src/staging/google-services.json"
+                    },
+                    "src/debug": {
+                        "projectId": "umivpn-staging",
+                        "appId": "1:772250867140:android:77975346cd058ef7b78091",
+                        "fileOutput": "android/app/src/debug/google-services.json"
+                    },
+                    "src/production": {
+                        "projectId": "umivpn",
+                        "appId": "1:44508252344:android:867c0bd2c5cd4cd2364c4d",
+                        "fileOutput": "android/app/src/production/google-services.json"
+                    }
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "umivpn",
+                    "configurations": {
+                        "android": "1:44508252344:android:867c0bd2c5cd4cd2364c4d",
+                        "ios": "1:44508252344:ios:b2b2ea85fb289287364c4d",
+                        "macos": "1:44508252344:ios:b2b2ea85fb289287364c4d"
+                    }
+                },
+                "lib/firebase_options_staging.dart": {
+                    "projectId": "umivpn-staging",
+                    "configurations": {
+                        "android": "1:772250867140:android:3546dae79c4756a4b78091",
+                        "ios": "1:772250867140:ios:6da43acc2920108eb78091",
+                        "macos": "1:772250867140:ios:1ea36d0040698890b78091"
+                    }
+                },
+                "lib/firebase_options_dev.dart": {
+                    "projectId": "umivpn-staging",
+                    "configurations": {
+                        "android": "1:772250867140:android:77975346cd058ef7b78091",
+                        "ios": "1:772250867140:ios:fb9623cf74437dfcb78091",
+                        "macos": "1:772250867140:ios:fb9623cf74437dfcb78091"
+                    }
+                }
+            },
+            "ios": {
+                "default": {
+                    "projectId": "umivpn",
+                    "appId": "1:44508252344:ios:6dd931a102028204364c4d",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "ios/Runner/GoogleService-Info.plist"
+                },
+                "buildConfigurations": {
+                    "Debug": {
+                        "projectId": "umivpn-staging",
+                        "appId": "1:772250867140:ios:fb9623cf74437dfcb78091",
+                        "uploadDebugSymbols": false,
+                        "fileOutput": "ios/flavors/dev/GoogleService-Info.plist"
+                    },
+                    "Debug-production": {
+                        "projectId": "umivpn",
+                        "appId": "1:44508252344:ios:b2b2ea85fb289287364c4d",
+                        "uploadDebugSymbols": false,
+                        "fileOutput": "ios/flavors/production/GoogleService-Info.plist"
+                    },
+                    "Profile-production": {
+                        "projectId": "umivpn",
+                        "appId": "1:44508252344:ios:b2b2ea85fb289287364c4d",
+                        "uploadDebugSymbols": false,
+                        "fileOutput": "ios/flavors/production/GoogleService-Info.plist"
+                    },
+                    "Release-production": {
+                        "projectId": "umivpn",
+                        "appId": "1:44508252344:ios:b2b2ea85fb289287364c4d",
+                        "uploadDebugSymbols": false,
+                        "fileOutput": "ios/flavors/production/GoogleService-Info.plist"
+                    }
+                }
+            },
+            "macos": {
+                "default": {
+                    "projectId": "umivpn",
+                    "appId": "1:44508252344:ios:6dd931a102028204364c4d",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "macos/Runner/GoogleService-Info.plist"
+                },
+                "buildConfigurations": {
+                    "Debug": {
+                        "projectId": "umivpn-staging",
+                        "appId": "1:772250867140:ios:fb9623cf74437dfcb78091",
+                        "uploadDebugSymbols": false,
+                        "fileOutput": "macos/flavors/dev/GoogleService-Info.plist"
+                    },
+                    "Debug-production": {
+                        "projectId": "umivpn",
+                        "appId": "1:44508252344:ios:b2b2ea85fb289287364c4d",
+                        "uploadDebugSymbols": false,
+                        "fileOutput": "macos/flavors/production/GoogleService-Info.plist"
+                    },
+                    "Profile-production": {
+                        "projectId": "umivpn",
+                        "appId": "1:44508252344:ios:b2b2ea85fb289287364c4d",
+                        "uploadDebugSymbols": false,
+                        "fileOutput": "macos/flavors/production/GoogleService-Info.plist"
+                    },
+                    "Release-production": {
+                        "projectId": "umivpn",
+                        "appId": "1:44508252344:ios:b2b2ea85fb289287364c4d",
+                        "uploadDebugSymbols": false,
+                        "fileOutput": "macos/flavors/production/GoogleService-Info.plist"
+                    }
+                }
+            }
+        }
+    },
+    "emulators": {
+        "functions": {
+            "port": 5001
+        },
+        "ui": {
+            "enabled": true
+        },
+        "singleProjectMode": true
+    }
+}
