@@ -125,7 +125,8 @@ jobs:
       - name: Build Windows
         env:
           LOG_KEY: ${{ secrets.LOG_KEY }}
-        run: flutter build windows --dart-define=LOG_KEY=$env:LOG_KEY --release --obfuscate --split-debug-info=symbols
+          URL: ${{ secrets.URL }}
+        run: flutter build windows --dart-define=LOG_KEY=$env:LOG_KEY --dart-define=URL=$env:URL --release --obfuscate --split-debug-info=symbols
 
       - name: Compile .ISS to .EXE Installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.2

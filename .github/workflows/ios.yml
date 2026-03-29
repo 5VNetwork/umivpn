@@ -82,7 +82,10 @@ jobs:
 
     - name: Get dependencies
       run: flutter pub get
-
+    
+    - name: Install FlutterFire
+      run: dart pub global activate flutterfire_cli
+    
     - name: Pod
       run: |
         cd ios && pod install
