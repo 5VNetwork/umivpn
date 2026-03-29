@@ -15,6 +15,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
 
     - name: Checkout dependencies
       env:
@@ -105,9 +107,11 @@ jobs:
     - name: Build 
       env:
         LOG_KEY: ${{ secrets.LOG_KEY }}
+        URL: ${{ secrets.URL }}
       run: |
+        mkdir -p build/app symbols/darwin
         flutter build ipa --flavor production --dart-define=LOG_KEY=$LOG_KEY \
-        --release --obfuscate --split-debug-info=symbols/darwin \
+        --dart-define=URL=$URL --release --obfuscate --split-debug-info=symbols/darwin \
         --extra-gen-snapshot-options=--save-obfuscation-map=build/app/obfuscation.map.json
 
     - name: Set version
@@ -132,5 +136,7 @@ jobs:
       run: |
         cd ios && fastlane release
 
-
-        
+    - name: sentry upload debug symbols
+      env:
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      run: flutter pub run sentry_dart_plugin
