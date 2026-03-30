@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -197,15 +197,11 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		15A130F32E71D3C4003E5632 /* SystemExtension */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = SystemExtension;
 			sourceTree = "<group>";
 		};
 		15EEE8212D6319C100642457 /* PacketTunnel */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = PacketTunnel;
 			sourceTree = "<group>";
 		};
@@ -540,7 +536,7 @@
 			);
 			mainGroup = 33CC10E42044A3C60003C045;
 			packageReferences = (
-				15994CF32F3E596700242A00 /* XCLocalSwiftPackageReference "umivpn-packet-tunnel" */,
+				15994CF32F3E596700242A00 /* XCLocalSwiftPackageReference "../../umivpn-plugin/umivpn-packet-tunnel" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 33CC10EE2044A3C60003C045 /* Products */;
@@ -676,9 +672,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -693,9 +693,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1523,10 +1527,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Runner/RunnerRelease-production.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "3rd Party Mac Developer Application";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = K4FDLB3LLD;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = K4FDLB3LLD;
 				ENABLE_HARDENED_RUNTIME = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = UmiVPN;
@@ -1647,6 +1653,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.umivpn.production;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "XC com umivpn production mac_app_store 1774778405";
 				SWIFT_VERSION = 5.0;
 			};
 			name = "Release-production";
@@ -1691,9 +1698,11 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "PacketTunnel/PacketTunnelRelease-production.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "3rd Party Mac Developer Application";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = K4FDLB3LLD;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = K4FDLB3LLD;
 				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -1779,6 +1788,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.umivpn.production.PacketTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "XC com umivpn production PacketTunnel mac_app_store 1774778406";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -5048,7 +5058,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		15994CF32F3E596700242A00 /* XCLocalSwiftPackageReference "umivpn-packet-tunnel" */ = {
+		15994CF32F3E596700242A00 /* XCLocalSwiftPackageReference "../../umivpn-plugin/umivpn-packet-tunnel" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../umivpn-plugin/umivpn-packet-tunnel";
 		};
@@ -5057,7 +5067,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		15994D052F3E59F900242A00 /* UmivpnPacketTunnel */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 15994CF32F3E596700242A00 /* XCLocalSwiftPackageReference "umivpn-packet-tunnel" */;
+			package = 15994CF32F3E596700242A00 /* XCLocalSwiftPackageReference "../../umivpn-plugin/umivpn-packet-tunnel" */;
 			productName = UmivpnPacketTunnel;
 		};
 /* End XCSwiftPackageProductDependency section */
