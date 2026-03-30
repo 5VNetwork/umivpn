@@ -7,14 +7,14 @@ project 'Runner', {
   'Debug' => :debug,
   'Debug-staging' => :debug,
   'Debug-production' => :debug,
-  'Debug-system' => :debug,
+  'Debug-pkg' => :debug,
   'Profile' => :release,
   'Profile-staging' => :release,
   'Profile-production' => :release,
   'Release' => :release,
   'Release-staging' => :release,
   'Release-production' => :release,
-  'Release-system' => :release,
+  'Release-pkg' => :release,
 }
 
 def flutter_root

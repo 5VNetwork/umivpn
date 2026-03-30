@@ -23,6 +23,7 @@
 import Foundation
 import NetworkExtension
 import Tm
+import OSLog
 
 let XTunnelErrorDomain: String = "XTunnelErrorDomain"
 
@@ -47,7 +48,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     private static var defaultSharedDirectory: URL! {
         let groupIdentifier =
-            "K4FDLB3LLD.com.umivpn.system"
+            "K4FDLB3LLD.com.umivpn.pkg"
             
         return FileManager.default
             .containerURL(
@@ -64,6 +65,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             msg:
                 "protocolConfiguration \(String(describing: (protocolConfiguration as! NETunnelProviderProtocol).providerConfiguration))"
         )
+        
+        monitor.pathUpdateHandler = { path in
+            self.setDefaultNIC(path: path)
+        }
+        monitor.start(queue: DispatchQueue.global())
+        setDefaultNIC(path: monitor.currentPath)
         
         ///Users/shan/Library/Group Containers/K4FDLB3LLD.com.umivpn/Library/Caches/stderr.log
         ///
@@ -110,9 +117,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         nsLog(msg: "networkSetting \(String(describing: settings))")
         try await setTunnelNetworkSettings(settings)
 
-        //        // Start reading packets to get the file descriptor
-        //        let _ = await packetFlow.readPackets()
-
         let fd = getFd()
         if fd != nil {
             let tunName = interfaceName(tunnelFileDescriptor: fd!)
@@ -136,13 +140,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         var config = map["config"] as? Data
         if config == nil {
             throw fatalError(errorStr: "no x config")
-//            do {
-//                NSLog("config path \(map["configPath"] as! String)")
-//                config = try Data(contentsOf: URL(fileURLWithPath: map["configPath"] as! String))
-//                nsLog(msg: "config file \(String(describing: config!))")
-//            } catch {
-//                
-//            }
         }
 
         let useFd = map["useFd"] as! NSNumber as! Bool
@@ -165,14 +162,23 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             throw fatalError(
                 errorStr: "failed to start x: \(error.localizedDescription)")
         }
-        monitor.pathUpdateHandler = { path in
+        
+        if #available(macOS 15.0, *) {
+            nsLog(msg: virtualInterface?.name ?? "aaa")
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    
+    private func setDefaultNIC(path: Network.NWPath) {
+            self.nsLog(msg: "path: \(path.debugDescription)")
             if path.status == .satisfied {
-                self.nsLog(msg: "connected")
                 let first = path.availableInterfaces.first { NWInterface in
                     !NWInterface.name.contains("utun")
                 }
                 if first != nil {
-                    X_darwinUpdateDefaultRouteInterface(first!.name)
+                    X_darwinUpdateDefaultRouteInterface(first!.name, first!.index)
+                    self.nsLog(msg: "default \(first!.debugDescription)")
                 }
                 path.availableInterfaces.forEach { NWInterface in
                     self.nsLog(msg: "available nic \(NWInterface.name)")
@@ -180,18 +186,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 path.gateways.forEach { NWEndpoint in
                     self.nsLog(msg: "available gateway \(NWEndpoint.debugDescription)")
                 }
-                self.nsLog(msg: "support ipv6: \(path.supportsIPv6)")
+                self.nsLog(msg: "path support ipv6: \(path.supportsIPv6)")
+                self.nsLog(msg: "path constrained: \(path.isConstrained)")
+                self.nsLog(msg: "path expensive: \(path.isExpensive)")
             } else {
-                self.nsLog(msg: "no connection")
+                self.nsLog(msg: "unsatisfied \(path.unsatisfiedReason)")
             }
         }
-        monitor.start(queue: DispatchQueue.global())
-        if #available(macOS 15.0, *) {
-            nsLog(msg: virtualInterface?.name ?? "aaa")
-        } else {
-            // Fallback on earlier versions
-        }
-    }
 
     private func getNetworkSetting(map: [String: NSObject], enableIpv6: Bool)
         throws
@@ -332,14 +333,24 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     private func fatalError(errorStr: String) -> Error {
         nsLog(msg: errorStr)
+        monitor.cancel()
         let err = NSError(domain: errorStr, code: 0)
         cancelTunnelWithError(err)
         return err
     }
 
-    func nsLog(msg: String) {
+    // Use os_log for PacketTunnel extension logging
+    // macOS 26+ redacts NSLog, so we use os_log with public formatting
+    private static let logger = Logger(
+        subsystem: "com.umivpn.PacketTunnel",
+        category: "PacketTunnel"
+    )
+    
+    public func nsLog(msg: String) {
+        // Use privacy: .public to prevent <private> redaction in Console.app
+        // This marks the message as public so it won't be redacted
         #if DEBUG
-            NSLog(msg)
+            Self.logger.info("\(msg, privacy: .public)")
         #endif
     }
 
@@ -440,21 +451,21 @@ class Interface: NSObject, X_darwinInterfaceProtocol {
 
     }
 
-    //    func getLogger() -> (any X_darwinLoggerProtocol)? {
-    //        if isDebug {
-    //            return Logger(packetTunnelProvider: packetTunnelProvider)
-    //        } else {
-    //            return nil
-    //        }
-    //    }
-
-    //    func useFd() -> Bool {
-    //        return useFD
-    //    }
-
-    //    func getTun() -> (any X_darwinTunProtocol)? {
-    //        return Tun(packetTunnelProvider: self.packetTunnelProvider)
-    //    }
+    public func getFetchResult() -> String {
+        return ""
+    }
+    
+    public func getSession(_ error: NSErrorPointer) -> String {
+        return ""
+    }
+    
+    public func setFetchResult(_ result: String?) throws {
+        
+    }
+    
+    public func setSession(_ session: String?) throws {
+        
+    }
 
     func getFd(_ ret0_: UnsafeMutablePointer<Int32>?) throws {
         let fd = packetTunnelProvider.getFd()
@@ -484,71 +495,4 @@ class Interface: NSObject, X_darwinInterfaceProtocol {
     }
 
 }
-
-//class Logger: NSObject, X_darwinLoggerProtocol {
-//    private let packetTunnelProvider: PacketTunnelProvider
-//    init(packetTunnelProvider: PacketTunnelProvider) {
-//        self.packetTunnelProvider = packetTunnelProvider
-//    }
-//
-//    func log(_ p0: String?) {
-//        if let p0 {
-//            packetTunnelProvider.nsLog(msg: p0)
-//        }
-//    }
-//}
-//
-//class Tun: NSObject, X_darwinTunProtocol {
-//    private let packetTunnelProvider: PacketTunnelProvider
-//    private var packets: [Data] = []
-//
-//    init(packetTunnelProvider: PacketTunnelProvider) {
-//        self.packetTunnelProvider = packetTunnelProvider
-//    }
-//
-//    func readPacket() throws -> Data {
-//        // If we have cached packets, return the first one
-//        if !packets.isEmpty {
-//            let packet = packets.removeFirst()
-//            return packet
-//        }
-//
-//        // Read new packets
-//        let semaphore = DispatchSemaphore(value: 0)
-//        var newPackets: [Data] = []
-//
-//        packetTunnelProvider.packetFlow.readPackets { (packets, protocols) in
-//            newPackets = packets
-//            semaphore.signal()
-//        }
-//
-//        // Wait indefinitely until packets are available
-//        semaphore.wait()
-//
-//        // Cache remaining packets
-//        if newPackets.count > 1 {
-//            packets = Array(newPackets.dropFirst())
-//        }
-//
-//        // Return first packet (we know there's at least one packet at this point)
-//        return newPackets[0]
-//    }
-//
-//    func writePacket(_ p0: Data?, p1: Int) throws {
-//        packetTunnelProvider.nsLog(msg: "writePacket")
-//        guard let packet = p0 else {
-//            packetTunnelProvider.nsLog(msg: "writePacket has no data")
-//            return
-//        }
-//
-//        // Write the packet
-//        let success = packetTunnelProvider.packetFlow.writePackets(
-//            [packet], withProtocols: [NSNumber(value: Int32(p1))])
-//        if !success {
-//            packetTunnelProvider.nsLog(msg: "writePacket failed")
-//            throw XTunnelError.writeToTunFailed as NSError
-//        }
-//    }
-//}
-
 

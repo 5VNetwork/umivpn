@@ -122,7 +122,7 @@ void initRouter(AuthProvider authProvider) {
               child: SignInPage(
                   showGoogle: true,
                   showMicrosoft: false,
-                  showApple: applePlatform,
+                  showApple: applePlatform && !isPkg,
                   termOfServiceUrl: termOfServiceUrl,
                   privacyPolicyUrl: privacyPolicyUrl,
                   showAppleNotification: false),
