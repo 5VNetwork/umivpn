@@ -138,20 +138,13 @@ jobs:
       - name: Build
         env:
           LOG_KEY: ${{ secrets.LOG_KEY }}
+          URL: ${{ secrets.URL }}
         run: |
-          flutter build macos --dart-define=LOG_KEY=$LOG_KEY --flavor production --release --obfuscate \
+          flutter build macos --dart-define=LOG_KEY=$LOG_KEY --dart-define=URL=$URL \
+          --flavor production --release --obfuscate \
           --split-debug-info=symbols/darwin \
           --build-name ${{ steps.get_version.outputs.version }} \
           --build-number ${{ steps.get_version.outputs.build_number }}
-
-      # - name: Set version
-      #   run: |
-      #     BUILD_NUMBER=$(grep '^version:' pubspec.yaml | sed 's/version: .*+\(.*\)/\1/')
-      #     VERSION_NAME=$(grep '^version:' pubspec.yaml | sed 's/version: \(.*\)+.*/\1/')
-      #     /usr/libexec/PlistBuddy -c  "Set :CFBundleShortVersionString $VERSION_NAME" \
-      #     "build/macos/Build/Products/Release-production/VX.app/Contents/PlugIns/PacketTunnel.appex/Contents/Info.plist"
-      #     /usr/libexec/PlistBuddy -c  "Set :CFBundleVersion $BUILD_NUMBER" \
-      #     "build/macos/Build/Products/Release-production/VX.app/Contents/PlugIns/PacketTunnel.appex/Contents/Info.plist"
 
       - name: Package
         run: |
@@ -179,3 +172,8 @@ jobs:
         if: always()
         run: |
           keychain use-login
+      
+      - name: sentry upload debug symbols
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: flutter pub run sentry_dart_plugin
