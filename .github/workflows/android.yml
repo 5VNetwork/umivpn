@@ -102,6 +102,11 @@ jobs:
           --build-name ${{ steps.get_version.outputs.version }} \
           --build-number ${{ steps.get_version.outputs.build_number }}
 
+      - name: sentry upload debug symbols
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: flutter pub run sentry_dart_plugin
+
       - name: upload to play store
         env:
           FASTLANE_PLAY_STORE: ${{ secrets.FASTLANE_PLAY_STORE }}
@@ -126,6 +131,11 @@ jobs:
           mv build/app/outputs/flutter-apk/app-apk-release.apk releases/umivpn-universal.apk
           zip -j releases/umivpn-universal.apk.zip releases/umivpn-universal.apk
           rm releases/umivpn-universal.apk
+          
+      - name: sentry upload debug symbols
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: flutter pub run sentry_dart_plugin
 
       - name: upload apks to github release
         env:
@@ -165,7 +175,3 @@ jobs:
                 -H "Content-Type: application/json" \
                 --data '{"purge_everything": true}'
 
-      - name: sentry upload debug symbols
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: flutter pub run sentry_dart_plugin

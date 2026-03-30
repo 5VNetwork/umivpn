@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           ref: dmg
+          fetch-depth: 0
 
       - name: Save Provision profiles
         env:
@@ -136,6 +137,11 @@ jobs:
           --release --obfuscate --split-debug-info=symbols/darwin \
           --dart-define=URL=$URL
 
+      - name: sentry upload debug symbols
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: flutter pub run sentry_dart_plugin
+
       - name: Archive
         run: |
           cd macos
@@ -233,7 +239,3 @@ jobs:
                 -H "Content-Type: application/json" \
                 --data '{"purge_everything": true}'
                 
-      - name: sentry upload debug symbols
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: flutter pub run sentry_dart_plugin
