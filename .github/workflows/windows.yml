@@ -127,6 +127,11 @@ jobs:
           LOG_KEY: ${{ secrets.LOG_KEY }}
           URL: ${{ secrets.URL }}
         run: flutter build windows --dart-define=LOG_KEY=$env:LOG_KEY --dart-define=URL=$env:URL --release --obfuscate --split-debug-info=symbols
+        
+      - name: sentry upload debug symbols
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: flutter pub run sentry_dart_plugin
 
       - name: Compile .ISS to .EXE Installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
