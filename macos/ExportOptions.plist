@@ -8,10 +8,10 @@
 	<string>developer-id</string>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>com.umivpn.system</key>
-		<string>pkg</string>
-		<key>com.umivpn.system.se</key>
-		<string>pkg se</string>
+		<key>com.umivpn.pkg</key>
+		<string>umivpn pkg</string>
+		<key>com.umivpn.pkg.se</key>
+		<string>umivpn pkg se</string>
 	</dict>
 	<key>signingCertificate</key>
 	<string>Developer ID Application</string>

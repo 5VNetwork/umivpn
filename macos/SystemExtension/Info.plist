@@ -9,7 +9,7 @@
 		<key>CFBundleVersion</key>
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
 		<key>NEMachServiceName</key>
-		<string>$(TeamIdentifierPrefix)com.umivpn.system.se</string>
+		<string>$(TeamIdentifierPrefix)com.umivpn.pkg.se</string>
 		<key>NEProviderClasses</key>
 		<dict>
 			<key>com.apple.networkextension.packet-tunnel</key>

@@ -13,7 +13,6 @@ const androidPackageNme = appFlavor == 'staging'
     : appFlavor == 'dev'
         ? 'com5vnetwork.umi.dev'
         : 'com5vnetwork.umi';
-const darwinBundleId = 'com.umivpn';
 
 final supabaseUrl = debug
     ? const String.fromEnvironment('SUPABASE_URL')

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -461,7 +461,7 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				154EF8852F72E373005939D0 /* XCLocalSwiftPackageReference "../../umivpn-plugin/umivpn-packet-tunnel" */,
+				154EF8852F72E373005939D0 /* XCLocalSwiftPackageReference "umivpn-packet-tunnel" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
@@ -576,13 +576,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -612,13 +608,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2520,7 +2512,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		154EF8852F72E373005939D0 /* XCLocalSwiftPackageReference "../../umivpn-plugin/umivpn-packet-tunnel" */ = {
+		154EF8852F72E373005939D0 /* XCLocalSwiftPackageReference "umivpn-packet-tunnel" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../umivpn-plugin/umivpn-packet-tunnel";
 		};
@@ -2529,7 +2521,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		154EF8872F72E557005939D0 /* UmivpnPacketTunnel */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 154EF8852F72E373005939D0 /* XCLocalSwiftPackageReference "../../umivpn-plugin/umivpn-packet-tunnel" */;
+			package = 154EF8852F72E373005939D0 /* XCLocalSwiftPackageReference "umivpn-packet-tunnel" */;
 			productName = UmivpnPacketTunnel;
 		};
 /* End XCSwiftPackageProductDependency section */

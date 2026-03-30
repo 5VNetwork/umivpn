@@ -131,7 +131,7 @@ jobs:
         run: |
           cd macos
           xcodebuild -scheme pkg -workspace Runner.xcworkspace \
-          -configuration Release-system -archivePath ./build/VX.xcarchive \
+          -configuration Release-pkg -archivePath ./build/VX.xcarchive \
           -destination "generic/platform=macOS" archive
 
       - name: Set version

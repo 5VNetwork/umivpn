@@ -10,7 +10,7 @@
 	<true/>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>K4FDLB3LLD.com.umivpn.system</string>
+		<string>K4FDLB3LLD.com.umivpn.pkg</string>
 	</array>
 	<key>com.apple.security.network.client</key>
 	<true/>
