@@ -29,7 +29,7 @@
 		15994D062F3E59F900242A00 /* UmivpnPacketTunnel in Frameworks */ = {isa = PBXBuildFile; productRef = 15994D052F3E59F900242A00 /* UmivpnPacketTunnel */; };
 		15A130F22E71D3C4003E5632 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F0A1DB2D1EF8E100E9C182 /* NetworkExtension.framework */; };
 		15A1310E2E71D492003E5632 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F0A1EB2D1EFA2700E9C182 /* libresolv.tbd */; };
-		15E4EA222F7A77B4006DE75D /* PacketTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 15EEE81F2D6319C100642457 /* PacketTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		15E4EA4C2F7A86AA006DE75D /* com.umivpn.pkg.se.systemextension in Embed System Extensions */ = {isa = PBXBuildFile; fileRef = 15A130F12E71D3C4003E5632 /* com.umivpn.pkg.se.systemextension */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		15EEE7902D63071800642457 /* MacosHostApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15EEE78E2D63071800642457 /* MacosHostApi.swift */; };
 		15EEE7912D63071800642457 /* Messages.g.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15EEE78F2D63071800642457 /* Messages.g.swift */; };
 		15EEE8202D6319C100642457 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F0A1DB2D1EF8E100E9C182 /* NetworkExtension.framework */; };
@@ -51,19 +51,19 @@
 			remoteGlobalIDString = 15EEE81E2D6319C100642457;
 			remoteInfo = PacketTunnel;
 		};
-		156F23E62E85A4B70093AA39 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 33CC10E52044A3C60003C045 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 15EEE81E2D6319C100642457;
-			remoteInfo = PacketTunnel;
-		};
 		15E4EA232F7A77B4006DE75D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 33CC10E52044A3C60003C045 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 15EEE81E2D6319C100642457;
 			remoteInfo = PacketTunnel;
+		};
+		15E4EA4D2F7A86AA006DE75D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 33CC10E52044A3C60003C045 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 15A130F02E71D3C4003E5632;
+			remoteInfo = SystemExtension;
 		};
 		331C80D9294CF71000263BE5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -102,15 +102,15 @@
 			name = "Embed ExtensionKit Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		15E4EA252F7A77B4006DE75D /* Embed Foundation Extensions */ = {
+		15E4EA4F2F7A86AA006DE75D /* Embed System Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
+			dstPath = "$(SYSTEM_EXTENSIONS_FOLDER_PATH)";
+			dstSubfolderSpec = 16;
 			files = (
-				15E4EA222F7A77B4006DE75D /* PacketTunnel.appex in Embed Foundation Extensions */,
+				15E4EA4C2F7A86AA006DE75D /* com.umivpn.pkg.se.systemextension in Embed System Extensions */,
 			);
-			name = "Embed Foundation Extensions";
+			name = "Embed System Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		15EEE8372D631A0800642457 /* Embed Frameworks */ = {
@@ -475,15 +475,15 @@
 				D9005513CAAA89D639A41D84 /* [CP] Embed Pods Frameworks */,
 				6A21E5FEA8DBCB632C2D20BB /* [CP] Copy Pods Resources */,
 				28792A90B15121B1DF0DE2F0 /* FlutterFire: "flutterfire bundle-service-file" */,
-				15E4EA252F7A77B4006DE75D /* Embed Foundation Extensions */,
+				15E4EA4F2F7A86AA006DE75D /* Embed System Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				33CC11202044C79F0003C045 /* PBXTargetDependency */,
-				156F23E72E85A4B70093AA39 /* PBXTargetDependency */,
 				15353AC12F1BBC7F00AFE654 /* PBXTargetDependency */,
 				15E4EA242F7A77B4006DE75D /* PBXTargetDependency */,
+				15E4EA4E2F7A86AA006DE75D /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
@@ -768,20 +768,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		15353AC12F1BBC7F00AFE654 /* PBXTargetDependency */ = {
+		15E4EA4E2F7A86AA006DE75D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 15EEE81E2D6319C100642457 /* PacketTunnel */;
-			targetProxy = 15353AC02F1BBC7F00AFE654 /* PBXContainerItemProxy */;
-		};
-		156F23E72E85A4B70093AA39 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 15EEE81E2D6319C100642457 /* PacketTunnel */;
-			targetProxy = 156F23E62E85A4B70093AA39 /* PBXContainerItemProxy */;
-		};
-		15E4EA242F7A77B4006DE75D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 15EEE81E2D6319C100642457 /* PacketTunnel */;
-			targetProxy = 15E4EA232F7A77B4006DE75D /* PBXContainerItemProxy */;
+			target = 15A130F02E71D3C4003E5632 /* SystemExtension */;
+			targetProxy = 15E4EA4D2F7A86AA006DE75D /* PBXContainerItemProxy */;
 		};
 		331C80DA294CF71000263BE5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2942,7 +2932,7 @@
 					"-weak_framework",
 					"\"UserNotifications\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.umivpn.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = com.umivpn.pkg;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -3076,7 +3066,7 @@
 					"-weak_framework",
 					"\"UserNotifications\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.umivpn.dev.PacketTunnel;
+				PRODUCT_BUNDLE_IDENTIFIER = com.umivpn.pkgPacketTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";

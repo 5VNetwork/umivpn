@@ -32,6 +32,7 @@ import 'package:umivpn/utils/path.dart';
 import 'package:umivpn/widgets/pro_icon.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:flutter_common/widgets/app_bar.dart';
+import 'package:flutter_sparkle/flutter_sparkle.dart';
 
 final InAppReview inAppReview = InAppReview.instance;
 
@@ -142,6 +143,20 @@ List<Widget> _getBottomButtons(BuildContext context, User? user) {
     const Version(),
     const Gap(5),
     if (autoUpdateSupported) const CheckUpdateButton(),
+    if (isPkg)
+      Column(children: [
+        Divider(),
+        Padding(
+            padding: EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
+            child: TextButton(
+              onPressed: () async {
+                FlutterSparkle.checkMacUpdate(isProduction()
+                    ? 'https://download.5vnetwork.com/appcast.xml'
+                    : 'https://pub-f52ca93bef2c463eabe42dfcf7d05b21.r2.dev/appcast.xml');
+              },
+              child: Text(AppLocalizations.of(context)!.checkUpdate),
+            ))
+      ]),
     if (!isProduction())
       Column(
         children: [

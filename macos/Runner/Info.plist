@@ -48,5 +48,11 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>SUEnableInstallerLauncherService</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>https://umivpn.r2.5vnetwork.com/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>GosVLcRirDhRX5P+Fwotujvt3k9vvIT5cWLJmtKJXkQ=</string>
 </dict>
 </plist>
