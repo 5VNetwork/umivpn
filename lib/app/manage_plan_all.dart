@@ -319,7 +319,8 @@ class AllPlansList extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      '3-day free trial for first-time customers',
+                      AppLocalizations.of(context)!
+                          .threeDayFreeTrialFirstTimeCustomers,
                       style: textTheme.bodySmall?.copyWith(
                         color: colorScheme.primary,
                         fontWeight: FontWeight.w500,

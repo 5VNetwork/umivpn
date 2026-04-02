@@ -176,6 +176,7 @@
   "loginWithApple": "Apple",
   "loginWithMicrosoft": "Microsoft",
   "newUserTrialText": "New users can try Pro for 7 days for free",
+  "threeDayFreeTrialFirstTimeCustomers": "3-day free trial for first-time customers",
   "proExpiredAt": "Pro Expiry",
   "lifetimeProAccount": "Lifetime Pro Account",
   "addGroup": "Add Group",

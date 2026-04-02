@@ -489,6 +489,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newUserTrialText => '新用户可免费试用Pro 7天';
 
   @override
+  String get threeDayFreeTrialFirstTimeCustomers => '首次购买用户可免费试用3天';
+
+  @override
   String get proExpiredAt => 'Pro 到期时间';
 
   @override

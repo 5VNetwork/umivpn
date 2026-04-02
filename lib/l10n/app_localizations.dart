@@ -1021,6 +1021,12 @@ abstract class AppLocalizations {
   /// **'New users can try Pro for 7 days for free'**
   String get newUserTrialText;
 
+  /// No description provided for @threeDayFreeTrialFirstTimeCustomers.
+  ///
+  /// In en, this message translates to:
+  /// **'3-day free trial for first-time customers'**
+  String get threeDayFreeTrialFirstTimeCustomers;
+
   /// No description provided for @proExpiredAt.
   ///
   /// In en, this message translates to:

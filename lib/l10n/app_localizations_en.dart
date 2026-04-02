@@ -503,6 +503,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newUserTrialText => 'New users can try Pro for 7 days for free';
 
   @override
+  String get threeDayFreeTrialFirstTimeCustomers =>
+      '3-day free trial for first-time customers';
+
+  @override
   String get proExpiredAt => 'Pro Expiry';
 
   @override
