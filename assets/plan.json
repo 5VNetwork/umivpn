@@ -7,14 +7,14 @@
                 "period": "month",
                 "priceId": "",
                 "subscriptionIndex": 1,
-                "appleProductId": "umivpn_air_month"
+                "appleProductId": "umi_air_month"
             },
             {
                 "price": "$14.99",
                 "period": "year",
                 "priceId": "",
                 "subscriptionIndex": 0,
-                "appleProductId": "umivpn_air_year"
+                "appleProductId": "umi_air_year"
             }
         ],
         "get": "Get Air",
@@ -36,14 +36,14 @@
                 "period": "month",
                 "priceId": "",
                 "subscriptionIndex": 1,
-                "appleProductId": "umivpn_pro_month"
+                "appleProductId": "umi_pro_month"
             },
             {
                 "price": "$59.99",
                 "period": "year",
                 "priceId": "",
                 "subscriptionIndex": 0,
-                "appleProductId": "umivpn_pro_year"
+                "appleProductId": "umi_pro_year"
             }
         ],
         "get": "Get Pro",
