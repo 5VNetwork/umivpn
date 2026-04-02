@@ -503,6 +503,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get newUserTrialText => 'Новые пользователи могут попробовать Pro в течение 7 дней бесплатно.';
 
   @override
+  String get threeDayFreeTrialFirstTimeCustomers =>
+      '3-дневная бесплатная пробная версия для новых клиентов';
+
+  @override
   String get proExpiredAt => 'Срок действия Pro';
 
   @override
