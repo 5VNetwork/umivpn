@@ -152,13 +152,13 @@ class AuthRepo extends ChangeNotifier {
             SubscriptionSource.playStore ||
             SubscriptionSource.stripe:
         switch (productId) {
-          case 'umivpn_air_month':
+          case 'umivpn_air_month' || 'umi_air_month':
             return (SubscriptionPlan.air, Period.month);
-          case 'umivpn_air_year':
+          case 'umivpn_air_year' || 'umi_air_year':
             return (SubscriptionPlan.air, Period.year);
-          case 'umivpn_pro_month':
+          case 'umivpn_pro_month' || 'umi_pro_month':
             return (SubscriptionPlan.pro, Period.month);
-          case 'umivpn_pro_year':
+          case 'umivpn_pro_year' || 'umi_pro_year':
             return (SubscriptionPlan.pro, Period.year);
           default:
             throw Exception('Invalid productId: $productId');
