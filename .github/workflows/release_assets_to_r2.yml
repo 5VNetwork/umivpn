@@ -1,0 +1,76 @@
+name: Sync Latest Prerelease Assets to R2
+
+on:
+  workflow_dispatch:
+
+jobs:
+  upload-latest-release-assets-to-r2:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install AWS CLI
+        uses: unfor19/install-aws-cli-action@v1
+        with:
+          version: 2
+          verbose: false
+          arch: amd64
+
+      - name: Configure AWS CLI for R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID" --profile r2
+          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile r2
+          aws configure set region auto --profile r2
+
+      - name: Resolve most recent prerelease tag
+        id: latest_prerelease
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          TAG_NAME=$(gh api "repos/${{ github.repository }}/releases" \
+            --jq 'map(select(.draft == false and .prerelease == true)) | .[0].tag_name')
+          if [ -z "$TAG_NAME" ] || [ "$TAG_NAME" = "null" ]; then
+            echo "No prerelease found to sync."
+            exit 1
+          fi
+          echo "tag=$TAG_NAME" >> "$GITHUB_OUTPUT"
+          echo "Most recent prerelease tag: $TAG_NAME"
+
+      - name: Download all assets from most recent prerelease
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          mkdir -p release-assets
+          gh release download "${{ steps.latest_prerelease.outputs.tag }}" \
+            --repo "${{ github.repository }}" \
+            --dir release-assets
+          ls -lah release-assets
+
+      - name: Upload all release assets to R2
+        run: |
+          aws s3 cp release-assets s3://umivpn/ \
+            --recursive \
+            --profile r2 \
+            --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
+
+      - name: Purge CDN cache
+        env:
+          CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
+        run: |
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/1aac9c58b9f5bab79fa16c90ebe2e0c2/purge_cache" \
+                -H "Authorization: Bearer $CLOUDFLARE_TOKEN" \
+                -H "Content-Type: application/json" \
+                --data '{"purge_everything": true}'
+
+      - name: Promote prerelease to latest release
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          gh release edit "${{ steps.latest_prerelease.outputs.tag }}" \
+            --prerelease=false \
+            --latest

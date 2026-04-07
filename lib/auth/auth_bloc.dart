@@ -54,6 +54,8 @@ class AuthRepo extends ChangeNotifier {
     await _authProvider.refreshUser();
   }
 
+  UserProfile? get userProfile => _userProfile;
+  UserProfile? _userProfile;
   Future<UserProfile?> fetchProfile() async {
     if (_user == null) {
       return null;
@@ -64,6 +66,7 @@ class AuthRepo extends ChangeNotifier {
           await supabase.from('profiles').select().eq('id', userId).single();
       debugPrint(response.toString());
       final profile = UserProfile.fromJson(response);
+      _userProfile = profile;
       return profile;
     } catch (e, stackTrace) {
       logger.e('Error fetching profile', error: e, stackTrace: stackTrace);

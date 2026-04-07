@@ -15,10 +15,11 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archßive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.2.1+20
+version: 0.2.2+22
 
 environment:
-  sdk: ">=3.3.4 <4.0.0"
+  sdk: ">=3.8.0 <4.0.0"
+
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -123,7 +124,8 @@ dev_dependencies:
   build_runner: ^2.5.4
   json_serializable: ^6.8.0
   freezed: ^2.5.7
-  msix: ^3.16.8
+  # 3.16.10+ avoids picking crashpad_handler.exe as the MSIX entry (Sentry).
+  msix: ^3.16.13
   flutter_oss_licenses: ^3.0.4
   in_app_purchase_platform_interface: ^1.4.0
 
@@ -183,8 +185,8 @@ flutter:
 msix_config:
   display_name: UmiVPN
   publisher_display_name: 5V Network
-  identity_name: 5VNetwork.XProxy
-  msix_version: 2.3.1.0
+  identity_name: 5VNetwork.UmiVPN
+  msix_version: 0.2.3.0
   logo_path: windows/runner/resources/app_icon.ico
   capabilities: internetClient
   publisher: CN=ABB09CD5-F7BA-4835-BDF5-8CB6DDDCC432
@@ -194,6 +196,8 @@ msix_config:
   trim_logo: false
   language: zh-cn, en-us
   output_path: build/windows/msix
+  windows_build_args: --dart-define=STORE=true
+
 
 sentry:
   upload_debug_symbols: true
