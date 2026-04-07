@@ -212,30 +212,30 @@ jobs:
             --repo ${{ github.repository_owner }}/umivpn \
             --clobber
 
-      - name: Configure AWS CLI for R2
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-        run: |
-          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID" --profile r2
-          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile r2
-          aws configure set region auto --profile r2
+      # - name: Configure AWS CLI for R2
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      #   run: |
+      #     aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID" --profile r2
+      #     aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile r2
+      #     aws configure set region auto --profile r2
 
-      - name: Upload DMG and appcast.xml to R2
-        run: |
-          aws s3 cp releases/UmiVPN.dmg s3://umivpn/ \
-            --profile r2 \
-            --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
-          aws s3 cp releases/appcast.xml s3://umivpn/ \
-            --profile r2 \
-            --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
+      # - name: Upload DMG and appcast.xml to R2
+      #   run: |
+      #     aws s3 cp releases/UmiVPN.dmg s3://umivpn/ \
+      #       --profile r2 \
+      #       --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
+      #     aws s3 cp releases/appcast.xml s3://umivpn/ \
+      #       --profile r2 \
+      #       --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
 
-      - name: Purge CDN cache
-        env:
-          CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
-        run: |
-          curl -X POST "https://api.cloudflare.com/client/v4/zones/f9498905dbe55fade38c7dd8621987cc/purge_cache" \
-                -H "Authorization: Bearer $CLOUDFLARE_TOKEN" \
-                -H "Content-Type: application/json" \
-                --data '{"purge_everything": true}'
+      # - name: Purge CDN cache
+      #   env:
+      #     CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
+      #   run: |
+      #     curl -X POST "https://api.cloudflare.com/client/v4/zones/f9498905dbe55fade38c7dd8621987cc/purge_cache" \
+      #           -H "Authorization: Bearer $CLOUDFLARE_TOKEN" \
+      #           -H "Content-Type: application/json" \
+      #           --data '{"purge_everything": true}'
                 

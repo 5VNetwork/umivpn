@@ -84,3 +84,4 @@ inno/install.iss
 ios/auth_key.p8
 ios/fastlane/README.md
 ios/fastlane/report.xml
+.sentry-native/
