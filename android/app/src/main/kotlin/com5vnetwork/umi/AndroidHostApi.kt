@@ -40,8 +40,12 @@ class AndroidHostApiImpl(
         X_android.redirectStderr(path);
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun requestAddTile() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            Log.w("QS", "requestAddTile ignored: requires Android 13+")
+            return
+        }
+
         val drawableResourceId: Int = com5vnetwork.tm_android.R.drawable.tile_icon
 
         val icon = IconCompat.createWithResource(
@@ -52,12 +56,24 @@ class AndroidHostApiImpl(
             StatusBarManager::class.java
         )
 
-        statusBarService.requestAddTileService(
-            ComponentName(context, MyTileService::class.java),
-            "Umi",
-            icon.toIcon(context),
-            {}) { result ->
-            Log.d("QS", "requestAddTileService result: $result")
+        if (statusBarService == null) {
+            Log.w("QS", "requestAddTile ignored: StatusBarManager unavailable")
+            return
+        }
+
+        try {
+            statusBarService.requestAddTileService(
+                ComponentName(context, MyTileService::class.java),
+                "Umi",
+                icon.toIcon(context),
+                {}
+            ) { result ->
+                Log.d("QS", "requestAddTileService result: $result")
+            }
+        } catch (e: NoSuchMethodError) {
+            Log.w("QS", "requestAddTile ignored: framework method not available", e)
+        } catch (e: Throwable) {
+            Log.e("QS", "requestAddTile failed", e)
         }
     }
 
