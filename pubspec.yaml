@@ -206,3 +206,5 @@ sentry:
   org: v-9r
   dart_symbol_map_path: build/app/obfuscation.map.json
   upload_sources: true
+  # CI: previous release commit may be absent after squash/rebase or not in clone.
+  ignore_missing: true
