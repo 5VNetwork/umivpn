@@ -13,7 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tm/common.dart';
 import 'package:umivpn/app/settings/general/general.dart';
 import 'package:umivpn/common/common.dart';
-import 'package:umivpn/iap/pro.dart';
+import 'package:tm/iap/pro.dart';
 import 'package:umivpn/l10n/app_localizations.dart';
 import 'package:umivpn/app/settings/account.dart';
 import 'package:umivpn/app/settings/contact.dart';

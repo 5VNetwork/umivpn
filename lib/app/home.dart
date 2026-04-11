@@ -17,7 +17,7 @@ import 'package:umivpn/auth/user.dart';
 import 'package:flutter_common/util/net.dart';
 import 'package:tm/ads/home_ad_provider.dart';
 import 'package:umivpn/common/common.dart';
-import 'package:umivpn/iap/pro.dart';
+import 'package:tm/iap/pro.dart';
 import 'package:umivpn/l10n/app_localizations.dart';
 import 'package:umivpn/main.dart';
 import 'package:umivpn/pref_helper.dart';
