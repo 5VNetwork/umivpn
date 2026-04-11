@@ -34,13 +34,13 @@ jobs:
         mkdir ../umivpn-plugin/tm_android/android/libs
         mkdir -p assets/google_fonts
 
-    - name: Download geo
-      run: |
-        mkdir -p assets/geo
-        curl -OL "https://github.com/5VNetwork/process-geo/releases/latest/download/simplified_geoip.dat" 
-        mv simplified_geoip.dat assets/geo/simplified_geoip.dat
-        curl -OL "https://github.com/5VNetwork/process-geo/releases/latest/download/simplified_geosite.dat" 
-        mv simplified_geosite.dat assets/geo/simplified_geosite.dat
+    # - name: Download geo
+    #   run: |
+    #     mkdir -p assets/geo
+    #     curl -OL "https://github.com/5VNetwork/process-geo/releases/latest/download/simplified_geoip.dat" 
+    #     mv simplified_geoip.dat assets/geo/simplified_geoip.dat
+    #     curl -OL "https://github.com/5VNetwork/process-geo/releases/latest/download/simplified_geosite.dat" 
+    #     mv simplified_geosite.dat assets/geo/simplified_geosite.dat
 
     - name: Download library from release
       env:
