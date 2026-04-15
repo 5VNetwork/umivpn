@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:country/country.dart';
+// import 'package:country/country.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_common/util/country.dart';
@@ -53,10 +53,7 @@ class _CountrySelectionPageState extends State<CountrySelectionPage> {
     final colorScheme = Theme.of(context).colorScheme;
     final selected = _selectedCountry;
     return Scaffold(
-      appBar: adaptiveClosableAppBar(
-        context,
-        title: l10n.currentLocation,
-      ),
+      appBar: adaptiveClosableAppBar(context, title: l10n.currentLocation),
       body: SafeArea(
         child: Column(
           children: [
@@ -68,8 +65,8 @@ class _CountrySelectionPageState extends State<CountrySelectionPage> {
                   final country = _countries[index];
                   final isSelected = country == selected;
                   return ListTile(
-                    leading: getCountryIcon(country),
-                    title: Text(getLocalizedCountryName(context, country)),
+                    // leading: getCountryIcon(country),
+                    // title: Text(getLocalizedCountryName(context, country)),
                     trailing: isSelected
                         ? Icon(Icons.check, color: colorScheme.primary)
                         : null,

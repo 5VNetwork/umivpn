@@ -213,15 +213,16 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              if (isConnected && status.realtimeCountry != null)
-                                getCountryIcon(status.realtimeCountry!,
-                                    height: 22, width: 22),
+                              // if (isConnected && status.realtimeCountry != null)
+                              //   getCountryIcon(status.realtimeCountry!,
+                              //       height: 22, width: 22),
                               const SizedBox(width: 6),
                               Text(
                                 isConnecting
                                     ? AppLocalizations.of(context)!.connecting
-                                    : AppLocalizations.of(context)!
-                                        .securelyConnected,
+                                    : AppLocalizations.of(
+                                        context,
+                                      )!.securelyConnected,
                                 style: TextStyle(
                                   color: colorScheme.primary,
                                   fontWeight: FontWeight.w600,

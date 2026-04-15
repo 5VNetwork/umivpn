@@ -25,7 +25,7 @@ import 'package:umivpn/utils/default_network.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:flutter_common/common.dart';
 import 'package:flutter_common/util/country.dart';
-import 'package:country/country.dart';
+// import 'package:country/country.dart';
 import 'package:umivpn/theme.dart';
 import 'package:tm/default.dart';
 import 'package:tm/ads/ad.dart';

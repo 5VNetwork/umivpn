@@ -18,7 +18,7 @@ import 'package:umivpn/main.dart';
 import 'package:umivpn/pref_helper.dart';
 import 'package:flutter_common/services/auto_update.dart';
 import 'package:flutter_common/widgets/progress.dart';
-import 'package:country/country.dart';
+// import 'package:country/country.dart';
 
 class GeneralSettingPage extends StatelessWidget {
   const GeneralSettingPage({super.key, this.showAppBar = true});
@@ -43,21 +43,30 @@ class GeneralSettingPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               leading: const Icon(Icons.language),
-              title: Text(AppLocalizations.of(context)!.language,
-                  style: Theme.of(context).textTheme.bodyLarge),
-              subtitle: Language.fromCode(
-                              Localizations.localeOf(context).languageCode)
-                          ?.localText !=
+              title: Text(
+                AppLocalizations.of(context)!.language,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              subtitle:
+                  Language.fromCode(
+                        Localizations.localeOf(context).languageCode,
+                      )?.localText !=
                       null
-                  ? Text(Language.fromCode(
-                          Localizations.localeOf(context).languageCode)!
-                      .localText)
+                  ? Text(
+                      Language.fromCode(
+                        Localizations.localeOf(context).languageCode,
+                      )!.localText,
+                    )
                   : null,
               trailing: const Icon(Icons.keyboard_arrow_right_rounded),
               onTap: () {
-                Navigator.of(context).push(CupertinoPageRoute(builder: (ctx) {
-                  return const LanguagePage();
-                }));
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (ctx) {
+                      return const LanguagePage();
+                    },
+                  ),
+                );
               },
             ),
             // ListTile(
@@ -89,20 +98,30 @@ class GeneralSettingPage extends StatelessWidget {
             //     ),
             //   ]),
             if (Platform.isWindows)
-              const Column(children: [
-                Divider(),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
-                  child: StartOnBootSetting(),
-                ),
-                Divider(),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
-                  child: AlwaysOnSetting(),
-                ),
-              ]),
+              const Column(
+                children: [
+                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 10,
+                      bottom: 10,
+                      left: 16,
+                      right: 16,
+                    ),
+                    child: StartOnBootSetting(),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 10,
+                      bottom: 10,
+                      left: 16,
+                      right: 16,
+                    ),
+                    child: AlwaysOnSetting(),
+                  ),
+                ],
+              ),
           ],
         ),
       ),
@@ -115,7 +134,8 @@ String _countryLabel(BuildContext context, SharedPreferences pref) {
   if (selectedCountry == null || selectedCountry.isEmpty) {
     return AppLocalizations.of(context)!.auto;
   }
-  return getLocalizedCountryName(context, selectedCountry);
+  // return getLocalizedCountryName(context, selectedCountry);
+  return '';
 }
 
 class StartOnBootSetting extends StatefulWidget {
@@ -141,8 +161,10 @@ class _StartOnBootSettingState extends State<StartOnBootSetting> {
       children: [
         Row(
           children: [
-            Text(AppLocalizations.of(context)!.startOnBoot,
-                style: Theme.of(context).textTheme.bodyLarge),
+            Text(
+              AppLocalizations.of(context)!.startOnBoot,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
             Expanded(child: SizedBox()),
             Switch(
               value: _startOnBoot,
@@ -161,10 +183,12 @@ class _StartOnBootSettingState extends State<StartOnBootSetting> {
           ],
         ),
         const Gap(10),
-        Text(AppLocalizations.of(context)!.startOnBootDesc,
-            style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                )),
+        Text(
+          AppLocalizations.of(context)!.startOnBootDesc,
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
       ],
     );
   }
@@ -241,8 +265,10 @@ class _AlwaysOnSettingState extends State<AlwaysOnSetting> {
       children: [
         Row(
           children: [
-            Text(AppLocalizations.of(context)!.alwaysOn,
-                style: Theme.of(context).textTheme.bodyLarge),
+            Text(
+              AppLocalizations.of(context)!.alwaysOn,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
             const Expanded(child: SizedBox()),
             Switch(
               value: _alwaysOn,
@@ -256,10 +282,12 @@ class _AlwaysOnSettingState extends State<AlwaysOnSetting> {
           ],
         ),
         const Gap(10),
-        Text(AppLocalizations.of(context)!.alwaysOnDesc,
-            style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                )),
+        Text(
+          AppLocalizations.of(context)!.alwaysOnDesc,
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
       ],
     );
   }

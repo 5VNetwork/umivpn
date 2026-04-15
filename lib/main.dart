@@ -84,8 +84,8 @@ import 'package:flutter_common/services/auto_update.dart';
 import 'package:flutter_common/l10n/app_localizations.dart'
     as xv_app_localizations;
 import 'package:ads/l10n/app_localizations.dart' as ads_app_localizations;
-import 'package:country/l10n/app_localizations.dart'
-    as country_app_localizations;
+// import 'package:country/l10n/app_localizations.dart'
+//     as country_app_localizations;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:tm/secure_storage.dart';
 import 'package:tm/xapi_client.dart';

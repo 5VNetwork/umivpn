@@ -17,7 +17,8 @@ class CountrySelector extends StatelessWidget {
           isScrollControlled: true,
           backgroundColor: colorScheme.surface,
           shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
           builder: (ctx) => ConstrainedBox(
             constraints: BoxConstraints(
               maxHeight: MediaQuery.of(ctx).size.height * 0.9,
@@ -41,26 +42,34 @@ class CountrySelector extends StatelessWidget {
             final country = state.realtimeCountry ?? state.country;
             return Row(
               children: [
-                getCountryIcon(country, height: 28, width: 28),
-                const SizedBox(width: 15),
+                // getCountryIcon(country, height: 28, width: 28),
+                // const SizedBox(width: 15),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(AppLocalizations.of(context)!.currentLocation,
-                        style: TextStyle(
-                            color: colorScheme.onSurface.withOpacity(0.70),
-                            fontSize: 12)),
+                    Text(
+                      AppLocalizations.of(context)!.currentLocation,
+                      style: TextStyle(
+                        color: colorScheme.onSurface.withOpacity(0.70),
+                        fontSize: 12,
+                      ),
+                    ),
                     const SizedBox(height: 2),
-                    Text(_getCountryName(context, state.country),
-                        style: TextStyle(
-                            color: colorScheme.onSurface,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16)),
+                    Text(
+                      _getCountryName(context, state.country),
+                      style: TextStyle(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                   ],
                 ),
                 const Spacer(),
-                Icon(Icons.keyboard_arrow_up_rounded,
-                    color: colorScheme.onSurface.withOpacity(0.70))
+                Icon(
+                  Icons.keyboard_arrow_up_rounded,
+                  color: colorScheme.onSurface.withOpacity(0.70),
+                ),
               ],
             );
           },
@@ -73,7 +82,8 @@ class CountrySelector extends StatelessWidget {
     if (countryCode.isEmpty) {
       return AppLocalizations.of(context)!.auto;
     }
-    return getLocalizedCountryName(context, countryCode);
+    return countryCode;
+    // return getLocalizedCountryName(context, countryCode);
   }
 }
 
@@ -85,11 +95,14 @@ class _CountryList extends StatefulWidget {
 }
 
 class _CountryListState extends State<_CountryList> {
-  final defaultCountries = Countries(popular: [
-    'US',
-    // 'JP',
-    // 'SG',
-  ], others: []);
+  final defaultCountries = Countries(
+    popular: [
+      'US',
+      // 'JP',
+      // 'SG',
+    ],
+    others: [],
+  );
   List<String> _selectableCountries = [];
   List<String> _unselectableCountries = [];
   List<String> _recentlyUsedCountries = [];
@@ -129,8 +142,10 @@ class _CountryListState extends State<_CountryList> {
 
   Future<void> _saveRecentlyUsedCountries() async {
     if (_pref != null) {
-      await _pref!
-          .setStringList('recentlyUsedCountries', _recentlyUsedCountries);
+      await _pref!.setStringList(
+        'recentlyUsedCountries',
+        _recentlyUsedCountries,
+      );
     }
   }
 
@@ -146,15 +161,20 @@ class _CountryListState extends State<_CountryList> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Select Location",
-              style: textTheme.titleLarge?.copyWith(
-                  color: colorScheme.onSurface, fontWeight: FontWeight.bold)),
+          Text(
+            "Select Location",
+            style: textTheme.titleLarge?.copyWith(
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 20),
           Flexible(
             child: ListView.builder(
               shrinkWrap: true,
               // one for auto, one for devider between selectable and unselectable
-              itemCount: _selectableCountries.length +
+              itemCount:
+                  _selectableCountries.length +
                   _unselectableCountries.length +
                   2,
               itemBuilder: (ctx, index) {
@@ -168,11 +188,14 @@ class _CountryListState extends State<_CountryList> {
                   if (index <= _selectableCountries.length) {
                     country = _selectableCountries[index - 1];
                     // Check if this country is in recently used (excluding current country position)
-                    isRecentlyUsed = _recentlyUsedCountries.contains(country) &&
+                    isRecentlyUsed =
+                        _recentlyUsedCountries.contains(country) &&
                         country != currentCountry;
                   } else {
-                    country = _unselectableCountries[
-                        index - _selectableCountries.length - 2];
+                    country =
+                        _unselectableCountries[index -
+                            _selectableCountries.length -
+                            2];
                   }
                 }
                 final isCurrent = country == currentCountry;
@@ -181,14 +204,21 @@ class _CountryListState extends State<_CountryList> {
 
                 final title = index == 0
                     ? AppLocalizations.of(context)!.auto
-                    : getLocalizedCountryName(context, country);
+                    : country;
 
                 late Widget icon;
                 if (index == 0) {
-                  icon = Icon(Icons.language,
-                      size: 28, color: colorScheme.onSurface);
+                  icon = Icon(
+                    Icons.language,
+                    size: 28,
+                    color: colorScheme.onSurface,
+                  );
                 } else {
-                  icon = getCountryIcon(country, height: 28, width: 28);
+                  icon = Icon(
+                    Icons.language,
+                    size: 28,
+                    color: colorScheme.onSurface,
+                  );
                 }
 
                 return Container(
@@ -203,7 +233,8 @@ class _CountryListState extends State<_CountryList> {
                     border: isCurrent
                         ? Border.all(
                             color: colorScheme.primary.withOpacity(0.4),
-                            width: 1.5)
+                            width: 1.5,
+                          )
                         : null,
                   ),
                   child: Opacity(
@@ -239,7 +270,9 @@ class _CountryListState extends State<_CountryList> {
                           if (isRecentlyUsed && !isCurrent)
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
                               decoration: BoxDecoration(
                                 color: colorScheme.surfaceOverlayLighter,
                                 borderRadius: BorderRadius.circular(4),
@@ -247,8 +280,9 @@ class _CountryListState extends State<_CountryList> {
                               child: Text(
                                 "Recent",
                                 style: TextStyle(
-                                  color:
-                                      colorScheme.onSurface.withOpacity(0.70),
+                                  color: colorScheme.onSurface.withOpacity(
+                                    0.70,
+                                  ),
                                   fontSize: 10,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -275,9 +309,9 @@ class _CountryListState extends State<_CountryList> {
                                 await _saveRecentlyUsedCountries();
 
                                 // Change country in cubit
-                                await context
-                                    .read<ChoiceCubit>()
-                                    .changeCountry(country);
+                                await context.read<ChoiceCubit>().changeCountry(
+                                  country,
+                                );
                               }
                               Navigator.pop(context);
                             },
@@ -286,7 +320,7 @@ class _CountryListState extends State<_CountryList> {
                 );
               },
             ),
-          )
+          ),
         ],
       ),
     );
@@ -301,17 +335,16 @@ class Countries {
 
   factory Countries.fromJson(Map<String, dynamic> json) {
     return Countries(
-      popular:
-          (json['popular'] as List<dynamic>).map((e) => e as String).toList(),
-      others:
-          (json['others'] as List<dynamic>).map((e) => e as String).toList(),
+      popular: (json['popular'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      others: (json['others'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'popular': popular,
-      'others': others,
-    };
+    return {'popular': popular, 'others': others};
   }
 }
