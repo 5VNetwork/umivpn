@@ -68,15 +68,13 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
       ),
     );
 
-    _statusSlideAnimation = Tween<Offset>(
-      begin: const Offset(0, -0.3),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _statusController,
-        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
-      ),
-    );
+    _statusSlideAnimation =
+        Tween<Offset>(begin: const Offset(0, -0.3), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _statusController,
+            curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+          ),
+        );
 
     // Setup button slide down animation
     _buttonSlideController = AnimationController(
@@ -86,11 +84,11 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
 
     _buttonSlideAnimation =
         Tween<Offset>(begin: const Offset(0, -0.3), end: Offset.zero).animate(
-      CurvedAnimation(
-        parent: _buttonSlideController,
-        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
-      ),
-    );
+          CurvedAnimation(
+            parent: _buttonSlideController,
+            curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+          ),
+        );
   }
 
   @override
@@ -114,7 +112,8 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
 
   void _updateAnimations(XStatus status) {
     // Determine if we should be in "forward" state (preparing, connecting, or connected)
-    final shouldBeForward = status == XStatus.preparing ||
+    final shouldBeForward =
+        status == XStatus.preparing ||
         status == XStatus.connecting ||
         status == XStatus.connected;
 
@@ -123,7 +122,8 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
         status == XStatus.disconnecting || status == XStatus.disconnected;
 
     // Get previous state
-    final wasForward = _previousStatus == XStatus.preparing ||
+    final wasForward =
+        _previousStatus == XStatus.preparing ||
         _previousStatus == XStatus.connecting ||
         _previousStatus == XStatus.connected;
 
@@ -186,10 +186,12 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
         buildWhen: (previous, current) => previous.status != current.status,
         builder: (context, status) {
           // Show connected appearance when preparing, connecting, or connected
-          final isConnected = status.status == XStatus.preparing ||
+          final isConnected =
+              status.status == XStatus.preparing ||
               status.status == XStatus.connecting ||
               status.status == XStatus.connected;
-          final isConnecting = status.status == XStatus.preparing ||
+          final isConnecting =
+              status.status == XStatus.preparing ||
               status.status == XStatus.connecting;
 
           return Column(
@@ -243,65 +245,69 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
 
               // 3. Connect Button
               SlideTransition(
-                  position: _buttonSlideAnimation,
-                  child: GestureDetector(
-                    onTap: _toggleConnection,
-                    child: Container(
-                      height: 180,
-                      width: 180,
-                      decoration: BoxDecoration(
+                position: _buttonSlideAnimation,
+                child: GestureDetector(
+                  onTap: _toggleConnection,
+                  child: Container(
+                    height: 180,
+                    width: 180,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isConnected
+                          ? colorScheme.primary.withOpacity(0.1)
+                          : colorScheme.shadowLight,
+                      boxShadow: [
+                        if (isConnected)
+                          BoxShadow(
+                            color: colorScheme.primary.withOpacity(0.4),
+                            blurRadius: 40,
+                            spreadRadius: 10,
+                          ),
+                        BoxShadow(
+                          color: colorScheme.shadowDark,
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                      border: Border.all(
+                        color: isConnected
+                            ? colorScheme.primary
+                            : colorScheme.borderLight,
+                        width: 2,
+                      ),
+                    ),
+                    child: Center(
+                      child: Container(
+                        height: 140,
+                        width: 140,
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: isConnected
-                              ? colorScheme.primary.withOpacity(0.1)
-                              : colorScheme.shadowLight,
-                          boxShadow: [
-                            if (isConnected)
-                              BoxShadow(
-                                color: colorScheme.primary.withOpacity(0.4),
-                                blurRadius: 40,
-                                spreadRadius: 10,
-                              ),
-                            BoxShadow(
-                                color: colorScheme.shadowDark,
-                                blurRadius: 20,
-                                offset: const Offset(0, 10))
-                          ],
-                          border: Border.all(
-                            color: isConnected
-                                ? colorScheme.primary
-                                : colorScheme.borderLight,
-                            width: 2,
-                          )),
-                      child: Center(
-                        child: Container(
-                          height: 140,
-                          width: 140,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: isConnected
-                                ? colorScheme.primary
-                                : colorScheme.inactiveColor,
-                            gradient: isConnected
-                                ? LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                        colorScheme.primary,
-                                        colorScheme.secondary,
-                                      ])
-                                : null,
-                          ),
-                          child: Icon(
-                            Icons.power_settings_new_rounded,
-                            size: 60,
-                            color: isConnected
-                                ? colorScheme.onPrimary
-                                : colorScheme.onSurface.withOpacity(0.70),
-                          ),
+                              ? colorScheme.primary
+                              : colorScheme.inactiveColor,
+                          gradient: isConnected
+                              ? LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    colorScheme.primary,
+                                    colorScheme.secondary,
+                                  ],
+                                )
+                              : null,
+                        ),
+                        child: Icon(
+                          Icons.power_settings_new_rounded,
+                          size: 60,
+                          color: isConnected
+                              ? colorScheme.onPrimary
+                              : colorScheme.onSurface.withOpacity(0.70),
                         ),
                       ),
                     ),
-                  )),
+                  ),
+                ),
+              ),
             ],
           );
         },
@@ -317,17 +323,18 @@ class _Timer extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return BlocSelector<StatusCubit, UmiStatus, String>(
-        selector: (state) => state.connected,
-        builder: (context, duration) {
-          return Text(
-            duration,
-            style: TextStyle(
-              color: colorScheme.onSurface,
-              fontSize: 40,
-              fontWeight: FontWeight.w300,
-              fontFeatures: const [FontFeature.tabularFigures()],
-            ),
-          );
-        });
+      selector: (state) => state.connected,
+      builder: (context, duration) {
+        return Text(
+          duration,
+          style: TextStyle(
+            color: colorScheme.onSurface,
+            fontSize: 40,
+            fontWeight: FontWeight.w300,
+            fontFeatures: const [FontFeature.tabularFigures()],
+          ),
+        );
+      },
+    );
   }
 }

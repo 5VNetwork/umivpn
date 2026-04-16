@@ -14,9 +14,11 @@ class ManagePlanViewModel extends ChangeNotifier {
     proPurchases?.addListener(_onProPurchasesChanged);
   }
 
+  bool _closed = false;
   @override
   void dispose() {
     proPurchases?.removeListener(_onProPurchasesChanged);
+    _closed = true;
     super.dispose();
   }
 
@@ -49,6 +51,7 @@ class ManagePlanViewModel extends ChangeNotifier {
       errorFetchingSubscriptionInfo = e.toString();
     } finally {
       loadingSubscriptionInfo = false;
+      if (_closed) return;
       notifyListeners();
     }
   }

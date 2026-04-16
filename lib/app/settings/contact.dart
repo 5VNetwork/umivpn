@@ -30,16 +30,15 @@ class ContactScreen extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                const Chip(
-                  label: Text(email),
-                ),
+                const Chip(label: Text(email)),
                 IconButton(
                   onPressed: () {
                     Pasteboard.writeText(email);
                     rootScaffoldMessengerKey.currentState?.showSnackBar(
                       SnackBar(
                         content: Text(
-                            AppLocalizations.of(context)!.copiedToClipboard),
+                          AppLocalizations.of(context)!.copiedToClipboard,
+                        ),
                         duration: const Duration(seconds: 2),
                       ),
                     );
@@ -62,18 +61,16 @@ class ContactScreen extends StatelessWidget {
             Row(
               children: [
                 OutlinedButton.icon(
-                    onPressed: () {
-                      launchUrl(Uri.parse('https://x.com/UmiVPN'));
-                    },
-                    icon: Image.asset(
-                      MediaQuery.of(context).platformBrightness ==
-                              Brightness.dark
-                          ? 'assets/icons/x_logo_white.png'
-                          : 'assets/icons/x_logo_black.png',
-                      width: 16,
-                      height: 16,
-                    ),
-                    label: Text(' X')),
+                  onPressed: () {
+                    launchUrl(Uri.parse('https://x.com/UmiVPN'));
+                  },
+                  icon: Image.asset(
+                    'assets/icons/x_logo_white.png',
+                    width: 16,
+                    height: 16,
+                  ),
+                  label: Text(' X'),
+                ),
                 const SizedBox(width: 10),
               ],
             ),

@@ -5,6 +5,7 @@ import 'package:flutter_common/widgets/app_bar.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:umivpn/common/common.dart';
 import 'package:umivpn/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:umivpn/auth/auth_bloc.dart';
@@ -43,8 +44,10 @@ class _AccountPageState extends State<AccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: widget.showAppBar
-          ? adaptiveClosableAppBar(context,
-              title: AppLocalizations.of(context)!.account)
+          ? adaptiveClosableAppBar(
+              context,
+              title: AppLocalizations.of(context)!.account,
+            )
           : null,
       body: Consumer<AuthRepo>(
         builder: (context, authRepo, child) {
@@ -58,14 +61,18 @@ class _AccountPageState extends State<AccountPage> {
               children: [
                 Row(
                   children: [
-                    Text(AppLocalizations.of(context)!.email,
-                        style: Theme.of(context).textTheme.titleMedium),
+                    Text(
+                      AppLocalizations.of(context)!.email,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
                     const SizedBox(width: 10),
                     Expanded(
-                      child: AutoSizeText(authRepo.user!.email,
-                          maxLines: 2,
-                          minFontSize: 12,
-                          style: Theme.of(context).textTheme.bodyLarge),
+                      child: AutoSizeText(
+                        authRepo.user!.email,
+                        maxLines: 2,
+                        minFontSize: 12,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
                     ),
                   ],
                 ),
@@ -73,84 +80,154 @@ class _AccountPageState extends State<AccountPage> {
                 Center(
                   child: Row(
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          context.go('/sign-in');
-                          context.read<AuthProvider>().logOut();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          foregroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
+                      if (!isProduction())
+                        ElevatedButton(
+                          onPressed: () {
+                            context.go('/sign-in');
+                            context.read<AuthProvider>().logOut();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
+                            foregroundColor: Theme.of(
+                              context,
+                            ).colorScheme.onPrimary,
+                          ),
+                          child: Text(AppLocalizations.of(context)!.logout),
                         ),
-                        child: Text(AppLocalizations.of(context)!.logout),
-                      ),
-                      Gap(10),
                       ElevatedButton(
                         onPressed: () {
                           showDialog(
                             context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(
-                                  AppLocalizations.of(context)!.deleteAccount),
-                              content: Text(AppLocalizations.of(context)!
-                                  .deleteAccountConfirm),
-                              actions: [
-                                TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: Text(
-                                        AppLocalizations.of(context)!.cancel)),
-                                TextButton(
-                                    onPressed: () async {
-                                      final userProfile = authRepo.user;
+                            barrierDismissible: false,
+                            builder: (context) {
+                              var isDeleting = false;
+                              return StatefulBuilder(
+                                builder: (context, setDialogState) => AlertDialog(
+                                  title: Text(
+                                    AppLocalizations.of(context)!.deleteAccount,
+                                  ),
+                                  content: Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.deleteAccountConfirm,
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: isDeleting
+                                          ? null
+                                          : () => Navigator.pop(context),
+                                      child: Text(
+                                        AppLocalizations.of(context)!.cancel,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Theme.of(
+                                          context,
+                                        ).colorScheme.error,
+                                        foregroundColor: Theme.of(
+                                          context,
+                                        ).colorScheme.onError,
+                                      ),
+                                      onPressed: isDeleting
+                                          ? null
+                                          : () async {
+                                              setDialogState(() {
+                                                isDeleting = true;
+                                              });
 
-                                      // Check if user has a non-canceled subscription
-                                      final hasSubscription =
-                                          userProfile!.plan !=
-                                              SubscriptionPlan.free;
+                                              try {
+                                                final subscriptionInfo =
+                                                    await authRepo
+                                                        .fetchSubscriptionInfo();
+                                                final hasActiveSubscription =
+                                                    subscriptionInfo != null &&
+                                                    !subscriptionInfo
+                                                        .isCanceled;
+                                                if (hasActiveSubscription) {
+                                                  if (context.mounted) {
+                                                    ScaffoldMessenger.of(
+                                                      context,
+                                                    ).showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          AppLocalizations.of(
+                                                            context,
+                                                          )!.cannotDeleteAccountWithActiveSubscription,
+                                                        ),
+                                                        backgroundColor:
+                                                            Theme.of(
+                                                              context,
+                                                            ).colorScheme.error,
+                                                      ),
+                                                    );
+                                                  }
+                                                  return;
+                                                }
 
-                                      if (hasSubscription) {
-                                        // Close the confirmation dialog
-                                        Navigator.pop(context);
-
-                                        // Show error message
-                                        if (mounted) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                AppLocalizations.of(context)!
-                                                    .cannotDeleteAccountWithActiveSubscription,
+                                                await context
+                                                    .read<AuthProvider>()
+                                                    .deleteAccount();
+                                                if (context.mounted) {
+                                                  Navigator.pop(context);
+                                                }
+                                              } catch (e) {
+                                                if (context.mounted) {
+                                                  ScaffoldMessenger.of(
+                                                    context,
+                                                  ).showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        e.toString(),
+                                                      ),
+                                                      backgroundColor: Theme.of(
+                                                        context,
+                                                      ).colorScheme.error,
+                                                    ),
+                                                  );
+                                                }
+                                              } finally {
+                                                if (context.mounted) {
+                                                  setDialogState(() {
+                                                    isDeleting = false;
+                                                  });
+                                                }
+                                              }
+                                            },
+                                      child: isDeleting
+                                          ? SizedBox(
+                                              width: 18,
+                                              height: 18,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.error,
                                               ),
-                                              backgroundColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .error,
+                                            )
+                                          : Text(
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.delete,
                                             ),
-                                          );
-                                        }
-                                        return;
-                                      }
-
-                                      // Proceed with account deletion
-                                      context
-                                          .read<AuthProvider>()
-                                          .deleteAccount();
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                        AppLocalizations.of(context)!.delete))
-                              ],
-                            ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).colorScheme.error,
-                          foregroundColor:
-                              Theme.of(context).colorScheme.onError,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onError,
                         ),
-                        child:
-                            Text(AppLocalizations.of(context)!.deleteAccount),
+                        child: Text(
+                          AppLocalizations.of(context)!.deleteAccount,
+                        ),
                       ),
                     ],
                   ),

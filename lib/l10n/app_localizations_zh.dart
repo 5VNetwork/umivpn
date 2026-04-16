@@ -36,6 +36,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routing => '路由';
 
   @override
+  String get routingRulesHint => '以下域名、IP 或应用会根据你的设置走直连/代理。';
+
+  @override
   String get whileList => '白名单';
 
   @override
@@ -1077,7 +1080,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteAccount => '删除账户';
 
   @override
-  String get deleteAccountConfirm => '确定要删除账户吗？此操作无法撤销。';
+  String get deleteAccountConfirm => '确定要删除账户吗？此操作无法撤销。此邮箱将无法再次用于登录。';
 
   @override
   String get domainSetDescription => '以下域名集合使用代理DNS服务器（默认为8.8.8.8和1.1.1.1）解析，其余域名使用直连DNS服务器（默认是物理网卡的DNS服务器，或223.5.5.5和114.114.114.114如果物理网卡的DNS服务器无法获取到）解析';
@@ -2112,4 +2115,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get noDataRemaining => '本月剩余数据已用完';
+
+  @override
+  String get saved => '已保存';
+
+  @override
+  String get androidDirectAppDescription => '安卓上，精确类型的应用不会经过UmiVPN';
 }

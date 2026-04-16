@@ -48,6 +48,7 @@ import 'package:umivpn/app/settings/general/general.dart';
 import 'package:umivpn/app/settings/open_source_software_notice_screen.dart';
 import 'package:umivpn/app/settings/privacy.dart';
 import 'package:umivpn/app/settings/setting.dart';
+import 'package:umivpn/features/routing/ui/routing_rules_page.dart';
 import 'package:umivpn/utils/default_network.dart';
 import 'package:umivpn/utils/geodata.dart';
 import 'package:umivpn/utils/windows_host_api.g.dart';
@@ -208,6 +209,7 @@ void main() async {
           if (Platform.isWindows) {
             MessageFlutterApi.setUp(controller);
           }
+          httpClient.setHandlerConfigGetter(controller);
           return controller;
         },
         lazy: false,

@@ -462,7 +462,7 @@
   "editIpSmallSet": "编辑IP小集合",
   "deleteFailed": "删除失败",
   "deleteAccount": "删除账户",
-  "deleteAccountConfirm": "确定要删除账户吗？此操作无法撤销。",
+  "deleteAccountConfirm": "确定要删除账户吗？此操作无法撤销。此邮箱将无法再次用于登录。",
   "domainSetDescription": "以下域名集合使用代理DNS服务器（默认为8.8.8.8和1.1.1.1）解析，其余域名使用直连DNS服务器（默认是物理网卡的DNS服务器，或223.5.5.5和114.114.114.114如果物理网卡的DNS服务器无法获取到）解析",
   "routerRuleDescription": "对于每一个连接，规则由上到下依次进行匹配，一旦匹配成功，后面的规则不会在被考虑。如果没有匹配到规则，此连接将会失败",
   "matchAll": "匹配所有",
@@ -909,5 +909,8 @@
       }
     }
   },
-  "noDataRemaining": "本月剩余数据已用完"
+  "noDataRemaining": "本月剩余数据已用完",
+  "saved": "已保存",
+  "routingRulesHint": "以下域名、IP 或应用会根据你的设置走直连/代理。",
+  "androidDirectAppDescription": "安卓上，精确类型的应用不会经过UmiVPN"
 }

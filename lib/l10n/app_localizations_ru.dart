@@ -36,6 +36,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get routing => 'Маршрутизация';
 
   @override
+  String get routingRulesHint => 'The following domains, IPs, or apps will go either directly or through the VPN tunnel as specified.';
+
+  @override
   String get whileList => 'CN';
 
   @override
@@ -503,8 +506,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get newUserTrialText => 'Новые пользователи могут попробовать Pro в течение 7 дней бесплатно.';
 
   @override
-  String get threeDayFreeTrialFirstTimeCustomers =>
-      '3-дневная бесплатная пробная версия для новых клиентов';
+  String get threeDayFreeTrialFirstTimeCustomers => '3-дневная бесплатная пробная версия для новых клиентов';
 
   @override
   String get proExpiredAt => 'Срок действия Pro';
@@ -2163,4 +2165,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get noDataRemaining => 'No monthly data remaining';
+
+  @override
+  String get saved => 'Saved';
+
+  @override
+  String get androidDirectAppDescription => 'On Android, apps with Exact type will not be handled by UmiVPN, they will go directly to the internet';
 }

@@ -151,6 +151,12 @@ abstract class AppLocalizations {
   /// **'Routing'**
   String get routing;
 
+  /// No description provided for @routingRulesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The following domains, IPs, or apps will go either directly or through the VPN tunnel as specified.'**
+  String get routingRulesHint;
+
   /// No description provided for @whileList.
   ///
   /// In en, this message translates to:
@@ -2092,7 +2098,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteAccountConfirm.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete your account? This action cannot be undone.'**
+  /// **'Are you sure you want to delete your account? This action cannot be undone. This email will not be used to login again.'**
   String get deleteAccountConfirm;
 
   /// No description provided for @domainSetDescription.
@@ -4074,6 +4080,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No monthly data remaining'**
   String get noDataRemaining;
+
+  /// No description provided for @saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get saved;
+
+  /// No description provided for @androidDirectAppDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'On Android, apps with Exact type will not be handled by UmiVPN, they will go directly to the internet'**
+  String get androidDirectAppDescription;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

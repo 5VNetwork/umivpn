@@ -121,21 +121,21 @@ ThemeData darkTheme(Locale? locale) {
         ),
       ),
     ),
-    filledButtonTheme: FilledButtonThemeData(
-      style: FilledButton.styleFrom(
-        backgroundColor: colorScheme.surface,
-        foregroundColor: colorScheme.onSurface,
-        // shape: RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.circular(12),
-        // ),
-        // padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-        textStyle: const TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.5,
-        ),
-      ),
-    ),
+    // filledButtonTheme: FilledButtonThemeData(
+    //   style: FilledButton.styleFrom(
+    //     backgroundColor: colorScheme.primary,
+    //     foregroundColor: colorScheme.onPrimary,
+    //     // shape: RoundedRectangleBorder(
+    //     //   borderRadius: BorderRadius.circular(12),
+    //     // ),
+    //     // padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+    //     textStyle: const TextStyle(
+    //       fontSize: 15,
+    //       fontWeight: FontWeight.w700,
+    //       letterSpacing: 0.5,
+    //     ),
+    //   ),
+    // ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
