@@ -36,6 +36,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routing => 'Routing';
 
   @override
+  String get routingRulesHint => 'The following domains, IPs, or apps will go either directly or through the VPN tunnel as specified.';
+
+  @override
   String get whileList => 'CN';
 
   @override
@@ -503,8 +506,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newUserTrialText => 'New users can try Pro for 7 days for free';
 
   @override
-  String get threeDayFreeTrialFirstTimeCustomers =>
-      '3-day free trial for first-time customers';
+  String get threeDayFreeTrialFirstTimeCustomers => '3-day free trial for first-time customers';
 
   @override
   String get proExpiredAt => 'Pro Expiry';
@@ -1128,7 +1130,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAccount => 'Delete Account';
 
   @override
-  String get deleteAccountConfirm => 'Are you sure you want to delete your account? This action cannot be undone.';
+  String get deleteAccountConfirm => 'Are you sure you want to delete your account? This action cannot be undone. This email will not be used to login again.';
 
   @override
   String get domainSetDescription => 'The following domain set uses proxy DNS server (default 8.8.8.8 and 1.1.1.1) to resolve, other domains use direct DNS server (default is dns servers of your primary physical nic, or 223.5.5.5 and 114.114.114.114 if the former cannot be known) to resolve';
@@ -2163,4 +2165,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noDataRemaining => 'No monthly data remaining';
+
+  @override
+  String get saved => 'Saved';
+
+  @override
+  String get androidDirectAppDescription => 'On Android, apps with Exact type will not be handled by UmiVPN, they will go directly to the internet';
 }

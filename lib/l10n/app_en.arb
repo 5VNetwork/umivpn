@@ -8,6 +8,7 @@
   "about": "About",
   "version": "Version",
   "routing": "Routing",
+  "routingRulesHint": "The following domains, IPs, or apps will go either directly or through the VPN tunnel as specified.",
   "whileList": "CN",
   "gfw": "GFW",
   "proxyAll": "Proxy All",
@@ -452,7 +453,7 @@
   "editIpSmallSet": "Edit IP Small Set",
   "deleteFailed": "Delete failed",
   "deleteAccount": "Delete Account",
-  "deleteAccountConfirm": "Are you sure you want to delete your account? This action cannot be undone.",
+  "deleteAccountConfirm": "Are you sure you want to delete your account? This action cannot be undone. This email will not be used to login again.",
   "domainSetDescription": "The following domain set uses proxy DNS server (default 8.8.8.8 and 1.1.1.1) to resolve, other domains use direct DNS server (default is dns servers of your primary physical nic, or 223.5.5.5 and 114.114.114.114 if the former cannot be known) to resolve",
   "routerRuleDescription": "For each connection, rules are matched one by one from top to bottom, if a rule matches, the following rules will not be considered. If no rule matches, the connection will abort.",
   "dstIpSet": "Destination IP Set",
@@ -902,5 +903,7 @@
       }
     }
   },
-  "noDataRemaining": "No monthly data remaining"
+  "noDataRemaining": "No monthly data remaining",
+  "saved": "Saved",
+  "androidDirectAppDescription": "On Android, apps with Exact type will not be handled by UmiVPN, they will go directly to the internet"
 }

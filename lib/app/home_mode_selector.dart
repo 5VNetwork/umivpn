@@ -6,17 +6,17 @@ class ModeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
 
     return GestureDetector(
       onTap: () {
         showModalBottomSheet(
           context: context,
-          
+
           backgroundColor: colorScheme.surface,
           shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-          builder: (ctx) => const _ModeList(),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          builder: (ctx) => SafeArea(child: const _ModeList()),
         );
       },
       child: Container(
@@ -56,8 +56,9 @@ class ModeSelector extends StatelessWidget {
                     Text(
                       AppLocalizations.of(context)!.mode,
                       style: TextStyle(
-                          color: colorScheme.onSurface.withOpacity(0.70),
-                          fontSize: 12),
+                        color: colorScheme.onSurface.withOpacity(0.70),
+                        fontSize: 12,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -71,8 +72,10 @@ class ModeSelector extends StatelessWidget {
                   ],
                 ),
                 const Spacer(),
-                Icon(Icons.keyboard_arrow_up_rounded,
-                    color: colorScheme.onSurface.withOpacity(0.70))
+                Icon(
+                  Icons.keyboard_arrow_up_rounded,
+                  color: colorScheme.onSurface.withOpacity(0.70),
+                ),
               ],
             );
           },
@@ -83,13 +86,23 @@ class ModeSelector extends StatelessWidget {
 }
 
 class _ModeList extends StatelessWidget {
-  const _ModeList({super.key});
+  const _ModeList();
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final currentMode = context.read<ChoiceCubit>().state.routeMode;
+    DefaultRouteMode currentMode = context.read<ChoiceCubit>().state.routeMode;
+    final authUser = context.read<AuthRepo>().user;
+    final isFreeUser = authUser?.plan == SubscriptionPlan.free;
+    final isInChina =
+        context.read<SharedPreferences>().userCountry?.toUpperCase() == 'CN';
+    final freeUserAllowedMode = isInChina
+        ? DefaultRouteMode.gfw
+        : DefaultRouteMode.proxyAll;
+    if (isFreeUser) {
+      currentMode = freeUserAllowedMode;
+    }
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -113,6 +126,15 @@ class _ModeList extends StatelessWidget {
               itemBuilder: (ctx, index) {
                 final mode = DefaultRouteMode.values[index];
                 final isSelected = mode == currentMode;
+                final isSelectable = !isFreeUser || mode == freeUserAllowedMode;
+                final titleColor = !isSelectable
+                    ? colorScheme.onSurface.withOpacity(0.38)
+                    : isSelected
+                    ? colorScheme.primary
+                    : colorScheme.onSurface;
+                final subtitleColor = !isSelectable
+                    ? colorScheme.onSurface.withOpacity(0.28)
+                    : colorScheme.onSurface.withOpacity(0.70);
                 return Container(
                   margin: const EdgeInsets.only(bottom: 8),
                   decoration: BoxDecoration(
@@ -123,20 +145,23 @@ class _ModeList extends StatelessWidget {
                     border: isSelected
                         ? Border.all(
                             color: colorScheme.primary.withOpacity(0.3),
-                            width: 1.5)
+                            width: 1.5,
+                          )
                         : null,
                   ),
                   child: ListTile(
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    enabled: isSelectable,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     title: Text(
                       mode.toLocalString(AppLocalizations.of(context)!),
                       style: TextStyle(
-                        color: isSelected
-                            ? colorScheme.primary
-                            : colorScheme.onSurface,
-                        fontWeight:
-                            isSelected ? FontWeight.w700 : FontWeight.w500,
+                        color: titleColor,
+                        fontWeight: isSelected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
                         fontSize: 15,
                       ),
                     ),
@@ -144,28 +169,41 @@ class _ModeList extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
                         mode.description(context),
-                        style: TextStyle(
-                          color: colorScheme.onSurface.withOpacity(0.70),
-                          fontSize: 12,
-                        ),
+                        style: TextStyle(color: subtitleColor, fontSize: 12),
                       ),
                     ),
                     trailing: isSelected
                         ? Icon(
                             Icons.check_circle_rounded,
-                            color: colorScheme.primary,
+                            color: isSelectable
+                                ? colorScheme.primary
+                                : colorScheme.primary.withOpacity(0.45),
                             size: 24,
                           )
                         : null,
-                    onTap: () {
-                      if (mode != currentMode) {
-                        context.read<ChoiceCubit>().changeRouteMode(mode);
-                      }
-                      Navigator.pop(context);
-                    },
+                    onTap: isSelectable
+                        ? () {
+                            if (mode != currentMode) {
+                              context.read<ChoiceCubit>().changeRouteMode(mode);
+                            }
+                            Navigator.pop(context);
+                          }
+                        : null,
                   ),
                 );
               },
+            ),
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                context.push('/route');
+              },
+              icon: const Icon(Icons.tune),
+              label: Text(AppLocalizations.of(context)!.advanced),
             ),
           ),
         ],
