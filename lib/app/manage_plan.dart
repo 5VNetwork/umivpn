@@ -71,7 +71,7 @@ class ManagePlanBody extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        const AllPlans(),
+        if (!Platform.isIOS) const AllPlans(),
       ],
     );
   }
