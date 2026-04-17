@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_common/widgets/app_bar.dart';
 import 'package:installed_apps/index.dart';
 import 'package:provider/provider.dart';
 import 'package:tm/custom_routing_rules.dart';
@@ -42,34 +43,38 @@ class _RoutingRulesView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.routing),
-        actions: [
-          Consumer<RoutingRulesViewModel>(
-            builder: (context, vm, _) => TextButton(
-              onPressed: vm.saving
-                  ? null
-                  : () async {
-                      await vm.save();
-                      if (!context.mounted) {
-                        return;
-                      }
-                      if (vm.error == null) {
-                        snack(l10n.saved);
-                      } else {
-                        snack(vm.error);
-                      }
-                    },
-              child: vm.saving
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Text(l10n.save),
-            ),
-          ),
-        ],
+      appBar: adaptiveClosableAppBar(context, title: l10n.routing),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Consumer<RoutingRulesViewModel>(
+        builder: (context, vm, _) => FloatingActionButton.extended(
+          onPressed: vm.saving
+              ? null
+              : () async {
+                  await vm.save();
+                  if (!context.mounted) {
+                    return;
+                  }
+                  if (vm.error == null) {
+                    snack(l10n.saved);
+                  } else {
+                    snack(vm.error);
+                  }
+                },
+          icon: vm.saving
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.save),
+          label: vm.saving
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Text(l10n.save),
+        ),
       ),
       body: SafeArea(
         child: Consumer<RoutingRulesViewModel>(
@@ -426,12 +431,11 @@ class _AppSection extends StatelessWidget {
     }
     if (action == 'installed') {
       if (Platform.isAndroid) {
-        final existingAppPackageNames = (direct
-                ? vm.currentRules.directApps
-                : vm.currentRules.proxyApps)
-            .where((e) => e.type == AppId_Type.Exact)
-            .map((e) => e.value)
-            .toSet();
+        final existingAppPackageNames =
+            (direct ? vm.currentRules.directApps : vm.currentRules.proxyApps)
+                .where((e) => e.type == AppId_Type.Exact)
+                .map((e) => e.value)
+                .toSet();
         await Navigator.of(context).push(
           CupertinoPageRoute(
             builder: (_) => _AndroidInstalledAppsScreen(
@@ -731,15 +735,17 @@ class _AndroidInstalledAppsScreenState
                         secondary: app.icon == null
                             ? const Icon(Icons.android)
                             : Image.memory(app.icon!),
-                        onChanged: isAlreadySelected ? null : (value) {
-                          setState(() {
-                            if (value == true) {
-                              _selected[app.packageName] = app;
-                            } else {
-                              _selected.remove(app.packageName);
-                            }
-                          });
-                        },
+                        onChanged: isAlreadySelected
+                            ? null
+                            : (value) {
+                                setState(() {
+                                  if (value == true) {
+                                    _selected[app.packageName] = app;
+                                  } else {
+                                    _selected.remove(app.packageName);
+                                  }
+                                });
+                              },
                       );
                     },
                   ),
