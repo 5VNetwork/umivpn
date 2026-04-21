@@ -21,9 +21,10 @@ final supabaseApiKey = debug
     ? 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH'
     : 'sb_publishable_bSVb6AH8NMt461D2zIqSjA_Ty5tfHhZ';
 
+const staging = bool.fromEnvironment('STAGING');
 final debug = (Platform.isAndroid && appFlavor == 'dev') ||
     (applePlatform && appFlavor == null) ||
-    (appFlavor == null && kDebugMode);
+    (appFlavor == null && kDebugMode && !staging);
 
 const websiteUrl = 'https://www.umivpn.com';
 const privacyPolicyUrl = 'https://www.umivpn.com/privacy';

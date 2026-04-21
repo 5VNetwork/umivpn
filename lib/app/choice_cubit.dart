@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tm/common.dart';
 import 'package:tm/protos/vx/outbound/outbound.pb.dart';
 import 'package:tm/x_controller.dart';
 import 'package:tm/xapi_client.dart';
 import 'package:umivpn/auth/auth_bloc.dart';
+import 'package:umivpn/auth/user.dart';
 import 'package:umivpn/l10n/app_localizations.dart';
 import 'package:umivpn/pref_helper.dart';
 import 'package:tm/default.dart';
@@ -39,8 +41,9 @@ class Choice extends Equatable {
     return Choice(
       country: country ?? this.country,
       routeMode: routeMode ?? this.routeMode,
-      realtimeCountry:
-          realtimeCountry != null ? realtimeCountry() : this.realtimeCountry,
+      realtimeCountry: realtimeCountry != null
+          ? realtimeCountry()
+          : this.realtimeCountry,
     );
   }
 }
@@ -52,13 +55,19 @@ class ChoiceCubit extends Cubit<Choice> {
     required XApiClient xApiClient,
     required XController xController,
     required AuthRepo authRepo,
-  })  : _pref = pref,
-        _storage = storage,
-        _xApiClient = xApiClient,
-        _xController = xController,
-        _authRepo = authRepo,
-        super(
-            Choice(country: _getCountry(pref), routeMode: pref.routingMode)) {}
+  }) : _pref = pref,
+       _storage = storage,
+       _xApiClient = xApiClient,
+       _xController = xController,
+       _authRepo = authRepo,
+       super(
+         Choice(
+           country: _getCountry(pref),
+           routeMode: _getMode(authRepo, pref),
+         ),
+       ) {
+    _authRepo.addListener(_onAuthRepoChange);
+  }
 
   final SharedPreferences _pref;
   final XController _xController;
@@ -67,9 +76,15 @@ class ChoiceCubit extends Cubit<Choice> {
   final AuthRepo _authRepo;
   StreamSubscription<XStatus>? _statusSubscription;
 
+  void _onAuthRepoChange() {
+    final mode = _getMode(_authRepo, _pref);
+    emit(state.copyWith(routeMode: mode));
+  }
+
   @override
   Future<void> close() async {
     _statusSubscription?.cancel();
+    _authRepo.removeListener(_onAuthRepoChange);
     await super.close();
     return;
   }
@@ -87,6 +102,18 @@ class ChoiceCubit extends Cubit<Choice> {
     emit(state.copyWith(routeMode: routeMode));
     await _xController.routingModeChange(routeMode);
   }
+}
+
+DefaultRouteMode _getMode(AuthRepo authRepo, SharedPreferences pref) {
+  final isFreeUser = authRepo.user?.plan == SubscriptionPlan.free;
+  if (isFreeUser) {
+    final isInChina = userInChina(pref);
+    final freeUserAllowedMode = isInChina
+        ? DefaultRouteMode.gfw
+        : DefaultRouteMode.proxyAll;
+    return freeUserAllowedMode;
+  }
+  return pref.routingMode;
 }
 
 int _getPort(OutboundHandlerConfig handler) {
@@ -136,7 +163,8 @@ class NodesSecureStorage {
   /// Create Choice from JSON string
   factory NodesSecureStorage.fromJsonString(String jsonString) {
     return NodesSecureStorage.fromJson(
-        jsonDecode(jsonString) as Map<String, dynamic>);
+      jsonDecode(jsonString) as Map<String, dynamic>,
+    );
   }
 }
 
@@ -145,7 +173,8 @@ String _getCountry(SharedPreferences pref) {
 }
 
 Future<NodesSecureStorage?> _getNodesSecureStorage(
-    FlutterSecureStorage storage) async {
+  FlutterSecureStorage storage,
+) async {
   final s = await storage.read(key: 'nodes_secure_storage');
   if (s == null) {
     return null;
@@ -154,9 +183,13 @@ Future<NodesSecureStorage?> _getNodesSecureStorage(
 }
 
 Future<void> _saveNodesSecureStorage(
-    FlutterSecureStorage storage, NodesSecureStorage nodesSecureStorage) async {
+  FlutterSecureStorage storage,
+  NodesSecureStorage nodesSecureStorage,
+) async {
   await storage.write(
-      key: 'nodes_secure_storage', value: nodesSecureStorage.toJsonString());
+    key: 'nodes_secure_storage',
+    value: nodesSecureStorage.toJsonString(),
+  );
 }
 
 extension XStatusExtension on XStatus {

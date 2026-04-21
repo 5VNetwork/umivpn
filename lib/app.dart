@@ -15,7 +15,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   late final AppLifecycleListener _listener;
   final appLinks = AppLinks();
   // AppLifecycleReactor? _appLifecycleReactor;
-
   void setLocale(Locale? value) {
     setState(() {
       _locale = value;
@@ -32,9 +31,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       theme: darkTheme(_locale),
       darkTheme: darkTheme(_locale),
       builder: desktopPlatforms
-          ? (context, child) => DesktopTray(
-                child: child!,
-              )
+          ? (context, child) => DesktopTray(child: child!)
           : null,
       routerConfig: router,
       localizationsDelegates: [
@@ -61,7 +58,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       pref.setInitialLaunch();
       androidHostApi?.requestAddTile();
     }
-    _locale = pref.language?.locale;
+    _locale = pref.language?.locale ?? PlatformDispatcher.instance.locale;
     WidgetsBinding.instance.addObserver(this);
     // app link
     if (Platform.isWindows && !isRunningAsAdmin) {

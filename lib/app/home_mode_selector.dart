@@ -95,14 +95,6 @@ class _ModeList extends StatelessWidget {
     DefaultRouteMode currentMode = context.read<ChoiceCubit>().state.routeMode;
     final authUser = context.read<AuthRepo>().user;
     final isFreeUser = authUser?.plan == SubscriptionPlan.free;
-    final isInChina =
-        context.read<SharedPreferences>().userCountry?.toUpperCase() == 'CN';
-    final freeUserAllowedMode = isInChina
-        ? DefaultRouteMode.gfw
-        : DefaultRouteMode.proxyAll;
-    if (isFreeUser) {
-      currentMode = freeUserAllowedMode;
-    }
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -126,7 +118,7 @@ class _ModeList extends StatelessWidget {
               itemBuilder: (ctx, index) {
                 final mode = DefaultRouteMode.values[index];
                 final isSelected = mode == currentMode;
-                final isSelectable = !isFreeUser || mode == freeUserAllowedMode;
+                final isSelectable = !isFreeUser || mode == currentMode;
                 final titleColor = !isSelectable
                     ? colorScheme.onSurface.withOpacity(0.38)
                     : isSelected
