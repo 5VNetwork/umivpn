@@ -148,7 +148,7 @@ jobs:
         shell: bash
         run: |
           gh release upload ${{ steps.get_version.outputs.version }} \
-            inno/Output/UmiVpnInstaller.exe \
+            inno/Output/UmiVPNInstaller.exe \
             --repo ${{ github.repository_owner }}/umivpn \
             --clobber
 
@@ -393,11 +393,11 @@ jobs:
   #       run: |
   #         gh release download ${{ steps.get_version.outputs.version }} \
   #           -R 5VNetwork/umivpn \
-  #           -p "UmiVpnInstaller.exe"
+  #           -p "UmiVPNInstaller.exe"
 
   #     - name: Upload Windows Installer to R2
   #       run: |
-  #         aws s3 cp UmiVpnInstaller.exe s3://umivpn/ \
+  #         aws s3 cp UmiVPNInstaller.exe s3://umivpn/ \
   #           --profile r2 \
   #           --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
 
