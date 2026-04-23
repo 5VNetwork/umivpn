@@ -119,6 +119,13 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       // Handle Supabase auth callback
       logger.d('Auth callback received: $uri');
       snack(AppLocalizations.of(context)?.loginSuccess);
+      final authProvider = context.read<AuthProvider>();
+      Future.delayed(const Duration(seconds: 2), () {
+        // sometimes, the session is not refreshed for unknown reason. So refresh it manually.
+        if (authProvider.currentSession == null) {
+          authProvider.refreshUser();
+        }
+      });
       // The Supabase client should handle this automatically
     } else if (uri.host == 'order-success') {
       context.read<AuthRepo>().fetchSubscriptionInfo();

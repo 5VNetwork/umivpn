@@ -193,6 +193,10 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
           final isConnecting =
               status.status == XStatus.preparing ||
               status.status == XStatus.connecting;
+          final isTransitioning =
+              status.status == XStatus.preparing ||
+              status.status == XStatus.connecting ||
+              status.status == XStatus.disconnecting;
 
           return Column(
             children: [
@@ -247,7 +251,7 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
               SlideTransition(
                 position: _buttonSlideAnimation,
                 child: GestureDetector(
-                  onTap: _toggleConnection,
+                  onTap: isTransitioning ? null : _toggleConnection,
                   child: Container(
                     height: 180,
                     width: 180,
