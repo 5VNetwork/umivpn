@@ -72,6 +72,17 @@ class ContactScreen extends StatelessWidget {
                   label: Text(' X'),
                 ),
                 const SizedBox(width: 10),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    launchUrl(Uri.parse('https://t.me/umivpngroup'));
+                  },
+                  icon: Image.asset(
+                    'assets/icons/telegram_icon.png',
+                    width: 20,
+                    height: 20,
+                  ),
+                  label: Text(AppLocalizations.of(context)!.telegram),
+                ),
               ],
             ),
             const SizedBox(height: 10),
