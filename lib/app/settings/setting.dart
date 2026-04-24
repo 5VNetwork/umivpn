@@ -8,9 +8,17 @@ import 'package:flutter_common/widgets/progress.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:tm/common.dart';
+import 'package:tm/private.dart';
+import 'package:umivpn/app/settings/general/general.dart';
 import 'package:umivpn/common/common.dart';
 import 'package:tm/iap/pro.dart';
 import 'package:umivpn/l10n/app_localizations.dart';
+import 'package:umivpn/app/settings/account.dart';
+import 'package:umivpn/app/settings/contact.dart';
+import 'package:umivpn/app/settings/general/language.dart';
 import 'package:umivpn/app/settings/open_source_software_notice_screen.dart';
 import 'package:umivpn/app/settings/privacy.dart';
 import 'package:umivpn/auth/auth_bloc.dart';
@@ -25,7 +33,6 @@ import 'package:umivpn/utils/path.dart';
 import 'package:umivpn/widgets/pro_icon.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:flutter_common/widgets/app_bar.dart';
-import 'package:tm/private.dart';
 
 final InAppReview inAppReview = InAppReview.instance;
 
@@ -93,6 +100,52 @@ enum SettingItem {
   }
 }
 
+const String websiteUrl = 'https://umivpn.5vnetwork.com';
+
+List<Widget> _getBottomButtons(BuildContext context, User? user) {
+  return [
+    const SizedBox(height: 5),
+    Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: OutlinedButton.icon(
+              onPressed: () {
+                launchUrl(Uri.parse(websiteUrl));
+              },
+              label: Text(AppLocalizations.of(context)!.website),
+              icon: const Icon(Icons.link),
+            ),
+          ),
+        ),
+      ],
+    ),
+    SizedBox(height: 5),
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: OutlinedButton.icon(
+        onPressed: () async {
+          if (await inAppReview.isAvailable()) {
+            inAppReview.requestReview();
+          } else {
+            inAppReview.openStoreListing(
+              appStoreId: '6744701950',
+              microsoftStoreId: '9PHBCBZ9R1FX',
+            );
+          }
+        },
+        label: Text(AppLocalizations.of(context)!.rateApp),
+        icon: const Icon(Icons.rate_review_outlined),
+      ),
+    ),
+    Gap(5),
+    const Version(),
+    const Gap(5),
+    if (autoUpdateSupported) const CheckUpdateButton(),
+    ...getPrivateBottomButtons(context, user),
+  ];
+}
 
 class CompactSettingScreen extends StatelessWidget {
   const CompactSettingScreen({super.key});
@@ -122,7 +175,7 @@ class CompactSettingScreen extends StatelessWidget {
               },
             ),
           );
-        }).toList()..addAll(getBottomButtons(context, user)),
+        }).toList()..addAll(_getBottomButtons(context, user)),
       ),
     );
   }
