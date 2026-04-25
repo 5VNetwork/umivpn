@@ -1,4 +1,4 @@
-name: Build Windows
+name: Build Windows Store
 
 on:
   # push:
@@ -127,9 +127,7 @@ jobs:
         env:
           LOG_KEY: ${{ secrets.LOG_KEY }}
         run: |
-          dart run msix:create --store --windows-build-args \
-          "--obfuscate --split-debug-info=symbols --dart-define=STORE=true --dart-define=LOG_KEY=$env:LOG_KEY --dart-define=URL=$env:URL" \
-          -n store
+          dart run msix:create --store --windows-build-args "--obfuscate --split-debug-info=symbols --dart-define=STORE=true --dart-define=LOG_KEY=$env:LOG_KEY --dart-define=URL=$env:URL" -n store
 
       - name: Upload debug symbols (Windows Store)
         env:
