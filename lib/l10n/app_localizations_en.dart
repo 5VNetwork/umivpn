@@ -389,6 +389,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get failedToChangeInboundMode => 'Failed to change inbound';
 
   @override
+  String get inboundSystemProxyDescription => 'Handle network traffic from apps that obey system proxy settings';
+
+  @override
+  String get inboundTunDescription => 'Handle network traffic from all apps';
+
+  @override
   String get language => 'Language';
 
   @override

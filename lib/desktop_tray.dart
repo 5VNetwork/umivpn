@@ -52,8 +52,12 @@ class _DesktopTrayState extends State<DesktopTray>
   // on windows this seems to be called when the app is exited
   @override
   void onWindowClose() async {
+    logger.d('onWindowClose');
     if (Platform.isWindows) {
       await context.read<XController>().beforeExitCleanup();
+    } else if (Platform.isLinux) {
+      await exitCurrentApp(context.read<XController>());
+      return;
     }
     await windowManager.hide();
     if (Platform.isMacOS) {
@@ -96,8 +100,11 @@ class _DesktopTrayState extends State<DesktopTray>
         iconPath = 'assets/icons/umi_48.png';
       }
     }
-    await trayManager.setIcon(iconPath,
-        isTemplate: true, iconSize: Platform.isWindows ? 12 : 16);
+    await trayManager.setIcon(
+      iconPath,
+      isTemplate: true,
+      iconSize: Platform.isWindows ? 12 : 16,
+    );
     if (!Platform.isLinux) {
       await trayManager.setToolTip('UmiVPN');
     }
@@ -125,11 +132,12 @@ class _DesktopTrayState extends State<DesktopTray>
     switch (status) {
       case XStatus.connected:
         connectMenuItem = MenuItem(
-            key: 'toggle_connection',
-            label: AppLocalizations.of(context)!.disconnect,
-            onClick: (menuItem) {
-              context.read<StatusCubit>().stop();
-            });
+          key: 'toggle_connection',
+          label: AppLocalizations.of(context)!.disconnect,
+          onClick: (menuItem) {
+            context.read<StatusCubit>().stop();
+          },
+        );
       case XStatus.disconnected:
         connectMenuItem = MenuItem(
           key: 'toggle_connection',
@@ -140,24 +148,28 @@ class _DesktopTrayState extends State<DesktopTray>
         );
       case XStatus.connecting || XStatus.preparing:
         connectMenuItem = MenuItem(
-            key: 'toggle_connection',
-            label: AppLocalizations.of(context)!.connecting,
-            disabled: true);
+          key: 'toggle_connection',
+          label: AppLocalizations.of(context)!.connecting,
+          disabled: true,
+        );
       case XStatus.disconnecting:
         connectMenuItem = MenuItem(
-            key: 'toggle_connection',
-            label: AppLocalizations.of(context)!.disconnecting,
-            disabled: true);
+          key: 'toggle_connection',
+          label: AppLocalizations.of(context)!.disconnecting,
+          disabled: true,
+        );
       case XStatus.reconnecting:
         connectMenuItem = MenuItem(
-            key: 'toggle_connection',
-            label: AppLocalizations.of(context)!.reconnecting,
-            disabled: true);
+          key: 'toggle_connection',
+          label: AppLocalizations.of(context)!.reconnecting,
+          disabled: true,
+        );
       case XStatus.unknown:
         connectMenuItem = MenuItem(
-            key: 'unknown',
-            label: AppLocalizations.of(context)!.unknown,
-            disabled: true);
+          key: 'unknown',
+          label: AppLocalizations.of(context)!.unknown,
+          disabled: true,
+        );
       default:
         connectMenuItem = null;
     }
@@ -197,7 +209,11 @@ class _DesktopTrayState extends State<DesktopTray>
 }
 
 Future<void> exitCurrentApp(XController xController) async {
-  await xController.beforeExitCleanup();
-  await trayManager.destroy();
-  await windowManager.destroy();
+  if (desktopPlatforms) {
+    await xController.beforeExitCleanup();
+    await trayManager.destroy();
+    await windowManager.destroy();
+  } else {
+    exit(0);
+  }
 }

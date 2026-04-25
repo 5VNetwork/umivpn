@@ -389,6 +389,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get failedToChangeInboundMode => '入站模式切换失败';
 
   @override
+  String get inboundSystemProxyDescription => '处理遵循系统代理设置的应用流量';
+
+  @override
+  String get inboundTunDescription => '处理所有应用的网络流量';
+
+  @override
   String get language => '语言';
 
   @override
@@ -755,7 +761,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get startFailedReasonTunNeedAdmin => 'Tun需要管理员身份。请以管理员身份重新运行UmiVPN或更换入站模式。';
+  String get startFailedReasonTunNeedAdmin => '微软商店版本需要管理员身份才可以使用TUN模式。请以管理员身份重新运行UmiVPN或更换入站模式。';
 
   @override
   String get startFailedReasonNoNode => '无节点';

@@ -132,6 +132,8 @@
   "quit": "Покидать",
   "iosAppRoutingNoSupport": "Маршрутизация на основе приложений в настоящее время не поддерживается на iOS.",
   "failedToChangeInboundMode": "Не удалось изменить входящий",
+  "inboundSystemProxyDescription": "Обрабатывать трафик приложений, которые используют системный прокси",
+  "inboundTunDescription": "Обрабатывать сетевой трафик всех приложений",
   "language": "Язык",
   "mannual": "Руководство",
   "updatedAt": "Обновлено в",

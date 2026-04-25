@@ -183,6 +183,7 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 msix_config:
+  msstore_appId: 9N9HJP6DB31L
   display_name: UmiVPN
   publisher_display_name: 5V Network
   identity_name: 5VNetwork.UmiVPN
@@ -197,7 +198,7 @@ msix_config:
   language: zh-cn, en-us
   output_path: build/windows/msix
   windows_build_args: --dart-define=STORE=true
-
+  store: true
 
 sentry:
   upload_debug_symbols: true

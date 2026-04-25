@@ -11,8 +11,8 @@ final desktopPlatforms =
 const androidPackageNme = appFlavor == 'staging'
     ? 'com5vnetwork.umi.staging'
     : appFlavor == 'dev'
-        ? 'com5vnetwork.umi.dev'
-        : 'com5vnetwork.umi';
+    ? 'com5vnetwork.umi.dev'
+    : 'com5vnetwork.umi';
 
 final supabaseUrl = debug
     ? const String.fromEnvironment('SUPABASE_URL')
@@ -22,7 +22,8 @@ final supabaseApiKey = debug
     : 'sb_publishable_bSVb6AH8NMt461D2zIqSjA_Ty5tfHhZ';
 
 const staging = bool.fromEnvironment('STAGING');
-final debug = (Platform.isAndroid && appFlavor == 'dev') ||
+final debug =
+    (Platform.isAndroid && appFlavor == 'dev') ||
     (applePlatform && appFlavor == null) ||
     (appFlavor == null && kDebugMode && !staging);
 
@@ -32,7 +33,8 @@ const termOfServiceUrl = 'https://www.umivpn.com/terms';
 
 const logKey = String.fromEnvironment('LOG_KEY', defaultValue: '1234567890');
 
-final useStripe = Platform.isWindows ||
+final useStripe =
+    Platform.isWindows ||
     (Platform.isAndroid && appFlavor != 'production') ||
     appFlavor == "pkg" ||
     Platform.isLinux;

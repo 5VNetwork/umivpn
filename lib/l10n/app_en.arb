@@ -132,6 +132,8 @@
   "quit": "Quit",
   "iosAppRoutingNoSupport": "App-based routing is currently not supported on iOS",
   "failedToChangeInboundMode": "Failed to change inbound",
+  "inboundSystemProxyDescription": "Handle network traffic from apps that obey system proxy settings",
+  "inboundTunDescription": "Handle network traffic from all apps",
   "language": "Language",
   "mannual": "Manual",
   "updatedAt": "Updated at",

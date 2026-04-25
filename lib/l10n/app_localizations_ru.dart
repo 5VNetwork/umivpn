@@ -389,6 +389,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get failedToChangeInboundMode => 'Не удалось изменить входящий';
 
   @override
+  String get inboundSystemProxyDescription => 'Обрабатывать трафик приложений, которые используют системный прокси';
+
+  @override
+  String get inboundTunDescription => 'Обрабатывать сетевой трафик всех приложений';
+
+  @override
   String get language => 'Язык';
 
   @override

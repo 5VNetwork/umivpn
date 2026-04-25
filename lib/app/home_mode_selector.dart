@@ -32,8 +32,8 @@ class ModeSelector extends StatelessWidget {
             return Row(
               children: [
                 Container(
-                  width: 30,
-                  height: 30,
+                  width: 28,
+                  height: 28,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: colorScheme.primary.withOpacity(0.2),
@@ -45,7 +45,7 @@ class ModeSelector extends StatelessWidget {
                   ),
                   child: Icon(
                     Icons.route_rounded,
-                    size: 18,
+                    size: 16,
                     color: colorScheme.primary,
                   ),
                 ),
@@ -66,16 +66,16 @@ class ModeSelector extends StatelessWidget {
                       style: TextStyle(
                         color: colorScheme.onSurface,
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 14,
                       ),
                     ),
                   ],
                 ),
                 const Spacer(),
-                Icon(
-                  Icons.keyboard_arrow_up_rounded,
-                  color: colorScheme.onSurface.withOpacity(0.70),
-                ),
+                // Icon(
+                //   Icons.keyboard_arrow_up_rounded,
+                //   color: colorScheme.onSurface.withOpacity(0.70),
+                // ),
               ],
             );
           },

@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tm/common.dart';
+import 'package:tm/private.dart';
 import 'package:tm/x_controller.dart';
 import 'package:tm/status_cubit.dart';
 import 'package:umivpn/app/choice_cubit.dart';
@@ -35,6 +36,7 @@ import 'package:ads/ad.dart' as my;
 
 part 'home_country_selector.dart';
 part 'home_mode_selector.dart';
+part 'inbound_mode_selector.dart';
 part 'home_traffic_card.dart';
 part 'home_button.dart';
 
@@ -195,6 +197,19 @@ class _VpnHomePageState extends State<VpnHomePage> {
             //         child: const ManagePlanBody(),
             //       ));
             // }
+            if (!isProduction()) {
+              return const Stack(
+                children: [
+                  _HomeBody(),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: HandlersBeingUsed(),
+                  ),
+                ],
+              );
+            }
             return const _HomeBody();
           },
         ),
@@ -317,17 +332,24 @@ class _HomeBody extends StatelessWidget {
                       return const SizedBox.shrink();
                     }
                     if (authRepo.user!.plan == SubscriptionPlan.free) {
-                      return const Column(
+                      return Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Expanded(
+                          const Expanded(
                             child: Align(
                               alignment: Alignment.bottomCenter,
                               child: my.BannerAdWidget(),
                             ),
                           ),
                           const SizedBox(height: 10),
-                          ModeSelector(),
+                          Row(
+                            children: [
+                              Expanded(child: const ModeSelector()),
+                              if (desktopPlatform) const SizedBox(width: 10),
+                              if (desktopPlatform)
+                                Expanded(child: InboundModeSelector()),
+                            ],
+                          ),
                           // Row(
                           //   children: [
                           //     Expanded(child: ModeSelector()),
