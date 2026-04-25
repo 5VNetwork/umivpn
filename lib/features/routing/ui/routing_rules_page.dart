@@ -515,6 +515,7 @@ class _AppSection extends StatelessWidget {
                 },
                 decoration: InputDecoration(
                   labelText: l10n.type,
+                  helperText: AppLocalizations.of(context)!.caseInsensitive,
                   border: const OutlineInputBorder(),
                 ),
               ),

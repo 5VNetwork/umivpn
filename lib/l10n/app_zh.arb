@@ -131,6 +131,8 @@
   "quit": "退出",
   "iosAppRoutingNoSupport": "iOS目前不支持应用路由",
   "failedToChangeInboundMode": "入站模式切换失败",
+  "inboundSystemProxyDescription": "处理遵循系统代理设置的应用流量",
+  "inboundTunDescription": "处理所有应用的网络流量",
   "invalidIp": "无效的IP",
   "language": "语言",
   "mannual": "手动",
@@ -293,7 +295,7 @@
       }
     }
   },
-  "startFailedReasonTunNeedAdmin": "Tun需要管理员身份。请以管理员身份重新运行UmiVPN或更换入站模式。",
+  "startFailedReasonTunNeedAdmin": "微软商店版本需要管理员身份才可以使用TUN模式。请以管理员身份重新运行UmiVPN或更换入站模式。",
   "startFailedReasonNoNode": "无节点",
   "startFailedReasonNoEnabledNode": "无启用节点，请至少启用一个节点",
   "startFailedReasonNoSelected": "未选择节点",

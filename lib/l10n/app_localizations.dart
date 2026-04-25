@@ -853,6 +853,18 @@ abstract class AppLocalizations {
   /// **'Failed to change inbound'**
   String get failedToChangeInboundMode;
 
+  /// No description provided for @inboundSystemProxyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Handle network traffic from apps that obey system proxy settings'**
+  String get inboundSystemProxyDescription;
+
+  /// No description provided for @inboundTunDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Handle network traffic from all apps'**
+  String get inboundTunDescription;
+
   /// No description provided for @language.
   ///
   /// In en, this message translates to:

@@ -24,13 +24,16 @@ Future<void> makeWinTunAvailable() async {
   // Get CPU architecture
   if (!File(dllPath).existsSync()) {
     // delete existing dir
-    final eistingWintunDir =
-        Directory(join((await resourceDir()).path, 'wintun'));
+    final eistingWintunDir = Directory(
+      join((await resourceDir()).path, 'wintun'),
+    );
     if (eistingWintunDir.existsSync()) {
       eistingWintunDir.deleteSync(recursive: true);
     }
-    final zipPath =
-        join((await getApplicationCacheDirectory()).path, 'wintun-zip');
+    final zipPath = join(
+      (await getApplicationCacheDirectory()).path,
+      'wintun-zip',
+    );
     await directDownloadToFile(wintunDownloadLink, zipPath);
     // Extract the zip file
     await extractFileToDisk(zipPath, (await resourceDir()).path);
@@ -41,10 +44,35 @@ Future<void> makeWinTunAvailable() async {
 }
 
 String getServiceInstallExePath() {
-  final String localExePath = join('data', 'flutter_assets', 'packages',
-      'tm_windows', 'assets', 'service_install.exe');
-  String pathToExe =
-      join(Directory(Platform.resolvedExecutable).parent.path, localExePath);
+  final String localExePath = join(
+    'data',
+    'flutter_assets',
+    'packages',
+    'tm_windows',
+    'assets',
+    'service_install.exe',
+  );
+  String pathToExe = join(
+    Directory(Platform.resolvedExecutable).parent.path,
+    localExePath,
+  );
+  logger.d('pathToExe: $pathToExe');
+  return pathToExe;
+}
+
+String getServiceExePath() {
+  final String localExePath = join(
+    'data',
+    'flutter_assets',
+    'packages',
+    'tm_windows',
+    'assets',
+    'umi_service.exe',
+  );
+  String pathToExe = join(
+    Directory(Platform.resolvedExecutable).parent.path,
+    localExePath,
+  );
   logger.d('pathToExe: $pathToExe');
   return pathToExe;
 }

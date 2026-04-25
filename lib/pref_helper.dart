@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:umivpn/app/home.dart';
 import 'package:umivpn/common/common.dart';
 import 'package:umivpn/l10n/app_localizations.dart';
-import 'package:umivpn/utils/logger.dart';
 import 'package:tm/default.dart';
 
 extension PrefHelperExtension on SharedPreferences {
@@ -146,7 +145,7 @@ extension PrefHelperExtension on SharedPreferences {
   }
 
   double get windowWidth {
-    return getDouble('windowWidth') ?? 350;
+    return getDouble('windowWidth') ?? 360;
   }
 
   void setWindowWidth(double x) {
@@ -264,23 +263,40 @@ extension PrefHelperExtension on SharedPreferences {
   void setEnableAppOpenAds(bool enable) {
     setBool('enableAppOpenAds', enable);
   }
+
+  // the version of the umi_service.exe in the service folder
+  String? get umiServiceVersion {
+    return getString('umiServiceVersion');
+  }
+
+  void setUmiServiceVersion(String version) {
+    setString('umiServiceVersion', version);
+  }
 }
 
 enum InboundMode {
   tun(),
-  systemProxy(),
-  wfp();
+  systemProxy();
 
   const InboundMode();
 
   String toLocalString(BuildContext ctx) {
     switch (this) {
-      case InboundMode.wfp:
-        return 'WFP';
+      // case InboundMode.wfp:
+      //   return 'WFP';
       case InboundMode.systemProxy:
         return AppLocalizations.of(ctx)!.systemProxy;
       case InboundMode.tun:
         return 'TUN';
+    }
+  }
+
+  String description(BuildContext ctx) {
+    switch (this) {
+      case InboundMode.systemProxy:
+        return AppLocalizations.of(ctx)!.inboundSystemProxyDescription;
+      case InboundMode.tun:
+        return AppLocalizations.of(ctx)!.inboundTunDescription;
     }
   }
 }
