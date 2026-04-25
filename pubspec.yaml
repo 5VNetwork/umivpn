@@ -15,7 +15,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archßive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.2.6+34
+version: 0.2.7+35
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
@@ -52,7 +52,7 @@ dependencies:
   gap: ^3.0.1
   flutter_svg: ^2.0.10+1
   flutter_swipe_action_cell: ^3.1.5
-  freezed_annotation: ^2.4.4
+  freezed_annotation: ^3.0.0
   pasteboard: ^0.4.0
   zxing2: ^0.2.3
   image: ^4.3.0
@@ -111,7 +111,7 @@ dev_dependencies:
   sentry_dart_plugin: ^3.2.1
   flutter_launcher_icons: ^0.14.3
   json_annotation: ^4.9.0
-  pigeon: ^22.7.4
+  pigeon: ^26.2.3
   mockito: ^5.4.6
   flutter_test:
     sdk: flutter
@@ -121,10 +121,10 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.0
-  build_runner: ^2.5.4
+  flutter_lints: ^6.0.0
+  build_runner: ^2.7.2
   json_serializable: ^6.8.0
-  freezed: ^2.5.7
+  freezed: ^3.1.0
   # 3.16.10+ avoids picking crashpad_handler.exe as the MSIX entry (Sentry).
   msix: ^3.16.13
   flutter_oss_licenses: ^3.0.4
@@ -198,7 +198,7 @@ msix_config:
   language: zh-cn, en-us
   output_path: build/windows/msix
   windows_build_args: --dart-define=STORE=true
-  store: true
+  # store: true
 
 sentry:
   upload_debug_symbols: true
