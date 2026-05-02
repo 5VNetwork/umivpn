@@ -1707,7 +1707,7 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: HEAD
+      ref: main
       resolved-ref: "79705393e073734283ca36c3f40fde7ecf6b3146"
       url: "https://github.com/5vnetwork/system-proxy.git"
     source: git

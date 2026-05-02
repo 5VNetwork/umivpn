@@ -81,7 +81,7 @@ jobs:
       - name: copy files to umivpn_plugin
         run: |
           cp x_win_x86_64/x.dll ../umivpn-plugin/tm_windows/assets/x.dll
-          cp x_win_x86_64/umi_service.exe umi_service.exe
+          cp x_win_x86_64/umi_service.exe ../umivpn-plugin/tm_windows/assets/umi_service.exe
           cp x_win_x86_64/service_install.exe service_install.exe
 
       - name: Setup Flutter

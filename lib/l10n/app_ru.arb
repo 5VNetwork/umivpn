@@ -396,6 +396,14 @@
   "all": "Все",
   "failedToUndoBlockDns": "Не удалось удалить фильтр WFP для блокировки DNS-трафика основной сетевой карты. Закройте это приложение, которое может удалить фильтр.",
   "failedToRemoveSystemProxy": "Не удалось удалить системный прокси-сервер. Пожалуйста, удалите его вручную в разделе «Настройки» > «Системный прокси-сервер».",
+  "installingWindowsService": "Установка службы…",
+  "windowsServiceInstalled": "Служба установлена!",
+  "removeWindowsService": "Удалить службу Windows",
+  "removeWindowsServiceConfirmTitle": "Удалить службу Windows?",
+  "removeWindowsServiceConfirmMessage": "Будет удалена фоновая служба UmiVPN. При ошибке запустите приложение от имени администратора. В режиме TUN служба может быть установлена снова при подключении.",
+  "removeWindowsServiceConfirm": "Удалить",
+  "removeWindowsServiceRequiresAdmin": "Удаление службы требует запуска UmiVPN от имени администратора.",
+  "windowsServiceRemoved": "Служба Windows удалена.",
   "failedToChangeNode": "Не удалось изменить узел: {value}",
   "@failedToChangeNode": {
     "placeholders": {

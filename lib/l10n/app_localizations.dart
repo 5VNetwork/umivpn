@@ -1549,11 +1549,11 @@ abstract class AppLocalizations {
   /// **'Failed to start: {reason}'**
   String startFailedWithReason(String reason);
 
-  /// No description provided for @startFailedReasonTunNeedAdmin.
+  /// No description provided for @startFailedReasonServiceNotInstalled.
   ///
   /// In en, this message translates to:
-  /// **'Tun inbound is only available when running as administrator. Rerun UmiVPN as administrator or change inbound mode.'**
-  String get startFailedReasonTunNeedAdmin;
+  /// **'Service is not installed. Please rerun UmiVPN as an administrator and start again, during which the service will be installed automatically, or change inbound mode.'**
+  String get startFailedReasonServiceNotInstalled;
 
   /// No description provided for @startFailedReasonNoNode.
   ///
@@ -1794,6 +1794,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to remove system proxy, please remove it mannually at Settings > System Proxy.'**
   String get failedToRemoveSystemProxy;
+
+  /// No description provided for @installingWindowsService.
+  ///
+  /// In en, this message translates to:
+  /// **'Installing service...'**
+  String get installingWindowsService;
+
+  /// No description provided for @windowsServiceInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Service installed!'**
+  String get windowsServiceInstalled;
+
+  /// No description provided for @removeWindowsService.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Windows service'**
+  String get removeWindowsService;
+
+  /// No description provided for @removeWindowsServiceConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Windows service?'**
+  String get removeWindowsServiceConfirmTitle;
+
+  /// No description provided for @removeWindowsServiceConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This uninstalls the UmiVPN background service. Run the app as administrator if removal fails. TUN mode can reinstall the service when you connect again.'**
+  String get removeWindowsServiceConfirmMessage;
+
+  /// No description provided for @removeWindowsServiceConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get removeWindowsServiceConfirm;
+
+  /// No description provided for @removeWindowsServiceRequiresAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Removing the service requires running UmiVPN as administrator.'**
+  String get removeWindowsServiceRequiresAdmin;
+
+  /// No description provided for @windowsServiceRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Windows service removed.'**
+  String get windowsServiceRemoved;
 
   /// No description provided for @failedToChangeNode.
   ///

@@ -264,14 +264,6 @@ extension PrefHelperExtension on SharedPreferences {
     setBool('enableAppOpenAds', enable);
   }
 
-  // the version of the umi_service.exe in the service folder
-  String? get umiServiceVersion {
-    return getString('umiServiceVersion');
-  }
-
-  void setUmiServiceVersion(String version) {
-    setString('umiServiceVersion', version);
-  }
 }
 
 enum InboundMode {

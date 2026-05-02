@@ -1,6 +1,8 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_common/services/auto_update.dart';
@@ -10,8 +12,10 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:tm/common.dart';
 import 'package:tm/private.dart';
+import 'package:tm/x_controller.dart';
 import 'package:umivpn/app/settings/general/general.dart';
 import 'package:umivpn/common/common.dart';
 import 'package:tm/iap/pro.dart';
@@ -33,6 +37,7 @@ import 'package:umivpn/utils/path.dart';
 import 'package:umivpn/widgets/pro_icon.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:flutter_common/widgets/app_bar.dart';
+import 'package:tm_windows/tm_windows_bindings_generated.dart';
 
 final InAppReview inAppReview = InAppReview.instance;
 
@@ -139,7 +144,14 @@ List<Widget> _getBottomButtons(BuildContext context, User? user) {
         icon: const Icon(Icons.rate_review_outlined),
       ),
     ),
-    Gap(5),
+    if (Platform.isWindows && isWinStore) ...[
+      const Gap(5),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: RemoveWindowsServiceButton(),
+      ),
+    ],
+    const Gap(5),
     const Version(),
     const Gap(5),
     if (autoUpdateSupported) const CheckUpdateButton(),
@@ -240,6 +252,101 @@ AppBar getAdaptiveAppBar(BuildContext context, Widget? title) {
         ),
     ],
   );
+}
+
+class RemoveWindowsServiceButton extends StatefulWidget {
+  const RemoveWindowsServiceButton({super.key});
+
+  @override
+  State<RemoveWindowsServiceButton> createState() =>
+      _RemoveWindowsServiceButtonState();
+}
+
+class _RemoveWindowsServiceButtonState
+    extends State<RemoveWindowsServiceButton> {
+  bool _busy = false;
+
+  /// Uninstalls the Windows Store Umi background service (`umi`). Requires admin.
+  Future<void> removeWindowsService() async {
+    if (!isRunningAsAdmin) {
+      snack(rootLocalizations()?.removeWindowsServiceRequiresAdmin);
+      return;
+    }
+    try {
+      final tmWindowsBindings = TmWindowsBindings(
+        DynamicLibrary.open(getDllPath()),
+      );
+      const serviceName = "umi";
+      final serviceNamePtr = serviceName.toNativeUtf8();
+      try {
+        final resultPtr = tmWindowsBindings.RemoveService(
+          serviceNamePtr.cast<Char>(),
+        );
+        final result = resultPtr.cast<Utf8>().toDartString();
+        tmWindowsBindings.FreeString(resultPtr);
+        if (result != "") {
+          snack(result);
+          return;
+        }
+        snack(rootLocalizations()?.windowsServiceRemoved);
+      } finally {
+        calloc.free(serviceNamePtr);
+      }
+    } catch (e, st) {
+      logger.e('removeWindowsService', error: e, stackTrace: st);
+      snack(e.toString());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return OutlinedButton.icon(
+      onPressed: _busy
+          ? null
+          : () async {
+              final confirmed = await showDialog<bool>(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: Text(l10n.removeWindowsServiceConfirmTitle),
+                  content: Text(l10n.removeWindowsServiceConfirmMessage),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(ctx).pop(false),
+                      child: Text(l10n.cancel),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(ctx).pop(true),
+                      child: Text(l10n.removeWindowsServiceConfirm),
+                    ),
+                  ],
+                ),
+              );
+              if (confirmed != true || !context.mounted) {
+                return;
+              }
+              setState(() => _busy = true);
+              try {
+                await removeWindowsService();
+              } finally {
+                if (mounted) {
+                  setState(() => _busy = false);
+                }
+              }
+            },
+      icon: _busy
+          ? SizedBox(
+              width: 18,
+              height: 18,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            )
+          : const Icon(Icons.delete_outline_rounded),
+      label: Text(l10n.removeWindowsService),
+    );
+  }
 }
 
 class CheckUpdateButton extends StatefulWidget {
