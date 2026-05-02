@@ -775,7 +775,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get startFailedReasonTunNeedAdmin => 'Tun inbound is only available when running as administrator. Rerun UmiVPN as administrator or change inbound mode.';
+  String get startFailedReasonServiceNotInstalled => 'Service is not installed. Please rerun UmiVPN as an administrator and start again, during which the service will be installed automatically, or change inbound mode.';
 
   @override
   String get startFailedReasonNoNode => 'No node';
@@ -976,6 +976,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failedToRemoveSystemProxy => 'Failed to remove system proxy, please remove it mannually at Settings > System Proxy.';
+
+  @override
+  String get installingWindowsService => 'Installing service...';
+
+  @override
+  String get windowsServiceInstalled => 'Service installed!';
+
+  @override
+  String get removeWindowsService => 'Remove Windows service';
+
+  @override
+  String get removeWindowsServiceConfirmTitle => 'Remove Windows service?';
+
+  @override
+  String get removeWindowsServiceConfirmMessage => 'This uninstalls the UmiVPN background service. Run the app as administrator if removal fails. TUN mode can reinstall the service when you connect again.';
+
+  @override
+  String get removeWindowsServiceConfirm => 'Remove';
+
+  @override
+  String get removeWindowsServiceRequiresAdmin => 'Removing the service requires running UmiVPN as administrator.';
+
+  @override
+  String get windowsServiceRemoved => 'Windows service removed.';
 
   @override
   String failedToChangeNode(String value) {

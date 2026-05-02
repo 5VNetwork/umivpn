@@ -80,7 +80,8 @@ class _AccountPageState extends State<AccountPage> {
                 Center(
                   child: Row(
                     children: [
-                      if (!isProduction())
+                      if (!isProduction() ||
+                          authRepo.user?.plan != SubscriptionPlan.free)
                         ElevatedButton(
                           onPressed: () {
                             context.go('/sign-in');

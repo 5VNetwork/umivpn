@@ -10,14 +10,13 @@ import 'package:umivpn/utils/logger.dart';
 enum SubscriptionPlan {
   free,
   air,
-  pro,
-  ;
+  pro;
 
   String get name => switch (this) {
-        free => 'Free',
-        air => 'Air',
-        pro => 'Pro',
-      };
+    free => 'Free',
+    air => 'Air',
+    pro => 'Pro',
+  };
 
   int get data => 1024 * 1024 * 1024;
 
@@ -34,21 +33,24 @@ enum SubscriptionPlan {
 enum SubscriptionSource {
   stripe,
   playStore,
-  appStore;
+  appStore,
+  others;
 
   String get name => switch (this) {
-        stripe => 'Stripe',
-        playStore => 'Play Store',
-        appStore => 'App Store',
-      };
+    stripe => 'Stripe',
+    playStore => 'Play Store',
+    appStore => 'App Store',
+    others => 'Others',
+  };
 }
 
 class User extends Equatable {
-  const User(
-      {required this.id,
-      required this.email,
-      required this.plan,
-      this.cycleEndAt});
+  const User({
+    required this.id,
+    required this.email,
+    required this.plan,
+    this.cycleEndAt,
+  });
   final String id;
   final String email;
   final SubscriptionPlan plan;
@@ -69,12 +71,7 @@ class User extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-        id,
-        email,
-        plan,
-        cycleEndAt,
-      ];
+  List<Object?> get props => [id, email, plan, cycleEndAt];
 }
 
 extension UserExtension on Session {

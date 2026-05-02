@@ -127,15 +127,33 @@ void initRouter(AuthProvider authProvider) {
                   child: const Icon(Icons.arrow_back),
                 )
               : null,
-          body: Center(
-            child: SignInPage(
-              showGoogle: true,
-              showMicrosoft: false,
-              showApple: applePlatform && !isPkg,
-              termOfServiceUrl: termOfServiceUrl,
-              privacyPolicyUrl: privacyPolicyUrl,
-              showAppleNotification: false,
-            ),
+          body: Column(
+            children: [
+              if (Platform.isWindows || Platform.isLinux)
+                SizedBox(
+                  height: 44,
+                  child: Row(
+                    children: [
+                      Expanded(child: MoveWindow(child: SizedBox.expand())),
+                      const Gap(5),
+                      const WindowButtons(),
+                      const Gap(5),
+                    ],
+                  ),
+                ),
+              Expanded(
+                child: Center(
+                  child: SignInPage(
+                    showGoogle: true,
+                    showMicrosoft: false,
+                    showApple: applePlatform && !isPkg,
+                    termOfServiceUrl: termOfServiceUrl,
+                    privacyPolicyUrl: privacyPolicyUrl,
+                    showAppleNotification: false,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -761,7 +761,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get startFailedReasonTunNeedAdmin => '微软商店版本需要管理员身份才可以使用TUN模式。请以管理员身份重新运行UmiVPN或更换入站模式。';
+  String get startFailedReasonServiceNotInstalled => 'Service尚未安装，请以管理员身份重新运行UmiVPN，届时在连接过程中Service将会自动安装，或更换入站模式。';
 
   @override
   String get startFailedReasonNoNode => '无节点';
@@ -926,6 +926,30 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get failedToRemoveSystemProxy => '移除系统代理失败，请手动在设置中移除';
+
+  @override
+  String get installingWindowsService => '正在安装服务…';
+
+  @override
+  String get windowsServiceInstalled => '服务已安装！';
+
+  @override
+  String get removeWindowsService => '移除 Windows 服务';
+
+  @override
+  String get removeWindowsServiceConfirmTitle => '移除 Windows 服务？';
+
+  @override
+  String get removeWindowsServiceConfirmMessage => '将卸载 UmiVPN 后台服务。若失败请以管理员身份运行应用。使用 TUN 连接时可能会再次自动安装服务。';
+
+  @override
+  String get removeWindowsServiceConfirm => '移除';
+
+  @override
+  String get removeWindowsServiceRequiresAdmin => '移除服务需要以管理员身份运行 UmiVPN。';
+
+  @override
+  String get windowsServiceRemoved => '已移除 Windows 服务。';
 
   @override
   String failedToChangeNode(String value) {

@@ -292,7 +292,7 @@
       }
     }
   },
-  "startFailedReasonTunNeedAdmin": "Tun inbound is only available when running as administrator. Rerun UmiVPN as administrator or change inbound mode.",
+  "startFailedReasonServiceNotInstalled": "Service is not installed. Please rerun UmiVPN as an administrator and start again, during which the service will be installed automatically, or change inbound mode.",
   "startFailedReasonNoNode": "No node",
   "startFailedReasonNoEnabledNode": "No enabled nodes, enable at least one node",
   "startFailedReasonNoSelected": "No selected node",
@@ -396,6 +396,14 @@
   "all": "All",
   "failedToUndoBlockDns": "Failed to remove the WFP filter for blocking dns traffic of primary NIC, please close this app which can remove the filter",
   "failedToRemoveSystemProxy": "Failed to remove system proxy, please remove it mannually at Settings > System Proxy.",
+  "installingWindowsService": "Installing service...",
+  "windowsServiceInstalled": "Service installed!",
+  "removeWindowsService": "Remove Windows service",
+  "removeWindowsServiceConfirmTitle": "Remove Windows service?",
+  "removeWindowsServiceConfirmMessage": "This uninstalls the UmiVPN background service. Run the app as administrator if removal fails. TUN mode can reinstall the service when you connect again.",
+  "removeWindowsServiceConfirm": "Remove",
+  "removeWindowsServiceRequiresAdmin": "Removing the service requires running UmiVPN as administrator.",
+  "windowsServiceRemoved": "Windows service removed.",
   "failedToChangeNode": "Failed to change node: {value}",
   "@failedToChangeNode": {
     "placeholders": {

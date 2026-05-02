@@ -20,17 +20,15 @@ const webClientId =
 final iosClientId = debug
     ? "952575395446-8gumjqa4av8akh8cralh8ug8kb2dckci.apps.googleusercontent.com"
     : appFlavor == "staging"
-        ? "952575395446-2738klk0hmj1mq9mli50lf1u6gkcmcvi.apps.googleusercontent.com"
-        : "952575395446-dts29lpnn4gnn9dbgu2aule8ja6ba7sn.apps.googleusercontent.com";
+    ? "952575395446-2738klk0hmj1mq9mli50lf1u6gkcmcvi.apps.googleusercontent.com"
+    : "952575395446-dts29lpnn4gnn9dbgu2aule8ja6ba7sn.apps.googleusercontent.com";
 
 class AuthRepo extends ChangeNotifier {
   AuthRepo(this._authProvider) {
-    _userSubscription = _authProvider.sessionStreams.listen(
-      (user) {
-        _user = user?.toUser;
-        notifyListeners();
-      },
-    );
+    _userSubscription = _authProvider.sessionStreams.listen((user) {
+      _user = user?.toUser;
+      notifyListeners();
+    });
   }
 
   User? get user => _user;
@@ -38,10 +36,11 @@ class AuthRepo extends ChangeNotifier {
 
   void setTestUser() {
     _user = const User(
-        id: 'test',
-        email: 'test@test.com',
-        plan: SubscriptionPlan.free,
-        cycleEndAt: null);
+      id: 'test',
+      email: 'test@test.com',
+      plan: SubscriptionPlan.free,
+      cycleEndAt: null,
+    );
     notifyListeners();
     // after 5 minutes, set the user to unauthenticated
     Future.delayed(const Duration(minutes: 5), () {
@@ -62,8 +61,11 @@ class AuthRepo extends ChangeNotifier {
     }
     final userId = _user!.id;
     try {
-      final response =
-          await supabase.from('profiles').select().eq('id', userId).single();
+      final response = await supabase
+          .from('profiles')
+          .select()
+          .eq('id', userId)
+          .single();
       debugPrint(response.toString());
       final profile = UserProfile.fromJson(response);
       _userProfile = profile;
@@ -79,8 +81,10 @@ class AuthRepo extends ChangeNotifier {
     // This happens when a user upgrades or downgrades their plan, but the session hasn't been refreshed yet
     if (_user!.plan != profile.plan) {
       logger.w('User plan has changed, updating user');
-      _user =
-          _user!.copyWith(plan: profile.plan, cycleEndAt: profile.cycleEndAt);
+      _user = _user!.copyWith(
+        plan: profile.plan,
+        cycleEndAt: profile.cycleEndAt,
+      );
       notifyListeners();
       _authProvider.refreshUser();
     }
@@ -119,13 +123,17 @@ class AuthRepo extends ChangeNotifier {
       }
 
       if (subscriptionRow != null && subscriptionRow.isNotEmpty) {
-        final periodEndAt =
-            DateTime.parse(subscriptionRow['period_end_at'] as String);
-        final source =
-            _parseSubscriptionSource(subscriptionRow['source'] as String);
+        final periodEndAt = DateTime.parse(
+          subscriptionRow['period_end_at'] as String,
+        );
+        final source = _parseSubscriptionSource(
+          subscriptionRow['source'] as String,
+        );
 
-        final (SubscriptionPlan, Period) planAndPeriod =
-            _parsePeriod(subscriptionRow['product_id'] as String, source);
+        final (SubscriptionPlan, Period) planAndPeriod = _parsePeriod(
+          subscriptionRow['product_id'] as String,
+          source,
+        );
 
         (SubscriptionPlan, Period)? nextPlanAndPeriod;
         if (subscriptionRow['next_product_id'] != null) {
@@ -149,11 +157,14 @@ class AuthRepo extends ChangeNotifier {
   }
 
   (SubscriptionPlan, Period) _parsePeriod(
-      String productId, SubscriptionSource source) {
+    String productId,
+    SubscriptionSource source,
+  ) {
     switch (source) {
       case SubscriptionSource.appStore ||
-            SubscriptionSource.playStore ||
-            SubscriptionSource.stripe:
+          SubscriptionSource.playStore ||
+          SubscriptionSource.stripe ||
+          SubscriptionSource.others:
         switch (productId) {
           case 'umivpn_air_month' || 'umi_air_month':
             return (SubscriptionPlan.air, Period.month);
@@ -193,7 +204,7 @@ class AuthRepo extends ChangeNotifier {
       case 'app_store':
         return SubscriptionSource.appStore;
       default:
-        throw Exception('Invalid subscription source: $source');
+        return SubscriptionSource.others;
     }
   }
 
@@ -205,12 +216,13 @@ class AuthRepo extends ChangeNotifier {
 }
 
 class SubscriptionInfo {
-  const SubscriptionInfo(
-      {required this.planAndPeriod,
-      required this.source,
-      required this.periodEndAt,
-      required this.isCanceled,
-      this.nextPlanAndPeriod});
+  const SubscriptionInfo({
+    required this.planAndPeriod,
+    required this.source,
+    required this.periodEndAt,
+    required this.isCanceled,
+    this.nextPlanAndPeriod,
+  });
 
   final (SubscriptionPlan, Period) planAndPeriod;
   final SubscriptionSource source;

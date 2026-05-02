@@ -11,12 +11,13 @@ class _CurrentPlan extends StatelessWidget {
       builder: (context, value, child) {
         if (value.loadingSubscriptionInfo) {
           return Center(
-              child: CircularProgressIndicator(color: colorScheme.primary));
+            child: CircularProgressIndicator(color: colorScheme.primary),
+          );
         }
         if (value.errorFetchingSubscriptionInfo != null) {
           return Center(
-              child:
-                  Text(value.errorFetchingSubscriptionInfo ?? 'Unknown error'));
+            child: Text(value.errorFetchingSubscriptionInfo ?? 'Unknown error'),
+          );
         }
 
         final subscriptionInfo = value.subscriptionInfo;
@@ -48,8 +49,10 @@ class _CurrentPlan extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: colorScheme.primary.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
@@ -66,7 +69,9 @@ class _CurrentPlan extends StatelessWidget {
                   if (isPaidPlan && subscriptionInfo?.isCanceled == true)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.orange.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(8),
@@ -138,8 +143,9 @@ class _CurrentPlan extends StatelessWidget {
                           child: Text(
                             AppLocalizations.of(context)!.willRenewTo(
                               subscriptionInfo!.nextPlanAndPeriod!.$1.name,
-                              subscriptionInfo!.nextPlanAndPeriod!.$2
-                                  .label(context),
+                              subscriptionInfo!.nextPlanAndPeriod!.$2.label(
+                                context,
+                              ),
                             ),
                             style: textTheme.bodySmall?.copyWith(
                               color: colorScheme.primary.withOpacity(0.9),
@@ -194,7 +200,9 @@ class _CurrentPlan extends StatelessWidget {
                   ),
                 ),
               ],
-              if (isPaidPlan && subscriptionInfo != null) ...[
+              if (isPaidPlan &&
+                  subscriptionInfo != null &&
+                  subscriptionInfo.source != SubscriptionSource.others) ...[
                 const SizedBox(height: 20),
                 if (subscriptionInfo.source != SubscriptionSource.appStore)
                   Container(
@@ -203,29 +211,38 @@ class _CurrentPlan extends StatelessWidget {
                     child: subscriptionInfo.isCanceled == true
                         //TODO: Handle reactivation for play store
                         ? subscriptionInfo.source ==
-                                SubscriptionSource.playStore
-                            ? null
-                            : ElevatedButton(
-                                onPressed: () =>
-                                    value.reactivateSubscription(context),
-                                child: value.isReactivating
-                                    ? smallCircularProgressIndicator(
-                                        color: colorScheme.onPrimary)
-                                    : Text(AppLocalizations.of(context)!
-                                        .dontCancelSubscription),
-                              )
+                                  SubscriptionSource.playStore
+                              ? null
+                              : ElevatedButton(
+                                  onPressed: () =>
+                                      value.reactivateSubscription(context),
+                                  child: value.isReactivating
+                                      ? smallCircularProgressIndicator(
+                                          color: colorScheme.onPrimary,
+                                        )
+                                      : Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.dontCancelSubscription,
+                                        ),
+                                )
                         : OutlinedButton(
                             onPressed: () => value.cancel(context),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: colorScheme.error,
                               side: BorderSide(
-                                  color: colorScheme.error.withOpacity(0.5)),
+                                color: colorScheme.error.withOpacity(0.5),
+                              ),
                             ),
                             child: value.isReactivating
                                 ? smallCircularProgressIndicator(
-                                    color: colorScheme.primary)
-                                : Text(AppLocalizations.of(context)!
-                                    .cancelSubscription),
+                                    color: colorScheme.primary,
+                                  )
+                                : Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.cancelSubscription,
+                                  ),
                           ),
                   ),
                 SizedBox(
@@ -234,9 +251,11 @@ class _CurrentPlan extends StatelessWidget {
                     onPressed: () => value._onManageSubscription(context),
                     child: value.isManaging
                         ? smallCircularProgressIndicator(
-                            color: colorScheme.onPrimary)
+                            color: colorScheme.onPrimary,
+                          )
                         : Text(
-                            AppLocalizations.of(context)!.manageSubscription),
+                            AppLocalizations.of(context)!.manageSubscription,
+                          ),
                   ),
                 ),
                 // Padding(
@@ -261,19 +280,19 @@ class _CurrentPlan extends StatelessWidget {
                       },
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withOpacity(0.5)),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withOpacity(0.5),
+                        ),
                       ),
-                      icon: Icon(Icons.history_rounded,
-                          color: Theme.of(context).colorScheme.primary),
-                      label: Text(
-                        AppLocalizations.of(context)!.restoreIAP,
+                      icon: Icon(
+                        Icons.history_rounded,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
+                      label: Text(AppLocalizations.of(context)!.restoreIAP),
                     ),
                   ),
-                )
+                ),
             ],
           ),
         );
@@ -305,11 +324,7 @@ class _CurrentPlan extends StatelessWidget {
 
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 16,
-          color: colorScheme.onSurface.withOpacity(0.87),
-        ),
+        Icon(icon, size: 16, color: colorScheme.onSurface.withOpacity(0.87)),
         const SizedBox(width: 8),
         Text(
           "$label: ",
@@ -330,10 +345,7 @@ class _CurrentPlan extends StatelessWidget {
     );
   }
 
-  Widget _buildSourceRow(
-    BuildContext context,
-    SubscriptionSource source,
-  ) {
+  Widget _buildSourceRow(BuildContext context, SubscriptionSource source) {
     final colorScheme = Theme.of(context).colorScheme;
     final sourceName = source.name;
 

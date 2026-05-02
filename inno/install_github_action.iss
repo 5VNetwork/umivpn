@@ -59,7 +59,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 ; 🔹 Install the service during setup
 ;  ""{app}""
 Filename: "{app}\service_install.exe"; \
-    Parameters: "install"; \
+    Parameters: "install ""{app}\data\flutter_assets\packages\tm_windows\assets\umi_service.exe"""; \
     Flags: waituntilterminated runhidden
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 

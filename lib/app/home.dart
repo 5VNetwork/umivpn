@@ -376,7 +376,14 @@ class _HomeBody extends StatelessWidget {
                               ),
                             ),
                           ),
-                        const ModeSelector(),
+                        Row(
+                          children: [
+                            Expanded(child: const ModeSelector()),
+                            if (desktopPlatform) const SizedBox(width: 10),
+                            if (desktopPlatform)
+                              Expanded(child: InboundModeSelector()),
+                          ],
+                        ),
                         const SizedBox(height: 15),
                         if (authRepo.user!.plan == SubscriptionPlan.pro)
                           Padding(

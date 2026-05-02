@@ -775,7 +775,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get startFailedReasonTunNeedAdmin => 'Входящий трафик Tun доступен только при запуске от имени администратора. Перезапустите UmiVPN от имени администратора или измените режим входящего трафика.';
+  String get startFailedReasonServiceNotInstalled => 'Service is not installed. Please rerun UmiVPN as an administrator and start again, during which the service will be installed automatically, or change inbound mode.';
 
   @override
   String get startFailedReasonNoNode => 'Нет узла';
@@ -976,6 +976,30 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get failedToRemoveSystemProxy => 'Не удалось удалить системный прокси-сервер. Пожалуйста, удалите его вручную в разделе «Настройки» > «Системный прокси-сервер».';
+
+  @override
+  String get installingWindowsService => 'Установка службы…';
+
+  @override
+  String get windowsServiceInstalled => 'Служба установлена!';
+
+  @override
+  String get removeWindowsService => 'Удалить службу Windows';
+
+  @override
+  String get removeWindowsServiceConfirmTitle => 'Удалить службу Windows?';
+
+  @override
+  String get removeWindowsServiceConfirmMessage => 'Будет удалена фоновая служба UmiVPN. При ошибке запустите приложение от имени администратора. В режиме TUN служба может быть установлена снова при подключении.';
+
+  @override
+  String get removeWindowsServiceConfirm => 'Удалить';
+
+  @override
+  String get removeWindowsServiceRequiresAdmin => 'Удаление службы требует запуска UmiVPN от имени администратора.';
+
+  @override
+  String get windowsServiceRemoved => 'Служба Windows удалена.';
 
   @override
   String failedToChangeNode(String value) {
