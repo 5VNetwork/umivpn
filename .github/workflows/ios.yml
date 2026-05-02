@@ -10,7 +10,7 @@ on:
 
 jobs:
   release-ios:
-    runs-on: macos-latest
+    runs-on: macos-26
     environment: ios
     steps:
     - name: Checkout code
