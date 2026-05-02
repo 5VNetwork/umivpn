@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-mac-store:
-    runs-on: macos-latest
+    runs-on: macos-26
     environment: mac
     steps:
       - name: Checkout code
