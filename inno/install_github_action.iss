@@ -48,7 +48,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "D:\a\umivpn\umivpn\build\windows\x64\runner\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "D:\a\umivpn\umivpn\service_install.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\a\umivpn\umivpn\umi_service.exe"; DestDir: "{app}"; Flags: ignoreversion
+; Source: "D:\a\umivpn\umivpn\umi_service.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
