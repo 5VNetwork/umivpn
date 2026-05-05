@@ -1,4 +1,4 @@
-name: Build Android Release
+name: Build Android Store
 
 on:
   # push:
@@ -112,42 +112,41 @@ jobs:
         env:
           FASTLANE_PLAY_STORE: ${{ secrets.FASTLANE_PLAY_STORE }}
         run: cd android && fastlane deploy
+      # - name: make releases dir
+      #   run: mkdir -p releases
 
-      - name: make releases dir
-        run: mkdir -p releases
+      # - name: build apks
+      #   env:
+      #     LOG_KEY: ${{ secrets.LOG_KEY }}
+      #     URL: ${{ secrets.URL }}
+      #   run: |
+      #     flutter build apk  --flavor apk --dart-define=LOG_KEY=$LOG_KEY --dart-define=URL=$URL --release --obfuscate \
+      #       --split-debug-info=symbols/android --split-per-abi \
+      #       --extra-gen-snapshot-options=--save-obfuscation-map=build/app/obfuscation.map.json 
+      #     mv build/app/outputs/flutter-apk/app-arm64-v8a-apk-release.apk releases/umivpn-arm64-v8a.apk
+      #     zip -j releases/umivpn-arm64-v8a.apk.zip releases/umivpn-arm64-v8a.apk
+      #     flutter build apk  --flavor apk --dart-define=LOG_KEY=$LOG_KEY --dart-define=URL=$URL --release --obfuscate \
+      #       --split-debug-info=symbols/android \
+      #       --extra-gen-snapshot-options=--save-obfuscation-map=build/app/obfuscation.map.json 
+      #     mv build/app/outputs/flutter-apk/app-apk-release.apk releases/umivpn-universal.apk
+      #     zip -j releases/umivpn-universal.apk.zip releases/umivpn-universal.apk
+      #     rm releases/umivpn-universal.apk
 
-      - name: build apks
-        env:
-          LOG_KEY: ${{ secrets.LOG_KEY }}
-          URL: ${{ secrets.URL }}
-        run: |
-          flutter build apk  --flavor apk --dart-define=LOG_KEY=$LOG_KEY --dart-define=URL=$URL --release --obfuscate \
-            --split-debug-info=symbols/android --split-per-abi \
-            --extra-gen-snapshot-options=--save-obfuscation-map=build/app/obfuscation.map.json 
-          mv build/app/outputs/flutter-apk/app-arm64-v8a-apk-release.apk releases/umivpn-arm64-v8a.apk
-          zip -j releases/umivpn-arm64-v8a.apk.zip releases/umivpn-arm64-v8a.apk
-          flutter build apk  --flavor apk --dart-define=LOG_KEY=$LOG_KEY --dart-define=URL=$URL --release --obfuscate \
-            --split-debug-info=symbols/android \
-            --extra-gen-snapshot-options=--save-obfuscation-map=build/app/obfuscation.map.json 
-          mv build/app/outputs/flutter-apk/app-apk-release.apk releases/umivpn-universal.apk
-          zip -j releases/umivpn-universal.apk.zip releases/umivpn-universal.apk
-          rm releases/umivpn-universal.apk
-          
-      - name: sentry upload debug symbols
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: flutter pub run sentry_dart_plugin
+      # - name: sentry upload debug symbols
+      #   env:
+      #     SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      #   run: flutter pub run sentry_dart_plugin
 
-      - name: upload apks to github release
-        env:
-          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: |
-          gh release upload v${{ steps.get_version.outputs.version }} \
-            releases/umivpn-arm64-v8a.apk \
-            releases/umivpn-arm64-v8a.apk.zip \
-            releases/umivpn-universal.apk.zip \
-            --repo ${{ github.repository_owner }}/umivpn \
-            --clobber
+      # - name: upload apks to github release
+      #   env:
+      #     GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+      #   run: |
+      #     gh release upload v${{ steps.get_version.outputs.version }} \
+      #       releases/umivpn-arm64-v8a.apk \
+      #       releases/umivpn-arm64-v8a.apk.zip \
+      #       releases/umivpn-universal.apk.zip \
+      #       --repo ${{ github.repository_owner }}/umivpn \
+      #       --clobber
 
       # - name: Configure AWS CLI for R2
       #   env:
