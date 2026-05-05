@@ -209,7 +209,7 @@ jobs:
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           gh release upload ${{ steps.get_version.outputs.version }} \
-            releases/UmiVPN.dmg \
+            releases/UmiVPN.dmg releases/appcast.xml \
             --repo ${{ github.repository_owner }}/umivpn \
             --clobber
 

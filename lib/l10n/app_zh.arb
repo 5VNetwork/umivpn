@@ -922,5 +922,10 @@
   "noDataRemaining": "本月剩余数据已用完",
   "saved": "已保存",
   "routingRulesHint": "以下域名、IP 或应用会根据你的设置走直连/代理。",
-  "androidDirectAppDescription": "安卓上，精确类型的应用不会经过UmiVPN"
+  "androidDirectAppDescription": "安卓上，精确类型的应用不会经过UmiVPN",
+  "oneTimePurchase": "一次性购买",
+  "oneMonth": "一个月",
+  "oneQuarter": "一个季度",
+  "oneHalfYear": "半年",
+  "oneYear": "一年"
 }

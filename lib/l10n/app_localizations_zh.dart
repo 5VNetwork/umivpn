@@ -2151,4 +2151,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get androidDirectAppDescription => '安卓上，精确类型的应用不会经过UmiVPN';
+
+  @override
+  String get oneTimePurchase => '一次性购买';
+
+  @override
+  String get oneMonth => '一个月';
+
+  @override
+  String get oneQuarter => '一个季度';
+
+  @override
+  String get oneHalfYear => '半年';
+
+  @override
+  String get oneYear => '一年';
 }

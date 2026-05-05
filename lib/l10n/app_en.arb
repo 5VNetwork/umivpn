@@ -915,5 +915,10 @@
   },
   "noDataRemaining": "No monthly data remaining",
   "saved": "Saved",
-  "androidDirectAppDescription": "On Android, apps with Exact type will not be handled by UmiVPN, they will go directly to the internet"
+  "androidDirectAppDescription": "On Android, apps with Exact type will not be handled by UmiVPN, they will go directly to the internet",
+  "oneTimePurchase": "One Time Purchase",
+  "oneMonth": "One Month",
+  "oneQuarter": "One Quarter",
+  "oneHalfYear": "One Half Year",
+  "oneYear": "One Year"
 }
