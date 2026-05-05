@@ -4152,6 +4152,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'On Android, apps with Exact type will not be handled by UmiVPN, they will go directly to the internet'**
   String get androidDirectAppDescription;
+
+  /// No description provided for @oneTimePurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'One Time Purchase'**
+  String get oneTimePurchase;
+
+  /// No description provided for @oneMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'One Month'**
+  String get oneMonth;
+
+  /// No description provided for @oneQuarter.
+  ///
+  /// In en, this message translates to:
+  /// **'One Quarter'**
+  String get oneQuarter;
+
+  /// No description provided for @oneHalfYear.
+  ///
+  /// In en, this message translates to:
+  /// **'One Half Year'**
+  String get oneHalfYear;
+
+  /// No description provided for @oneYear.
+  ///
+  /// In en, this message translates to:
+  /// **'One Year'**
+  String get oneYear;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

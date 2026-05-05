@@ -6,73 +6,91 @@ class AllPlans extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!useStripe) {
-      return Consumer<ProPurchases>(builder: (context, proPurchases, child) {
-
-        if (proPurchases.purchaseDetails != null) {
-          if (proPurchases.purchaseDetails!.status == PurchaseStatus.pending ||
-              proPurchases.buying) {
-            return const Center(
-              child: SizedBox(
-                  width: 24, height: 24, child: CircularProgressIndicator()),
-            );
-          } else if (proPurchases.purchaseDetails!.status ==
-              PurchaseStatus.error) {
-            return Center(
-                child: Text(
-              AppLocalizations.of(context)!.purchaseFailed(
-                  proPurchases.purchaseDetails!.error?.message ?? ''),
-              maxLines: 10,
-            ));
-          } else if (proPurchases.verifyErrorMessage != null) {
-            if (proPurchases.verifyErrorMessage == 'Invalid Purchase') {
+      return Consumer<ProPurchases>(
+        builder: (context, proPurchases, child) {
+          if (proPurchases.purchaseDetails != null) {
+            if (proPurchases.purchaseDetails!.status ==
+                    PurchaseStatus.pending ||
+                proPurchases.buying) {
+              return const Center(
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else if (proPurchases.purchaseDetails!.status ==
+                PurchaseStatus.error) {
               return Center(
+                child: Text(
+                  AppLocalizations.of(context)!.purchaseFailed(
+                    proPurchases.purchaseDetails!.error?.message ?? '',
+                  ),
+                  maxLines: 10,
+                ),
+              );
+            } else if (proPurchases.verifyErrorMessage != null) {
+              if (proPurchases.verifyErrorMessage == 'Invalid Purchase') {
+                return Center(
                   child: Column(
+                    children: [
+                      Text(AppLocalizations.of(context)!.invalidPurchase),
+                      Gap(10),
+                      _ifYouHavePaid(context, proPurchases.purchaseDetails!),
+                    ],
+                  ),
+                );
+              }
+              return Column(
                 children: [
-                  Text(AppLocalizations.of(context)!.invalidPurchase),
+                  Icon(
+                    Icons.error,
+                    color: Theme.of(context).colorScheme.error,
+                    size: 24,
+                  ),
+                  const Gap(5),
+                  Text(
+                    AppLocalizations.of(context)!.purchaseVerificationFailed(
+                      proPurchases.verifyErrorMessage!,
+                    ),
+                    maxLines: 10,
+                  ),
+                  Gap(5),
+                  TextButton(
+                    onPressed: proPurchases.reverify,
+                    child: Text(AppLocalizations.of(context)!.retry),
+                  ),
                   Gap(10),
                   _ifYouHavePaid(context, proPurchases.purchaseDetails!),
                 ],
-              ));
+              );
             }
-            return Column(
-              children: [
-                Icon(Icons.error,
-                    color: Theme.of(context).colorScheme.error, size: 24),
-                const Gap(5),
-                Text(
-                  AppLocalizations.of(context)!.purchaseVerificationFailed(
-                      proPurchases.verifyErrorMessage!),
-                  maxLines: 10,
-                ),
-                Gap(5),
-                TextButton(
-                    onPressed: proPurchases.reverify,
-                    child: Text(AppLocalizations.of(context)!.retry)),
-                Gap(10),
-                _ifYouHavePaid(context, proPurchases.purchaseDetails!),
-              ],
-            );
-          }
-          return const AllPlansList();
-        } else {
-          if (proPurchases.storeState == StoreState.notAvailable) {
-            return Center(
+            return const AllPlansList();
+          } else {
+            if (proPurchases.storeState == StoreState.notAvailable) {
+              return Center(
                 child: Row(
-              children: [
-                const Icon(Icons.error),
-                const Gap(10),
-                Text(AppLocalizations.of(context)!.unableToConnectToStore),
-              ],
-            ));
-          } else if (proPurchases.storeState == StoreState.loading ||
-              proPurchases.buying) {
-            return Center(
+                  children: [
+                    const Icon(Icons.error),
+                    const Gap(10),
+                    Text(AppLocalizations.of(context)!.unableToConnectToStore),
+                  ],
+                ),
+              );
+            } else if (proPurchases.storeState == StoreState.loading ||
+                proPurchases.buying) {
+              return Center(
                 child: SizedBox(
-                    width: 24, height: 24, child: CircularProgressIndicator()));
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+            return const AllPlansList();
           }
-          return const AllPlansList();
-        }
-      });
+        },
+      );
     }
     return const AllPlansList();
   }
@@ -84,8 +102,9 @@ class AllPlans extends StatelessWidget {
         style: Theme.of(context).textTheme.bodySmall,
         children: [
           TextSpan(
-            text: AppLocalizations.of(context)!
-                .ifYouHavePaid(purchaseDetails.purchaseID ?? ''),
+            text: AppLocalizations.of(
+              context,
+            )!.ifYouHavePaid(purchaseDetails.purchaseID ?? ''),
           ),
           WidgetSpan(
             child: IconButton(
@@ -100,8 +119,9 @@ class AllPlans extends StatelessWidget {
                 Pasteboard.writeText(purchaseDetails.purchaseID ?? '');
                 rootScaffoldMessengerKey.currentState?.showSnackBar(
                   SnackBar(
-                    content:
-                        Text(AppLocalizations.of(context)!.copiedToClipboard),
+                    content: Text(
+                      AppLocalizations.of(context)!.copiedToClipboard,
+                    ),
                     duration: const Duration(seconds: 2),
                   ),
                 );
@@ -128,9 +148,7 @@ class AllPlansList extends StatelessWidget {
 
         if (value.loadingPlans || value.loadingSubscriptionInfo) {
           return Center(
-            child: CircularProgressIndicator(
-              color: colorScheme.primary,
-            ),
+            child: CircularProgressIndicator(color: colorScheme.primary),
           );
         }
 
@@ -142,11 +160,7 @@ class AllPlansList extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 48,
-                    color: colorScheme.error,
-                  ),
+                  Icon(Icons.error_outline, size: 48, color: colorScheme.error),
                   const SizedBox(height: 10),
                   Text(
                     l10n.failedToLoadPlans,
@@ -195,19 +209,19 @@ class AllPlansList extends StatelessWidget {
             ...SubscriptionPlan.values.reversed
                 .where((plan) => plansMap!.containsKey(plan))
                 .map((plan) {
-              final planData = plansMap![plan]!;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: _buildPlanCard(
-                  context,
-                  plan,
-                  planData,
-                  userProfile.plan,
-                  userProfile,
-                  value.subscriptionInfo,
-                ),
-              );
-            }),
+                  final planData = plansMap![plan]!;
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: _buildPlanCard(
+                      context,
+                      plan,
+                      planData,
+                      userProfile.plan,
+                      userProfile,
+                      value.subscriptionInfo,
+                    ),
+                  );
+                }),
           ],
         );
       },
@@ -264,10 +278,7 @@ class AllPlansList extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.surfaceOverlay,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: colorScheme.surfaceOverlayLighter,
-          width: 1,
-        ),
+        border: Border.all(color: colorScheme.surfaceOverlayLighter, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -288,7 +299,9 @@ class AllPlansList extends StatelessWidget {
                   if (plan == currentPlan)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
                       decoration: BoxDecoration(
                         color: colorScheme.primary,
                         borderRadius: BorderRadius.circular(12),
@@ -319,8 +332,9 @@ class AllPlansList extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      AppLocalizations.of(context)!
-                          .threeDayFreeTrialFirstTimeCustomers,
+                      AppLocalizations.of(
+                        context,
+                      )!.threeDayFreeTrialFirstTimeCustomers,
                       style: textTheme.bodySmall?.copyWith(
                         color: colorScheme.primary,
                         fontWeight: FontWeight.w500,
@@ -331,51 +345,55 @@ class AllPlansList extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 15),
-          ...planData.features.map((feature) => Padding(
+          ...planData.features.map(
+            (feature) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.check_circle_rounded,
+                    size: 16,
+                    color: colorScheme.primary.withOpacity(0.8),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      feature,
+                      style: TextStyle(
+                        color: colorScheme.onSurface.withOpacity(0.87),
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (planData.unsupportedFeatures.isNotEmpty) ...[
+            ...planData.unsupportedFeatures.map(
+              (feature) => Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Row(
                   children: [
                     Icon(
-                      Icons.check_circle_rounded,
+                      Icons.cancel_rounded,
                       size: 16,
-                      color: colorScheme.primary.withOpacity(0.8),
+                      color: colorScheme.onSurface.withOpacity(0.38),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         feature,
                         style: TextStyle(
-                          color: colorScheme.onSurface.withOpacity(0.87),
+                          color: colorScheme.onSurface.withOpacity(0.38),
                           fontSize: 13,
                         ),
                       ),
                     ),
                   ],
                 ),
-              )),
-          if (planData.unsupportedFeatures.isNotEmpty) ...[
-            ...planData.unsupportedFeatures.map((feature) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.cancel_rounded,
-                        size: 16,
-                        color: colorScheme.onSurface.withOpacity(0.38),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          feature,
-                          style: TextStyle(
-                            color: colorScheme.onSurface.withOpacity(0.38),
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
+              ),
+            ),
           ],
           if (plan != SubscriptionPlan.free &&
               (userHasNoSub || (canChangePeriod && consistentSub))) ...[
@@ -384,11 +402,32 @@ class AllPlansList extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () => _handleSubscribe(
-                    context, plan, planData, userProfile, subscriptionInfo),
-                child:
-                    Text(_getButtonText(context, plan, currentPlan, planData)),
+                  context,
+                  plan,
+                  planData,
+                  userProfile,
+                  subscriptionInfo,
+                ),
+                child: Text(
+                  _getButtonText(context, plan, currentPlan, planData),
+                ),
               ),
             ),
+            if (userHasNoSub && useStripe)
+              Container(
+                padding: const EdgeInsets.only(top: 10),
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => _handleOneTimePurchase(
+                    context,
+                    plan,
+                    planData,
+                    userProfile,
+                    subscriptionInfo,
+                  ),
+                  child: Text(AppLocalizations.of(context)!.oneTimePurchase),
+                ),
+              ),
           ],
         ],
       ),
@@ -418,7 +457,7 @@ class AllPlansList extends StatelessWidget {
     // TODO: handle subsciption change
     final hasSubscriptionFromOtherSouce =
         userProfile.plan != SubscriptionPlan.free &&
-            subscriptionInfo?.source != source;
+        subscriptionInfo?.source != source;
     if (hasSubscriptionFromOtherSouce) {
       if (subscriptionInfo?.isCanceled == true) {
         // let a user know the existing subscription will be lost if they subscribe to this plan
@@ -433,17 +472,12 @@ class AllPlansList extends StatelessWidget {
             ),
             content: Text(
               AppLocalizations.of(context)!.warningExistingSubscriptionMessage,
-              style: TextStyle(
-                color: colorScheme.onSurface.withOpacity(0.87),
-              ),
+              style: TextStyle(color: colorScheme.onSurface.withOpacity(0.87)),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text(
-                  "OK",
-                  style: TextStyle(color: colorScheme.primary),
-                ),
+                child: Text("OK", style: TextStyle(color: colorScheme.primary)),
               ),
             ],
           ),
@@ -461,17 +495,12 @@ class AllPlansList extends StatelessWidget {
             ),
             content: Text(
               AppLocalizations.of(context)!.activeSubscriptionFoundMessage,
-              style: TextStyle(
-                color: colorScheme.onSurface.withOpacity(0.87),
-              ),
+              style: TextStyle(color: colorScheme.onSurface.withOpacity(0.87)),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text(
-                  "OK",
-                  style: TextStyle(color: colorScheme.primary),
-                ),
+                child: Text("OK", style: TextStyle(color: colorScheme.primary)),
               ),
             ],
           ),
@@ -484,12 +513,91 @@ class AllPlansList extends StatelessWidget {
     await _proceedWithCheckout(context, planData);
   }
 
+  Future<void> _handleOneTimePurchase(
+    BuildContext context,
+    SubscriptionPlan plan,
+    PlanMetadata planData,
+    User userProfile,
+    SubscriptionInfo? subscriptionInfo,
+  ) async {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    // Show dialog that user must cancel existing subscription from other source first
+    showDialog<PriceOption>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          AppLocalizations.of(context)!.oneTimePurchase,
+          style: textTheme.titleLarge?.copyWith(color: colorScheme.onSurface),
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: planData.priceOptions.map((priceOption) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: InkWell(
+                  onTap: () {
+                    launchUrl(Uri.parse(priceOption.stripePaymentLink));
+                  },
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceOverlay,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: colorScheme.borderLight,
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            priceOption.period.label1(context),
+                            style: textTheme.titleMedium?.copyWith(
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: colorScheme.onSurface.withOpacity(0.5),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              AppLocalizations.of(context)!.cancel,
+              style: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _proceedWithCheckout(
     BuildContext context,
     PlanMetadata planData,
   ) async {
-    final subscriptionInfo =
-        context.read<ManagePlanViewModel>().subscriptionInfo;
+    final subscriptionInfo = context
+        .read<ManagePlanViewModel>()
+        .subscriptionInfo;
     PriceOption? selectedPriceOption;
     // If there's only one price option, use it directly
     if (planData.priceOptions.length == 1) {
@@ -507,9 +615,11 @@ class AllPlansList extends StatelessWidget {
       }
     }
     if (context.mounted) {
-      await context
-          .read<ManagePlanViewModel>()
-          .buy(context, selectedPriceOption, planData.subscriptionPlan);
+      await context.read<ManagePlanViewModel>().buy(
+        context,
+        selectedPriceOption,
+        planData.subscriptionPlan,
+      );
     }
   }
 
@@ -529,16 +639,15 @@ class AllPlansList extends StatelessWidget {
       builder: (context) => AlertDialog(
         title: Text(
           AppLocalizations.of(context)!.selectBillingPeriod,
-          style: textTheme.titleLarge?.copyWith(
-            color: colorScheme.onSurface,
-          ),
+          style: textTheme.titleLarge?.copyWith(color: colorScheme.onSurface),
         ),
         content: SizedBox(
           width: double.maxFinite,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: planData.priceOptions.map((priceOption) {
-              final isCurrentPlan = subscriptionInfo?.planAndPeriod.$1 ==
+              final isCurrentPlan =
+                  subscriptionInfo?.planAndPeriod.$1 ==
                       planData.subscriptionPlan &&
                   currentPeriod == priceOption.period;
               bool canSelectCurrent = !isCurrentPlan;
@@ -686,7 +795,8 @@ class PlanService {
 
   /// Fetches plans from Cloudflare R2 URL
   static Future<Map<SubscriptionPlan, PlanMetadata>> fetchPlans(
-      String url) async {
+    String url,
+  ) async {
     // Return cached plans if available
     if (_cachedPlans != null) {
       return _cachedPlans!;
@@ -714,7 +824,8 @@ class PlanService {
 
   /// Parses JSON data into PlanMetadata map
   static Map<SubscriptionPlan, PlanMetadata> _parsePlansFromJson(
-      Map<String, dynamic> data) {
+    Map<String, dynamic> data,
+  ) {
     final plans = <SubscriptionPlan, PlanMetadata>{};
 
     for (final entry in data.entries) {
@@ -736,8 +847,9 @@ class PlanService {
 
       if (plan == null) continue;
 
-      final priceOptions =
-          (planData['priceOptions'] as List<dynamic>).map((po) {
+      final priceOptions = (planData['priceOptions'] as List<dynamic>).map((
+        po,
+      ) {
         final periodStr = po['period'] as String;
         Period period;
         switch (periodStr) {
@@ -763,6 +875,7 @@ class PlanService {
           priceId: po['priceId'] as String,
           subscriptionIndex: po['subscriptionIndex'] as int,
           appleProductId: po['appleProductId'] as String,
+          stripePaymentLink: po['stripePaymentLink'] as String? ?? '',
         );
       }).toList();
 
@@ -773,7 +886,8 @@ class PlanService {
         features: (planData['features'] as List<dynamic>)
             .map((f) => f as String)
             .toList(),
-        unsupportedFeatures: (planData['unsupportedFeatures'] as List<dynamic>?)
+        unsupportedFeatures:
+            (planData['unsupportedFeatures'] as List<dynamic>?)
                 ?.map((f) => f as String)
                 .toList() ??
             [],

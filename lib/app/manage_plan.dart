@@ -206,6 +206,7 @@ Map<SubscriptionPlan, PlanMetadata> _convertToIAPPlans(
                 iapProduct: product,
                 subscriptionIndex: priceOption.subscriptionIndex,
                 appleProductId: priceOption.appleProductId,
+                stripePaymentLink: "",
               );
             }).toList(),
       get: planData.get,
@@ -258,6 +259,13 @@ enum Period {
     Period.halfYear => AppLocalizations.of(context)!.perHalfYear,
     Period.year => AppLocalizations.of(context)!.perYear,
   };
+
+  String label1(BuildContext context) => switch (this) {
+    Period.month => AppLocalizations.of(context)!.oneMonth,
+    Period.quarter => AppLocalizations.of(context)!.oneQuarter,
+    Period.halfYear => AppLocalizations.of(context)!.oneHalfYear,
+    Period.year => AppLocalizations.of(context)!.oneYear,
+  };
 }
 
 class PriceOption {
@@ -266,6 +274,7 @@ class PriceOption {
   final String priceId; // Stripe price ID for checkout session
   final int subscriptionIndex; // android subscription index for IAP.
   final String appleProductId;
+  final String stripePaymentLink;
   PurchasableProduct? iapProduct;
 
   PriceOption({
@@ -275,5 +284,6 @@ class PriceOption {
     required this.subscriptionIndex,
     this.iapProduct,
     required this.appleProductId,
+    required this.stripePaymentLink,
   });
 }

@@ -2201,4 +2201,19 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get androidDirectAppDescription => 'On Android, apps with Exact type will not be handled by UmiVPN, they will go directly to the internet';
+
+  @override
+  String get oneTimePurchase => 'One Time Purchase';
+
+  @override
+  String get oneMonth => 'One Month';
+
+  @override
+  String get oneQuarter => 'One Quarter';
+
+  @override
+  String get oneHalfYear => 'One Half Year';
+
+  @override
+  String get oneYear => 'One Year';
 }
