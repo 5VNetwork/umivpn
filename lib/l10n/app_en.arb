@@ -275,6 +275,7 @@
     }
   },
   "unableToConnectToStore": "Unable to connect to store",
+  "testflightPurchaseNotSupported": "TestFlight version does not support purchase.",
   "loginBeforePurchase": "Please login before purchasing. New users can try Pro for 7 days",
   "loginBeforeRestore": "Please login before restoring purchase.",
   "alternativePurchase": "If purchase fails, please try other platforms or official website.",

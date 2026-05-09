@@ -743,6 +743,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get unableToConnectToStore => 'Невозможно подключиться к магазину';
 
   @override
+  String get testflightPurchaseNotSupported =>
+      'Версия из TestFlight не поддерживает покупки.';
+
+  @override
   String get loginBeforePurchase => 'Пожалуйста, войдите в систему перед покупкой. Новые пользователи могут попробовать Pro-версию в течение 7 дней.';
 
   @override

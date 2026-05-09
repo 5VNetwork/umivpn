@@ -278,6 +278,7 @@
     }
   },
   "unableToConnectToStore": "无法与商店连接",
+  "testflightPurchaseNotSupported": "TestFlight 版本不支持购买。",
   "loginBeforePurchase": "购买前请先登录",
   "loginBeforeRestore": "恢复购买购买前请先登录",
   "alternativePurchase": "如购买失败，请通过其他平台或者官网购买。",
