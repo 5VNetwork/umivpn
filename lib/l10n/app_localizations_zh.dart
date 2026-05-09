@@ -729,6 +729,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unableToConnectToStore => '无法与商店连接';
 
   @override
+  String get testflightPurchaseNotSupported => 'TestFlight 版本不支持购买。';
+
+  @override
   String get loginBeforePurchase => '购买前请先登录';
 
   @override

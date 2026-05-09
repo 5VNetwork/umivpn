@@ -6,7 +6,7 @@ class AllPlans extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!useStripe) {
-      return Consumer<ProPurchases>(
+      final child = Consumer<ProPurchases>(
         builder: (context, proPurchases, child) {
           if (proPurchases.purchaseDetails != null) {
             if (proPurchases.purchaseDetails!.status ==
@@ -91,6 +91,31 @@ class AllPlans extends StatelessWidget {
           }
         },
       );
+      if (Platform.isIOS) {
+        return FutureBuilder(
+          future: installationSource,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.data == Source.IS_INSTALLED_FROM_TEST_FLIGHT) {
+                return Center(
+                  child: Text(
+                    AppLocalizations.of(context)!.testflightPurchaseNotSupported,
+                  ),
+                );
+              }
+              return child;
+            }
+            return const Center(
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(),
+              ),
+            );
+          },
+        );
+      }
+      return child;
     }
     return const AllPlansList();
   }

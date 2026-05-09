@@ -1489,6 +1489,12 @@ abstract class AppLocalizations {
   /// **'Unable to connect to store'**
   String get unableToConnectToStore;
 
+  /// No description provided for @testflightPurchaseNotSupported.
+  ///
+  /// In en, this message translates to:
+  /// **'TestFlight version does not support purchase.'**
+  String get testflightPurchaseNotSupported;
+
   /// No description provided for @loginBeforePurchase.
   ///
   /// In en, this message translates to:

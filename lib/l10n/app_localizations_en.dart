@@ -743,6 +743,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unableToConnectToStore => 'Unable to connect to store';
 
   @override
+  String get testflightPurchaseNotSupported =>
+      'TestFlight version does not support purchase.';
+
+  @override
   String get loginBeforePurchase => 'Please login before purchasing. New users can try Pro for 7 days';
 
   @override
