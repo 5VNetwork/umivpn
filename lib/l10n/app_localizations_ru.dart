@@ -111,6 +111,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get connected => 'Подключен';
 
   @override
+  String get changingCountry => 'Смена страны';
+
+  @override
   String get disconnecting => 'Отключение';
 
   @override
@@ -743,8 +746,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get unableToConnectToStore => 'Невозможно подключиться к магазину';
 
   @override
-  String get testflightPurchaseNotSupported =>
-      'Версия из TestFlight не поддерживает покупки.';
+  String get testflightPurchaseNotSupported => 'Версия из TestFlight не поддерживает покупки.';
 
   @override
   String get loginBeforePurchase => 'Пожалуйста, войдите в систему перед покупкой. Новые пользователи могут попробовать Pro-версию в течение 7 дней.';
@@ -1991,6 +1993,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get currentLocation => 'Location';
 
   @override
+  String get selectLocation => 'Выберите локацию';
+
+  @override
   String get expired => 'Expired';
 
   @override
@@ -2115,7 +2120,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noServers => 'No Servers';
 
   @override
-  String get noServersMessage => 'Sorry, no server matching your choice is available now. Please try again later.';
+  String get noServersMessage => 'Sorry, no server matching your choice is available now. Please change location or try again later.';
 
   @override
   String get selectRouteMode => 'Select Route Mode';

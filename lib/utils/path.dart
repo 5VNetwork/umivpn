@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:umivpn/main.dart';
+import 'package:umivpn/utils/logger.dart';
 
 final macPkg = Platform.isMacOS && appFlavor == 'pkg';
 
@@ -80,8 +81,9 @@ Future<String> getGeositePath() async {
 
 Future<String> getSimplifiedGeositePath() async {
   String path;
-  final geositeFile =
-      File(join((await resourceDir()).path, 'geosite_simplified.dat'));
+  final geositeFile = File(
+    join((await resourceDir()).path, 'geosite_simplified.dat'),
+  );
   path = geositeFile.path;
   return path;
 }
@@ -95,8 +97,9 @@ Future<String> getGeoIPPath() async {
 
 Future<String> getSimplifiedGeoIPPath() async {
   String path;
-  final geoIPFile =
-      File(join((resourceDirectory).path, 'geoip_simplified.dat'));
+  final geoIPFile = File(
+    join((resourceDirectory).path, 'geoip_simplified.dat'),
+  );
   path = geoIPFile.path;
   return path;
 }
@@ -116,9 +119,17 @@ Future<String> configFilePath() async {
 String getDllPath() {
   // if (kReleaseMode) {
   final String localLibPath = join(
-      'data', 'flutter_assets', 'packages', 'tm_windows', 'assets', 'x.dll');
-  String pathToLib =
-      join(Directory(Platform.resolvedExecutable).parent.path, localLibPath);
+    'data',
+    'flutter_assets',
+    'packages',
+    'tm_windows',
+    'assets',
+    'x.dll',
+  );
+  String pathToLib = join(
+    Directory(Platform.resolvedExecutable).parent.path,
+    localLibPath,
+  );
   return pathToLib;
   // } else {
   // return join(Directory.current.parent.path, 'umivpn-plugin', 'tm_windows',
@@ -127,10 +138,18 @@ String getDllPath() {
 }
 
 String getSoPath() {
-  final String localLibPath =
-      join('data', 'flutter_assets', 'packages', 'tm_linux', 'assets', 'x.so');
-  String pathToLib =
-      join(Directory(Platform.resolvedExecutable).parent.path, localLibPath);
+  final String localLibPath = join(
+    'data',
+    'flutter_assets',
+    'packages',
+    'tm_linux',
+    'assets',
+    'x.so',
+  );
+  String pathToLib = join(
+    Directory(Platform.resolvedExecutable).parent.path,
+    localLibPath,
+  );
   return pathToLib;
 }
 
@@ -152,4 +171,42 @@ Future<String> getClashRulesPath(String url, {bool isPkg = false}) async {
   // hash the url
   final hash = sha256.convert(utf8.encode(url)).toString();
   return join(dir.path, hash);
+}
+
+String getServiceInstallExePath() {
+  final String localExePath = join(
+    'data',
+    'flutter_assets',
+    'packages',
+    'tm_windows',
+    'assets',
+    'service_install.exe',
+  );
+  String pathToExe = join(
+    Directory(Platform.resolvedExecutable).parent.path,
+    localExePath,
+  );
+  logger.d('pathToExe: $pathToExe');
+  return pathToExe;
+}
+
+String getServiceExePath() {
+  final String localExePath = join(
+    'data',
+    'flutter_assets',
+    'packages',
+    'tm_windows',
+    'assets',
+    'umi_service.exe',
+  );
+  String pathToExe = join(
+    Directory(Platform.resolvedExecutable).parent.path,
+    localExePath,
+  );
+  logger.d('pathToExe: $pathToExe');
+  return pathToExe;
+}
+
+String getServicePath() {
+  return join((resourceDirectory).path, 'umi_service.exe');
 }

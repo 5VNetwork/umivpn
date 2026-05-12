@@ -42,37 +42,3 @@ Future<void> makeWinTunAvailable() async {
     logger.d('Wintun DLL downloaded and extracted to $dllPath');
   }
 }
-
-String getServiceInstallExePath() {
-  final String localExePath = join(
-    'data',
-    'flutter_assets',
-    'packages',
-    'tm_windows',
-    'assets',
-    'service_install.exe',
-  );
-  String pathToExe = join(
-    Directory(Platform.resolvedExecutable).parent.path,
-    localExePath,
-  );
-  logger.d('pathToExe: $pathToExe');
-  return pathToExe;
-}
-
-String getServiceExePath() {
-  final String localExePath = join(
-    'data',
-    'flutter_assets',
-    'packages',
-    'tm_windows',
-    'assets',
-    'umi_service.exe',
-  );
-  String pathToExe = join(
-    Directory(Platform.resolvedExecutable).parent.path,
-    localExePath,
-  );
-  logger.d('pathToExe: $pathToExe');
-  return pathToExe;
-}

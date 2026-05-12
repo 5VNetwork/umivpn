@@ -301,6 +301,12 @@ abstract class AppLocalizations {
   /// **'Connected'**
   String get connected;
 
+  /// No description provided for @changingCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing country'**
+  String get changingCountry;
+
   /// No description provided for @disconnecting.
   ///
   /// In en, this message translates to:
@@ -3751,6 +3757,12 @@ abstract class AppLocalizations {
   /// **'Location'**
   String get currentLocation;
 
+  /// No description provided for @selectLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Select location'**
+  String get selectLocation;
+
   /// No description provided for @expired.
   ///
   /// In en, this message translates to:
@@ -3982,7 +3994,7 @@ abstract class AppLocalizations {
   /// No description provided for @noServersMessage.
   ///
   /// In en, this message translates to:
-  /// **'Sorry, no server matching your choice is available now. Please try again later.'**
+  /// **'Sorry, no server matching your choice is available now. Please change location or try again later.'**
   String get noServersMessage;
 
   /// No description provided for @selectRouteMode.

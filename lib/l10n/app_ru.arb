@@ -32,6 +32,7 @@
   "home": "Дом",
   "connecting": "Подключение",
   "connected": "Подключен",
+  "changingCountry": "Смена страны",
   "disconnecting": "Отключение",
   "disconnected": "Отключен",
   "subscription": "Подписка",
@@ -812,5 +813,6 @@
   "subscriptionCancelDialogBody": "После отмены вы продолжите иметь доступ до конца текущего периода оплаты.",
   "subscriptionCancelDialogStripeReactivationInfo": "Вы можете повторно активировать подписку в любое время.",
   "failedToReactivateSubscription": "Не удалось повторно активировать подписку",
-  "failedToCancelSubscription": "Не удалось отменить подписку"
+  "failedToCancelSubscription": "Не удалось отменить подписку",
+  "selectLocation": "Выберите локацию"
 }

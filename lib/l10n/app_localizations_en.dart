@@ -111,6 +111,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get connected => 'Connected';
 
   @override
+  String get changingCountry => 'Changing country';
+
+  @override
   String get disconnecting => 'Disconnecting';
 
   @override
@@ -743,8 +746,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unableToConnectToStore => 'Unable to connect to store';
 
   @override
-  String get testflightPurchaseNotSupported =>
-      'TestFlight version does not support purchase.';
+  String get testflightPurchaseNotSupported => 'TestFlight version does not support purchase.';
 
   @override
   String get loginBeforePurchase => 'Please login before purchasing. New users can try Pro for 7 days';
@@ -1991,6 +1993,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get currentLocation => 'Location';
 
   @override
+  String get selectLocation => 'Select location';
+
+  @override
   String get expired => 'Expired';
 
   @override
@@ -2115,7 +2120,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noServers => 'No Servers';
 
   @override
-  String get noServersMessage => 'Sorry, no server matching your choice is available now. Please try again later.';
+  String get noServersMessage => 'Sorry, no server matching your choice is available now. Please change location or try again later.';
 
   @override
   String get selectRouteMode => 'Select Route Mode';
