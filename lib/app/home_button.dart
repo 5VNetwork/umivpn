@@ -183,13 +183,9 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
         _updateAnimations(status.status);
       },
       child: BlocBuilder<StatusCubit, UmiStatus>(
-        buildWhen: (previous, current) => previous.status != current.status,
         builder: (context, status) {
           // Show connected appearance when preparing, connecting, or connected
-          final isConnected =
-              status.status == XStatus.preparing ||
-              status.status == XStatus.connecting ||
-              status.status == XStatus.connected;
+          final isConnected = status.status == XStatus.connected;
           final isConnecting =
               status.status == XStatus.preparing ||
               status.status == XStatus.connecting;
@@ -197,7 +193,7 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
               status.status == XStatus.preparing ||
               status.status == XStatus.connecting ||
               status.status == XStatus.disconnecting;
-
+          final isChangingCountry = status.changingCountry;
           return Column(
             children: [
               AnimatedBuilder(
@@ -218,23 +214,42 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              if (isConnected && status.realtimeCountry != null)
-                                getCountryIcon(status.realtimeCountry!,
-                                    height: 22, width: 22),
-                              const SizedBox(width: 6),
-                              Text(
-                                isConnecting
-                                    ? AppLocalizations.of(context)!.connecting
-                                    : AppLocalizations.of(context)!
-                                        .securelyConnected,
-                                style: TextStyle(
-                                  color: colorScheme.primary,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 1.5,
-                                ),
-                              ),
-                            ],
+                            children: isChangingCountry
+                                ? [
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .changingCountry,
+                                      style: TextStyle(
+                                        color: colorScheme.primary,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 1.5,
+                                      ),
+                                    ),
+                                  ]
+                                : [
+                                    if (isConnected &&
+                                        status.realtimeCountry != null)
+                                      getCountryIcon(
+                                        status.realtimeCountry!,
+                                        height: 22,
+                                        width: 22,
+                                      ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      isConnecting
+                                          ? AppLocalizations.of(
+                                              context,
+                                            )!.connecting
+                                          : AppLocalizations.of(
+                                              context,
+                                            )!.securelyConnected,
+                                      style: TextStyle(
+                                        color: colorScheme.primary,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 1.5,
+                                      ),
+                                    ),
+                                  ],
                           ),
                           const SizedBox(height: 10),
                           const _Timer(),

@@ -111,6 +111,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get connected => '已连接';
 
   @override
+  String get changingCountry => '正在切换国家';
+
+  @override
   String get disconnecting => '正在断开连接';
 
   @override
@@ -1940,6 +1943,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get currentLocation => '位置';
 
   @override
+  String get selectLocation => '选择地区';
+
+  @override
   String get expired => '已过期';
 
   @override
@@ -2064,7 +2070,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noServers => '没有服务器';
 
   @override
-  String get noServersMessage => '抱歉，没有匹配到合适的服务器。请稍后再试。';
+  String get noServersMessage => '抱歉，没有匹配到满足您要求的服务器。请更换位置为自动或稍后再试。';
 
   @override
   String get selectRouteMode => '选择路由模式';

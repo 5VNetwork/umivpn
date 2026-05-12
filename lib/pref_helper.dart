@@ -264,6 +264,21 @@ extension PrefHelperExtension on SharedPreferences {
     setBool('enableAppOpenAds', enable);
   }
 
+  String? get installedWindowsServiceVersion {
+    return getString('installedWindowsServiceVersion');
+  }
+
+  void setInstalledWindowsServiceVersion(String version) {
+    setString('installedWindowsServiceVersion', version);
+  }
+
+  bool get needReInstallWindowsService {
+    return getBool('needReInstallWindowsService') ?? false;
+  }
+
+  void setNeedReInstallWindowsService(bool need) {
+    setBool('needReInstallWindowsService', need);
+  }
 }
 
 enum InboundMode {

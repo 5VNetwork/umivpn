@@ -385,11 +385,10 @@ class _HomeBody extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 15),
-                        if (authRepo.user!.plan == SubscriptionPlan.pro)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: const CountrySelector(),
-                          ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: const CountrySelector(),
+                        ),
                       ],
                     );
                   },

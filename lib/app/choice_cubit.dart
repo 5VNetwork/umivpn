@@ -92,9 +92,12 @@ class ChoiceCubit extends Cubit<Choice> {
   Completer<void>? _completer;
 
   Future<void> changeCountry(String country) async {
+    if (country == state.country) {
+      return;
+    }
     _pref.setSelectedCountry(country);
     emit(state.copyWith(country: country));
-    // await _xController.countryChange(country);
+    await _xController.countryChange(country);
   }
 
   Future<void> changeRouteMode(DefaultRouteMode routeMode) async {
@@ -169,7 +172,7 @@ class NodesSecureStorage {
 }
 
 String _getCountry(SharedPreferences pref) {
-  return pref.getString('country') ?? '';
+  return pref.selectedCountry;
 }
 
 Future<NodesSecureStorage?> _getNodesSecureStorage(
