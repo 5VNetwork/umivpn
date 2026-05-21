@@ -164,7 +164,7 @@ class _VpnHomePageState extends State<VpnHomePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Platform.isMacOS ? null : settingButton,
-        leadingWidth: desktopPlatform ? 148 : 160,
+        leadingWidth: desktopPlatform ? 148 : 168,
         title: desktopPlatform
             ? ConstrainedBox(
                 constraints: BoxConstraints(maxHeight: 24),

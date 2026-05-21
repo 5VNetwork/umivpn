@@ -98,6 +98,16 @@ class SupportChatRepository {
     return conversationId;
   }
 
+  /// Device cache only (no network). Used for instant chat UI on open.
+  Future<List<SupportMessage>> loadCachedMessages() async {
+    final userId = currentUserId;
+    if (userId == null) {
+      throw StateError('Not signed in');
+    }
+    await _localStore.ensureWelcomeMessage(userId);
+    return _localStore.loadMessages(userId);
+  }
+
   Future<List<SupportMessage>> loadMessages(String conversationId) async {
     final userId = currentUserId;
 
