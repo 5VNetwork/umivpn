@@ -82,7 +82,9 @@ jobs:
           pods-${{ runner.os }}-
 
     - name: Get dependencies
-      run: flutter pub get
+      run: |
+        flutter config --no-enable-swift-package-manager
+        flutter pub get
     
     - name: Install FlutterFire
       run: dart pub global activate flutterfire_cli
