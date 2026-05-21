@@ -37,19 +37,16 @@ Future<void> _initFcm() async {
       try {
         await flutterLocalNotificationsPlugin
             .resolvePlatformSpecificImplementation<
-                AndroidFlutterLocalNotificationsPlugin>()
+              AndroidFlutterLocalNotificationsPlugin
+            >()
             ?.createNotificationChannel(androidChannel);
       } catch (e) {
         logger.e('createNotificationChannel', error: e);
       }
       // Android 13+ requires POST_NOTIFICATIONS runtime permission.
       try {
-        final notificationSettings =
-            await FirebaseMessaging.instance.requestPermission(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
+        final notificationSettings = await FirebaseMessaging.instance
+            .requestPermission(alert: true, badge: true, sound: true);
         logger.d(
           'Android FCM permission: ${notificationSettings.authorizationStatus}',
         );
@@ -70,29 +67,34 @@ Future<void> _initFcm() async {
       try {
         await FirebaseMessaging.instance
             .setForegroundNotificationPresentationOptions(
-          alert: false,
-          badge: false,
-          sound: false,
-        );
+              alert: false,
+              badge: false,
+              sound: false,
+            );
       } catch (e) {
         logger.e('setForegroundNotificationPresentationOptions', error: e);
       }
     }
     if (!isProduction()) {
-      FirebaseMessaging.instance.getToken().then((token) {
-        logger.d('FCM token: $token');
-      }).catchError((err) {
-        logger.e('Error getting FCM token', error: err);
-      });
-      FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) {
-        // TODO: If necessary send token to application server.
-        logger.d('FCM token: $fcmToken');
-        // Note: This callback is fired at each app startup and whenever a new
-        // token is generated.
-      }).onError((err) {
-        // Error getting token.
-        logger.e('Error getting FCM token', error: err);
-      });
+      FirebaseMessaging.instance
+          .getToken()
+          .then((token) {
+            logger.d('FCM token: $token');
+          })
+          .catchError((err) {
+            logger.e('Error getting FCM token', error: err);
+          });
+      FirebaseMessaging.instance.onTokenRefresh
+          .listen((fcmToken) {
+            // TODO: If necessary send token to application server.
+            logger.d('FCM token: $fcmToken');
+            // Note: This callback is fired at each app startup and whenever a new
+            // token is generated.
+          })
+          .onError((err) {
+            // Error getting token.
+            logger.e('Error getting FCM token', error: err);
+          });
       if (Platform.isIOS || Platform.isMacOS) {
         // For apple platforms, ensure the APNS token is available before making any FCM plugin API calls
         final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
@@ -125,12 +127,14 @@ Future<void> _ensureFcmLocalNotificationsInitialized() async {
   if (Platform.isIOS) {
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()
+          IOSFlutterLocalNotificationsPlugin
+        >()
         ?.requestPermissions(alert: true, badge: true, sound: true);
   } else if (Platform.isMacOS) {
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            MacOSFlutterLocalNotificationsPlugin>()
+          MacOSFlutterLocalNotificationsPlugin
+        >()
         ?.requestPermissions(alert: true, badge: true, sound: true);
   }
   _fcmLocalNotificationsInitialized = true;
@@ -183,10 +187,7 @@ String? _fcmImageUrlFromMessage(RemoteMessage message) {
     // Ignore malformed URLs; we'll just fall back to defaults.
   }
 
-  return (
-    dataWidth ?? urlWidth,
-    dataHeight ?? urlHeight,
-  );
+  return (dataWidth ?? urlWidth, dataHeight ?? urlHeight);
 }
 
 (String?, String?) _fcmTitleBody(RemoteMessage message) {
@@ -197,10 +198,7 @@ String? _fcmImageUrlFromMessage(RemoteMessage message) {
   final data = message.data;
   final title = data['title'];
   final body = data['body'];
-  return (
-    title is String ? title : null,
-    body is String ? body : null,
-  );
+  return (title is String ? title : null, body is String ? body : null);
 }
 
 bool _fcmDialogShowing = false;
@@ -267,26 +265,32 @@ void _presentFcmMessageDialog(RemoteMessage message) {
                   borderRadius: BorderRadius.circular(8),
                   child: Builder(
                     builder: (context) {
-                      final (srcW, srcH) =
-                          _fcmImageWidthHeight(message, imageUrl);
+                      final (srcW, srcH) = _fcmImageWidthHeight(
+                        message,
+                        imageUrl,
+                      );
                       final aspectRatio =
                           (srcW != null && srcH != null && srcH > 0)
-                              ? (srcW / srcH)
-                              : (16 / 9);
+                          ? (srcW / srcH)
+                          : (16 / 9);
 
                       // Avoid LayoutBuilder here: AlertDialog may ask for intrinsic sizes.
                       // Pick a reasonable decode target from screen width.
                       final mq = MediaQuery.of(context);
                       final dpr = mq.devicePixelRatio;
-                      final logicalTargetW =
-                          (mq.size.width * 0.70).clamp(240.0, 420.0);
+                      final logicalTargetW = (mq.size.width * 0.70).clamp(
+                        240.0,
+                        420.0,
+                      );
                       final targetPxW = (logicalTargetW * dpr).round();
                       final targetPxH = (targetPxW / aspectRatio).round();
 
-                      final cacheW =
-                          srcW != null ? srcW.clamp(1, targetPxW) : targetPxW;
-                      final cacheH =
-                          srcH != null ? srcH.clamp(1, targetPxH) : targetPxH;
+                      final cacheW = srcW != null
+                          ? srcW.clamp(1, targetPxW)
+                          : targetPxW;
+                      final cacheH = srcH != null
+                          ? srcH.clamp(1, targetPxH)
+                          : targetPxH;
 
                       return AspectRatio(
                         aspectRatio: aspectRatio,
@@ -330,8 +334,25 @@ void _presentFcmMessageDialog(RemoteMessage message) {
   });
 }
 
+final _supportFcmService = SupportFcmService();
+
+void _setupSupportFcmRegistration() {
+  if (!fcmEnabled) return;
+
+  _supportFcmService.listenTokenRefresh();
+  supabase.auth.onAuthStateChange.listen((data) {
+    if (data.session != null) {
+      unawaited(_supportFcmService.registerTokenIfNeeded());
+    }
+  });
+  if (supabase.auth.currentSession != null) {
+    unawaited(_supportFcmService.registerTokenIfNeeded());
+  }
+}
+
 Future<void> _setupFcm() async {
   if (fcmEnabled) {
+    _setupSupportFcmRegistration();
     // listen foreground messages
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       if (kDebugMode) {
@@ -339,10 +360,20 @@ Future<void> _setupFcm() async {
       }
       logger.d('Got a message whilst in the foreground! ${message.data}');
 
-      await _schedulePresentFcmMessageUi(
-        message,
-        preloadImage: true,
-      );
+      if (message.data['type'] == 'support_reply') {
+        final ctx = rootNavigationKey.currentContext;
+        if (ctx != null && ctx.mounted) {
+          final unreadController = ctx.read<SupportUnreadBadgeController>();
+          if (_isSupportChatRoute()) {
+            unreadController.clear();
+          } else {
+            unreadController.showUnreadDot();
+          }
+        }
+        return;
+      }
+
+      await _schedulePresentFcmMessageUi(message, preloadImage: true);
     });
     // handle interacted messages when a user clicks on a notification
     _setupInteractedMessage();
@@ -353,8 +384,8 @@ Future<void> _setupFcm() async {
 Future<void> _setupInteractedMessage() async {
   // Get any messages which caused the application to open from
   // a terminated state.
-  RemoteMessage? initialMessage =
-      await FirebaseMessaging.instance.getInitialMessage();
+  RemoteMessage? initialMessage = await FirebaseMessaging.instance
+      .getInitialMessage();
 
   if (initialMessage != null) {
     _handleMessage(initialMessage);
@@ -369,6 +400,16 @@ void _handleMessage(RemoteMessage message) {
     inspect(message);
   }
   logger.d('Interacted FCM message: ${message.data}');
+
+  if (message.data['type'] == 'support_reply') {
+    final ctx = rootNavigationKey.currentContext;
+    if (ctx != null && ctx.mounted) {
+      ctx.read<SupportUnreadBadgeController>().clear();
+      router.go('/supportChat');
+    }
+    return;
+  }
+
   final notification = message.notification;
   if (notification != null) {
     logger.d(
@@ -376,9 +417,12 @@ void _handleMessage(RemoteMessage message) {
     );
   }
   // When user taps a notification, show dialog immediately (no preloading).
-  _schedulePresentFcmMessageUi(
-    message,
-    preloadImage: false,
+  _schedulePresentFcmMessageUi(message, preloadImage: false);
+}
+
+bool _isSupportChatRoute() {
+  return router.routeInformationProvider.value.uri.path.endsWith(
+    '/supportChat',
   );
 }
 
@@ -386,6 +430,11 @@ void _handleMessage(RemoteMessage message) {
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   WidgetsFlutterBinding.ensureInitialized();
   await ensureFirebaseInitialized();
+
+  if (message.data['type'] == 'support_reply') {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setBool(supportUnreadNeedsRefreshPreferenceKey, true);
+  }
 
   print("Handling a background message: ${message.messageId}");
 }

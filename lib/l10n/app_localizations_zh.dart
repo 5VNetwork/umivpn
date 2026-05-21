@@ -1334,6 +1334,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get advancedSettingDesc => 'VPN相关设置';
 
   @override
+  String get fakeDnsDesc => 'FakeDNS可以降低延迟。但部分网站可能无法正常访问';
+
+  @override
   String get general => '通用';
 
   @override
@@ -2175,4 +2178,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get oneYear => '一年';
+
+  @override
+  String get supportWelcomeMessage => '欢迎！你可以随时提问、反馈问题（例如无法访问某些网站）。感谢你的反馈！';
 }

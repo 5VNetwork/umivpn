@@ -1384,6 +1384,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get advancedSettingDesc => 'Настройки, связанные с VPN';
 
   @override
+  String get fakeDnsDesc => 'FakeDNS can reduce latency';
+
+  @override
   String get general => 'Общий';
 
   @override
@@ -2225,4 +2228,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get oneYear => 'One Year';
+
+  @override
+  String get supportWelcomeMessage => 'Добро пожаловать! Вы можете задать любой вопрос или сообщить о проблеме, например о невозможности открыть некоторые сайты. Спасибо за обратную связь!';
 }

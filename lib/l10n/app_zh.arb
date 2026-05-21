@@ -592,6 +592,7 @@
   "tun46SettingIpv4AndIpv6": "IPv4 & IPv6",
   "ad": "广告",
   "advancedSettingDesc": "VPN相关设置",
+  "fakeDnsDesc": "FakeDNS可以降低延迟。但部分网站可能无法正常访问",
   "general": "通用",
   "light": "亮色",
   "dark": "暗色",
@@ -930,5 +931,6 @@
   "oneMonth": "一个月",
   "oneQuarter": "一个季度",
   "oneHalfYear": "半年",
-  "oneYear": "一年"
+  "oneYear": "一年",
+  "supportWelcomeMessage": "欢迎！你可以随时提问、反馈问题（例如无法访问某些网站）。感谢你的反馈！"
 }

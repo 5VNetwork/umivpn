@@ -582,6 +582,7 @@
   "tun46SettingIpv4AndIpv6": "IPv4 и IPv6",
   "ad": "Реклама",
   "advancedSettingDesc": "Настройки, связанные с VPN",
+  "fakeDnsDesc": "FakeDNS can reduce latency",
   "general": "Общий",
   "light": "Свет",
   "dark": "Темный",
@@ -814,5 +815,6 @@
   "subscriptionCancelDialogStripeReactivationInfo": "Вы можете повторно активировать подписку в любое время.",
   "failedToReactivateSubscription": "Не удалось повторно активировать подписку",
   "failedToCancelSubscription": "Не удалось отменить подписку",
-  "selectLocation": "Выберите локацию"
+  "selectLocation": "Выберите локацию",
+  "supportWelcomeMessage": "Добро пожаловать! Вы можете задать любой вопрос или сообщить о проблеме, например о невозможности открыть некоторые сайты. Спасибо за обратную связь!"
 }

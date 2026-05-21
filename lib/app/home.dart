@@ -13,8 +13,10 @@ import 'package:tm/private.dart';
 import 'package:tm/x_controller.dart';
 import 'package:tm/status_cubit.dart';
 import 'package:umivpn/app/choice_cubit.dart';
+import 'package:umivpn/app/control.dart';
 import 'package:umivpn/app/manage_plan.dart';
 import 'package:umivpn/app/settings/general/country.dart';
+import 'package:umivpn/app/support/support_unread_badge.dart';
 import 'package:umivpn/auth/auth_bloc.dart';
 import 'package:umivpn/auth/user.dart';
 import 'package:flutter_common/util/net.dart';
@@ -48,6 +50,8 @@ class VpnHomePage extends StatefulWidget {
 }
 
 class _VpnHomePageState extends State<VpnHomePage> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -111,31 +115,56 @@ class _VpnHomePageState extends State<VpnHomePage> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final l10n = AppLocalizations.of(context)!;
-    final settingButton = IconButton(
-      icon: Icon(
-        Icons.settings_rounded,
-        color: colorScheme.onSurface.withOpacity(0.87),
-      ),
-      onPressed: () {
-        context.go('/setting');
-      },
+    final settingButton = Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: IconButton(
+            onPressed: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
+            icon: Icon(
+              Icons.tune_rounded,
+              color: colorScheme.onSurface.withOpacity(0.87),
+            ),
+            tooltip: AppLocalizations.of(context)!.advanced,
+          ),
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.settings_rounded,
+            color: colorScheme.onSurface.withOpacity(0.87),
+          ),
+          onPressed: () {
+            context.go('/setting');
+          },
+        ),
+        SizedBox(width: 8),
+        SupportUnreadIconButton(
+          route: '/supportChat',
+          icon: Icons.support_agent_rounded,
+          iconColor: colorScheme.onSurface.withValues(alpha: 0.87),
+        ),
+      ],
     );
-    final title = Text(
+    final title = SizedBox() /*  Text(
       "UmiVPN",
       style: textTheme.titleMedium?.copyWith(
         letterSpacing: 1,
         fontWeight: FontWeight.bold,
         color: colorScheme.onSurface,
       ),
-    );
+    ) */;
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: colorScheme.bgColor,
+      drawer: ControlDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Platform.isMacOS ? null : settingButton,
+        leadingWidth: desktopPlatform ? 148 : 152,
         title: desktopPlatform
             ? ConstrainedBox(
                 constraints: BoxConstraints(maxHeight: 24),
@@ -198,7 +227,7 @@ class _VpnHomePageState extends State<VpnHomePage> {
             //       ));
             // }
             if (!isProduction()) {
-              return const Stack(
+              return Stack(
                 children: [
                   _HomeBody(),
                   Positioned(

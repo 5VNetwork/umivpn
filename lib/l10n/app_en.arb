@@ -582,6 +582,7 @@
   "tun46SettingIpv4AndIpv6": "IPv4 and IPv6",
   "ad": "Ads",
   "advancedSettingDesc": "VPN related settings",
+  "fakeDnsDesc": "FakeDNS can reduce latency",
   "general": "General",
   "light": "Light",
   "dark": "Dark",
@@ -923,5 +924,6 @@
   "oneMonth": "One Month",
   "oneQuarter": "One Quarter",
   "oneHalfYear": "One Half Year",
-  "oneYear": "One Year"
+  "oneYear": "One Year",
+  "supportWelcomeMessage": "Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback!"
 }
