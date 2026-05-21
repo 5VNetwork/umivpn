@@ -47,6 +47,9 @@ import 'package:umivpn/app/top_bar.dart';
 import 'package:umivpn/app/welcome.dart';
 import 'package:umivpn/app/settings/account.dart';
 import 'package:umivpn/app/settings/contact.dart';
+import 'package:umivpn/app/support/support_chat_page.dart';
+import 'package:umivpn/app/support/support_fcm_service.dart';
+import 'package:umivpn/app/support/support_unread_badge.dart';
 import 'package:umivpn/app/settings/general/general.dart';
 import 'package:umivpn/app/settings/open_source_software_notice_screen.dart';
 import 'package:umivpn/app/settings/privacy.dart';
@@ -177,6 +180,10 @@ void main() async {
       if (proPurchases != null)
         ChangeNotifierProvider.value(value: proPurchases),
       ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
+      ChangeNotifierProvider(
+        create: (_) => SupportUnreadBadgeController()..start(),
+        lazy: false,
+      ),
       ChangeNotifierProvider.value(value: AuthRepo(authProvider)),
       Provider.value(value: pref),
       Provider.value(value: storage),
@@ -563,14 +570,19 @@ void periodicFetchCountries(SharedPreferences pref) async {
   ).start();
 }
 
+ScheduledTask? _geoScheduledTask;
+
 void periodicFetchGeo(SharedPreferences pref) {
-  ScheduledTask(
+  if (_geoScheduledTask != null) {
+    return;
+  }
+  _geoScheduledTask = ScheduledTask(
     task: fetchGeo,
     sharedPreferences: pref,
     timeZone: 8,
     hour: 8,
     lastRunKey: 'last_geo_fetch',
-  ).start();
+  )..start();
 }
 
 Future<String> assetName() async {

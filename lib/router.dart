@@ -59,6 +59,12 @@ void initRouter(AuthProvider authProvider) {
             },
           ),
           GoRoute(
+            parentNavigatorKey: rootNavigationKey,
+            path: 'supportChat',
+            pageBuilder: (context, state) =>
+                const CupertinoPage(child: SupportChatPage()),
+          ),
+          GoRoute(
             path: 'route',
             parentNavigatorKey: rootNavigationKey,
             pageBuilder: (context, state) =>

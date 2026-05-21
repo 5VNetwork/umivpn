@@ -1384,6 +1384,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get advancedSettingDesc => 'VPN related settings';
 
   @override
+  String get fakeDnsDesc => 'FakeDNS can reduce latency';
+
+  @override
   String get general => 'General';
 
   @override
@@ -2225,4 +2228,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get oneYear => 'One Year';
+
+  @override
+  String get supportWelcomeMessage => 'Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback!';
 }

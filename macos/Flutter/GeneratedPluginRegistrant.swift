@@ -26,6 +26,7 @@ import screen_retriever_macos
 import sentry_flutter
 import shared_preferences_foundation
 import sign_in_with_apple
+import sqflite_darwin
 import store_checker
 import tm_macos
 import tray_manager
@@ -54,6 +55,7 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   SentryFlutterPlugin.register(with: registry.registrar(forPlugin: "SentryFlutterPlugin"))
   SharedPreferencesPlugin.register(with: registry.registrar(forPlugin: "SharedPreferencesPlugin"))
   SignInWithApplePlugin.register(with: registry.registrar(forPlugin: "SignInWithApplePlugin"))
+  SqflitePlugin.register(with: registry.registrar(forPlugin: "SqflitePlugin"))
   StoreCheckerPlugin.register(with: registry.registrar(forPlugin: "StoreCheckerPlugin"))
   TmMacosPlugin.register(with: registry.registrar(forPlugin: "TmMacosPlugin"))
   TrayManagerPlugin.register(with: registry.registrar(forPlugin: "TrayManagerPlugin"))

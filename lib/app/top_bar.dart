@@ -3,12 +3,10 @@ import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:umivpn/main.dart';
-import 'package:umivpn/utils/logger.dart';
-import 'package:umivpn/utils/path.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:umivpn/common/common.dart';
+import 'package:umivpn/app/support/support_unread_badge.dart';
 import 'package:umivpn/theme.dart';
 
 class TopBar extends StatelessWidget {
@@ -24,19 +22,25 @@ class TopBar extends StatelessWidget {
           children: [
             if (!desktopPlatforms)
               SizedBox(
-                  width: 80,
-                  child: Image.asset(
-                    'assets/icons/V.png',
-                    width: 24,
-                    height: 24,
-                    color: Theme.of(context).colorScheme.primary,
-                  )),
+                width: 80,
+                child: Image.asset(
+                  'assets/icons/V.png',
+                  width: 24,
+                  height: 24,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
             Expanded(child: SizedBox()),
+            const SupportUnreadIconButton(
+              route: '/setting/supportChat',
+              icon: Icons.support_agent_outlined,
+            ),
             IconButton(
-                onPressed: () {
-                  Scaffold.of(context).openEndDrawer();
-                },
-                icon: const Icon(Icons.tune_rounded)),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+              icon: const Icon(Icons.tune_rounded),
+            ),
             const Gap(10),
           ],
         ),
@@ -46,19 +50,21 @@ class TopBar extends StatelessWidget {
       child = Row(
         children: [
           Expanded(
-              child: MoveWindow(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: SizedBox(
+            child: MoveWindow(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
                   width: 80,
                   child: Image.asset(
                     'assets/icons/V.png',
                     width: 18,
                     height: 18,
                     color: Theme.of(context).colorScheme.primary,
-                  )),
+                  ),
+                ),
+              ),
             ),
-          )),
+          ),
           // if (!isProduction())
           //   TextButton(
           //     onPressed: () async {
@@ -70,11 +76,16 @@ class TopBar extends StatelessWidget {
           //     },
           //     child: const Text("Upload"),
           //   ),
+          const SupportUnreadIconButton(
+            route: '/setting/supportChat',
+            icon: Icons.support_agent_outlined,
+          ),
           IconButton(
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer();
-              },
-              icon: const Icon(Icons.tune_rounded)),
+            onPressed: () {
+              Scaffold.of(context).openEndDrawer();
+            },
+            icon: const Icon(Icons.tune_rounded),
+          ),
           const Gap(5),
           const WindowButtons(),
           const Gap(5),
@@ -113,33 +124,41 @@ class WindowButtons extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         IconButton(
-            onPressed: appWindow.minimize,
-            icon: const Icon(Icons.remove_rounded)),
+          onPressed: appWindow.minimize,
+          icon: const Icon(Icons.remove_rounded),
+        ),
         const SizedBox(width: 4),
         IconButton(
-            onPressed: appWindow.maximizeOrRestore,
-            icon: Icon(
-                size: 20,
-                appWindow.isMaximized
-                    ? Icons.fullscreen_exit_rounded
-                    : Icons.fullscreen_rounded)),
+          onPressed: appWindow.maximizeOrRestore,
+          icon: Icon(
+            size: 20,
+            appWindow.isMaximized
+                ? Icons.fullscreen_exit_rounded
+                : Icons.fullscreen_rounded,
+          ),
+        ),
         const SizedBox(width: 4),
         IconButton(
-            onPressed: () async {
-              await windowManager.hide();
-            },
-            icon: const Icon(Icons.close_rounded)),
+          onPressed: () async {
+            await windowManager.hide();
+          },
+          icon: const Icon(Icons.close_rounded),
+        ),
       ],
     );
   }
 }
 
 class MinimizeWindowButton extends WindowButton {
-  MinimizeWindowButton(
-      {super.key, super.colors, VoidCallback? onPressed, bool? animate})
-      : super(
-            animate: animate ?? false,
-            iconBuilder: (buttonContext) =>
-                MinimizeIcon(color: buttonContext.iconColor),
-            onPressed: onPressed ?? () => appWindow.minimize());
+  MinimizeWindowButton({
+    super.key,
+    super.colors,
+    VoidCallback? onPressed,
+    bool? animate,
+  }) : super(
+         animate: animate ?? false,
+         iconBuilder: (buttonContext) =>
+             MinimizeIcon(color: buttonContext.iconColor),
+         onPressed: onPressed ?? () => appWindow.minimize(),
+       );
 }

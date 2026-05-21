@@ -240,6 +240,14 @@ extension PrefHelperExtension on SharedPreferences {
     setInt('inboundMode', mode.index);
   }
 
+  bool get fakeDns {
+    return getBool('fakeDns') ?? true;
+  }
+
+  void setFakeDns(bool enable) {
+    setBool('fakeDns', enable);
+  }
+
   String get selectedCountry {
     return getString('selectedCountry') ?? '';
   }

@@ -2575,6 +2575,12 @@ abstract class AppLocalizations {
   /// **'VPN related settings'**
   String get advancedSettingDesc;
 
+  /// No description provided for @fakeDnsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'FakeDNS can reduce latency'**
+  String get fakeDnsDesc;
+
   /// No description provided for @general.
   ///
   /// In en, this message translates to:
@@ -4200,6 +4206,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'One Year'**
   String get oneYear;
+
+  /// No description provided for @supportWelcomeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback!'**
+  String get supportWelcomeMessage;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
