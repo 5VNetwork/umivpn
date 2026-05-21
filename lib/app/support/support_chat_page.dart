@@ -38,7 +38,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
 
   String? _error;
 
-  bool _loading = true;
+  bool _syncing = false;
 
   StreamSubscription<SupportMessage>? _subscription;
 
@@ -48,33 +48,39 @@ class _SupportChatPageState extends State<SupportChatPage> {
 
     _chatController = InMemoryChatController();
 
+    if (supabase.auth.currentSession == null) {
+      _error = 'Please sign in to contact support';
+    } else {
+      final userId = _repository.currentUserId;
+      if (userId == null) {
+        _error = 'Supabase session is missing';
+      } else {
+        _currentUserId = userId;
+        _syncing = true;
+      }
+    }
+
     _bootstrap();
   }
 
   Future<void> _bootstrap() async {
-    if (supabase.auth.currentSession == null) {
-      setState(() {
-        _error = 'Please sign in to contact support';
-
-        _loading = false;
-      });
-
-      return;
-    }
+    final userId = _currentUserId;
+    if (userId == null) return;
 
     try {
+      await _populateFromCache(userId);
+      if (!mounted) return;
+
+      setState(() {});
+
       final conversationId = await _repository.ensureConversation();
-
-      final userId = _repository.currentUserId;
-
-      if (userId == null) {
-        throw StateError('Supabase session is missing');
-      }
-
       final loaded = await _repository.loadMessages(conversationId);
 
       for (final message in loaded) {
-        await _chatController.insertMessage(_toChatMessage(message, userId));
+        await supportChatInsertOrReconcileIncoming(
+          controller: _chatController,
+          incoming: _toChatMessage(message, userId),
+        );
       }
 
       await _repository.markUserRead(conversationId);
@@ -85,10 +91,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
 
       setState(() {
         _conversationId = conversationId;
-
-        _currentUserId = userId;
-
-        _loading = false;
+        _syncing = false;
       });
 
       _subscription = _repository
@@ -99,10 +102,25 @@ class _SupportChatPageState extends State<SupportChatPage> {
       if (!mounted) return;
 
       setState(() {
-        _error = error.toString();
-
-        _loading = false;
+        if (_chatController.messages.isEmpty) {
+          _error = error.toString();
+        }
+        _syncing = false;
       });
+    }
+  }
+
+  Future<void> _populateFromCache(String userId) async {
+    try {
+      final cached = await _repository.loadCachedMessages();
+      for (final message in cached) {
+        await supportChatInsertOrReconcileIncoming(
+          controller: _chatController,
+          incoming: _toChatMessage(message, userId),
+        );
+      }
+    } catch (error) {
+      logger.e(error);
     }
   }
 
@@ -344,11 +362,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
   }
 
   Widget _buildBody(bool isLightTheme) {
-    if (_loading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (_error != null) {
+    if (_error != null && _currentUserId == null) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -363,15 +377,23 @@ class _SupportChatPageState extends State<SupportChatPage> {
       return const SizedBox.shrink();
     }
 
-    return Chat(
-      currentUserId: currentUserId,
-      resolveUser: _resolveUser,
-      chatController: _chatController,
-      onMessageSend: _handleMessageSend,
-      onMessageTap: _onMessageTap,
-      onAttachmentTap: _handleAttachmentTap,
-      builders: supportChatBuilders(onImagePaste: _handleImagePaste),
-      theme: supportChatTheme(context, isLight: isLightTheme),
+    return Column(
+      children: [
+        if (_syncing)
+          const LinearProgressIndicator(minHeight: 2),
+        Expanded(
+          child: Chat(
+            currentUserId: currentUserId,
+            resolveUser: _resolveUser,
+            chatController: _chatController,
+            onMessageSend: _handleMessageSend,
+            onMessageTap: _onMessageTap,
+            onAttachmentTap: _handleAttachmentTap,
+            builders: supportChatBuilders(onImagePaste: _handleImagePaste),
+            theme: supportChatTheme(context, isLight: isLightTheme),
+          ),
+        ),
+      ],
     );
   }
 }

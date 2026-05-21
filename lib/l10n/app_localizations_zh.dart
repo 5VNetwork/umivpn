@@ -2180,5 +2180,5 @@ class AppLocalizationsZh extends AppLocalizations {
   String get oneYear => '一年';
 
   @override
-  String get supportWelcomeMessage => '欢迎！你可以随时提问、反馈问题（例如无法访问某些网站）。感谢你的反馈！';
+  String get supportWelcomeMessage => '欢迎！您可以随时提问、反馈问题（例如无法访问某些网站）。感谢您的反馈！';
 }
