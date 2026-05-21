@@ -139,8 +139,8 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   config:
-    # Firebase is already provided via CocoaPods (plugins + ImageNotification).
-    # Enabling Flutter SPM duplicates the Firebase module and breaks iOS builds.
+    # Native deps (Firebase, AppAuth/google_sign_in, etc.) use CocoaPods.
+    # Flutter SPM on stable duplicates modules and breaks iOS/macOS CI builds.
     enable-swift-package-manager: false
   generate: true
   # The following line ensures that the Material Icons font is
