@@ -169,8 +169,6 @@ PODS:
   - sqflite_darwin (0.0.4):
     - Flutter
     - FlutterMacOS
-  - store_checker (0.0.1):
-    - Flutter
   - SwiftyGif (5.4.5)
   - tm_ios (0.0.1):
     - Flutter
@@ -199,7 +197,6 @@ DEPENDENCIES:
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
-  - store_checker (from `.symlinks/plugins/store_checker/ios`)
   - tm_ios (from `.symlinks/plugins/tm_ios/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
@@ -266,8 +263,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sign_in_with_apple/ios"
   sqflite_darwin:
     :path: ".symlinks/plugins/sqflite_darwin/darwin"
-  store_checker:
-    :path: ".symlinks/plugins/store_checker/ios"
   tm_ios:
     :path: ".symlinks/plugins/tm_ios/ios"
   url_launcher_ios:
@@ -312,7 +307,6 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   sign_in_with_apple: c5dcc141574c8c54d5ac99dd2163c0c72ad22418
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
-  store_checker: bcaa4c645cbb578f7f087cd6088d42ba26135470
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
   tm_ios: 78422358a31385ba6547155bd0b5b7e16841664c
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d

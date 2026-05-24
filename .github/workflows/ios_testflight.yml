@@ -1,4 +1,4 @@
-name: Release iOS
+name: Release iOS Testflight
 
 on:
   # push:
@@ -116,7 +116,7 @@ jobs:
         URL: ${{ secrets.URL }}
       run: |
         mkdir -p build/app symbols/darwin
-        flutter build ipa --flavor production --dart-define=LOG_KEY=$LOG_KEY \
+        flutter build ipa --flavor cn --dart-define=LOG_KEY=$LOG_KEY \
         --dart-define=URL=$URL --release --obfuscate --split-debug-info=symbols/darwin \
         --extra-gen-snapshot-options=--save-obfuscation-map=build/app/obfuscation.map.json
 
@@ -132,7 +132,7 @@ jobs:
 
     - name: Fastlane release
       env:
-        BUNDLE_ID: "com.umivpn.production"
+        BUNDLE_ID: "com.umivpn.cn"
         APPLE_ID: ${{ secrets.APPLE_ID }}
         FASTLANE_IOS_KEY_ID: ${{ secrets.FASTLANE_IOS_KEY_ID }}
         APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}

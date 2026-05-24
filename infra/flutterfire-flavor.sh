@@ -39,6 +39,13 @@ case $1 in
       --android-package-name=com5vnetwork.umi \
       --android-out=android/app/src/production/google-services.json
     ;;
+  cn)
+    flutterfire config \
+      --project=umivpn \
+      --out=lib/firebase_options_cn.dart \
+      --ios-bundle-id=com.umivpn.cn \
+      --ios-out=ios/flavors/cn/GoogleService-Info.plist 
+    ;;
   *)
     echo "Error: Invalid environment specified. Use 'staging' or 'production'."
     exit 1

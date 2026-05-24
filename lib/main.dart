@@ -77,6 +77,7 @@ import 'package:flutter_common/services/periodic.dart';
 import 'firebase_options.dart';
 import 'firebase_options_staging.dart' as staging;
 import 'firebase_options_dev.dart' as dev;
+import 'firebase_options_cn.dart' as cn;
 import 'package:umivpn/utils/logger.dart';
 import 'package:umivpn/pref_helper.dart';
 import 'package:umivpn/utils/path.dart';
@@ -99,7 +100,6 @@ import 'package:tm/xapi_client.dart';
 import 'package:tm/http.dart';
 import 'package:path/path.dart' as path;
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:store_checker/store_checker.dart';
 
 part 'desktop_tray.dart';
 part 'router.dart';
@@ -420,10 +420,6 @@ late final String version;
 // Router
 final rootNavigationKey = GlobalKey<NavigatorState>();
 final supabase = Supabase.instance.client;
-// final isAdPlatforms = Platform.isAndroid;
-Future<Source>? installationSource = Platform.isIOS
-    ? StoreChecker.getSource
-    : null;
 
 void snack(String? message, {Duration? duration}) {
   if (message == null) {
@@ -609,6 +605,7 @@ Future<String> assetName() async {
 FirebaseOptions _firebaseOptionsForCurrentFlavor() {
   return switch (appFlavor) {
     'produdction' || 'pkg' || 'apk' => DefaultFirebaseOptions.currentPlatform,
+    'cn' => cn.DefaultFirebaseOptions.currentPlatform,
     'staging' => staging.DefaultFirebaseOptions.currentPlatform,
     _ => dev.DefaultFirebaseOptions.currentPlatform,
   };

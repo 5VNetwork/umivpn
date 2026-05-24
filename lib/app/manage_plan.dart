@@ -12,7 +12,6 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:pasteboard/pasteboard.dart';
 import 'package:provider/provider.dart';
-import 'package:store_checker/store_checker.dart';
 import 'package:umivpn/auth/auth_bloc.dart';
 import 'package:umivpn/auth/user.dart';
 import 'package:umivpn/common/common.dart';

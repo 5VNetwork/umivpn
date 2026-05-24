@@ -8,7 +8,10 @@ type("appstore") # The default type, can be: appstore, adhoc, enterprise or deve
 app_identifier([
   "com.umivpn.production",                    # Main app
   "com.umivpn.production.PacketTunnel",       # PacketTunnel extension
-  "com.umivpn.production.ImageNotification"   # ImageNotification extension
+  "com.umivpn.production.ImageNotification",   # ImageNotification extension
+  "com.umivpn.cn",
+  "com.umivpn.cn.PacketTunnel",
+  "com.umivpn.cn.ImageNotification"
 ])
 
 # app_identifier(["tools.fastlane.app", "tools.fastlane.app2"])
