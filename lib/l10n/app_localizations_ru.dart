@@ -2231,4 +2231,16 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get supportWelcomeMessage => 'Добро пожаловать! Вы можете задать любой вопрос или сообщить о проблеме, например о невозможности открыть некоторые сайты. Спасибо за обратную связь!';
+
+  @override
+  String get hideSessionOngoingIndicator => 'Hide Session Ongoing Indicator';
+
+  @override
+  String get showSessionOngoingIndicator => 'Show Session Ongoing Indicator';
+
+  @override
+  String get hideRealtimeUsage => 'Hide Realtime Usage';
+
+  @override
+  String get showRealtimeUsage => 'Show Realtime Usage';
 }

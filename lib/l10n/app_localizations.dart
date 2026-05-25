@@ -4212,6 +4212,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback!'**
   String get supportWelcomeMessage;
+
+  /// No description provided for @hideSessionOngoingIndicator.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Session Ongoing Indicator'**
+  String get hideSessionOngoingIndicator;
+
+  /// No description provided for @showSessionOngoingIndicator.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Session Ongoing Indicator'**
+  String get showSessionOngoingIndicator;
+
+  /// No description provided for @hideRealtimeUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Realtime Usage'**
+  String get hideRealtimeUsage;
+
+  /// No description provided for @showRealtimeUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Realtime Usage'**
+  String get showRealtimeUsage;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

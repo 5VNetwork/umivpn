@@ -932,5 +932,9 @@
   "oneQuarter": "一个季度",
   "oneHalfYear": "半年",
   "oneYear": "一年",
-  "supportWelcomeMessage": "欢迎！您可以随时提问、反馈问题（例如无法访问某些网站）。感谢您的反馈！"
+  "supportWelcomeMessage": "欢迎！您可以随时提问、反馈问题（例如无法访问某些网站）。感谢您的反馈！",
+  "hideSessionOngoingIndicator": "隐藏会话进行中指示器",
+  "showSessionOngoingIndicator": "显示会话进行中指示器",
+  "hideRealtimeUsage": "隐藏实时用量",
+  "showRealtimeUsage": "显示实时用量"
 }

@@ -71,6 +71,12 @@ void initRouter(AuthProvider authProvider) {
                 const CupertinoPage(child: RoutingRulesPage()),
           ),
           GoRoute(
+            path: 'log',
+            parentNavigatorKey: rootNavigationKey,
+            pageBuilder: (context, state) =>
+                const CupertinoPage(child: LogPage()),
+          ),
+          GoRoute(
             path: 'setting',
             parentNavigatorKey: rootNavigationKey,
             pageBuilder: (context, state) =>

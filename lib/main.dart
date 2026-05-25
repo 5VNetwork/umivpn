@@ -54,6 +54,8 @@ import 'package:umivpn/app/settings/general/general.dart';
 import 'package:umivpn/app/settings/open_source_software_notice_screen.dart';
 import 'package:umivpn/app/settings/privacy.dart';
 import 'package:umivpn/app/settings/setting.dart';
+import 'package:umivpn/app/log/log_bloc.dart';
+import 'package:umivpn/app/log/log_page.dart';
 import 'package:umivpn/features/routing/ui/routing_rules_page.dart';
 import 'package:umivpn/utils/default_network.dart';
 import 'package:umivpn/utils/geodata.dart';
@@ -334,6 +336,13 @@ void main() async {
           autoUpdateService: autoUpdateSupported
               ? context.read<AutoUpdateService>()
               : null,
+        ),
+      ),
+      BlocProvider(
+        lazy: false,
+        create: (context) => LogBloc(
+          pref: context.read<SharedPreferences>(),
+          xController: context.read<XController>(),
         ),
       ),
       if (Platform.isAndroid)

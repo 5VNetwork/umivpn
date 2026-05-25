@@ -14,9 +14,8 @@ class RoutingRulesRepository {
 
   Future<void> saveModeRules(
     DefaultRouteMode mode,
-    ModeCustomRoutingRules rules, {
-    bool applyIfConnected = true,
-  }) {
-    return _service.saveRules(mode, rules, applyIfConnected: applyIfConnected);
+    ModeCustomRoutingRules rules,
+  ) {
+    return _service.saveRules(mode, rules);
   }
 }

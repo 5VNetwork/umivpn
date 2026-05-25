@@ -925,5 +925,9 @@
   "oneQuarter": "One Quarter",
   "oneHalfYear": "One Half Year",
   "oneYear": "One Year",
-  "supportWelcomeMessage": "Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback!"
+  "supportWelcomeMessage": "Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback!",
+  "hideSessionOngoingIndicator": "Hide Session Ongoing Indicator",
+  "showSessionOngoingIndicator": "Show Session Ongoing Indicator",
+  "hideRealtimeUsage": "Hide Realtime Usage",
+  "showRealtimeUsage": "Show Realtime Usage"
 }

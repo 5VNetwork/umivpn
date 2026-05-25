@@ -2231,4 +2231,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supportWelcomeMessage => 'Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback!';
+
+  @override
+  String get hideSessionOngoingIndicator => 'Hide Session Ongoing Indicator';
+
+  @override
+  String get showSessionOngoingIndicator => 'Show Session Ongoing Indicator';
+
+  @override
+  String get hideRealtimeUsage => 'Hide Realtime Usage';
+
+  @override
+  String get showRealtimeUsage => 'Show Realtime Usage';
 }

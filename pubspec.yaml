@@ -78,7 +78,6 @@ dependencies:
   convert: ^3.1.2
   qr_flutter: ^4.1.0
   auto_size_text: ^3.0.0
-
   crypto: ^3.0.6
   encrypt: ^5.0.3
   device_info_plus: ^11.5.0

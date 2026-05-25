@@ -2181,4 +2181,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get supportWelcomeMessage => '欢迎！您可以随时提问、反馈问题（例如无法访问某些网站）。感谢您的反馈！';
+
+  @override
+  String get hideSessionOngoingIndicator => '隐藏会话进行中指示器';
+
+  @override
+  String get showSessionOngoingIndicator => '显示会话进行中指示器';
+
+  @override
+  String get hideRealtimeUsage => '隐藏实时用量';
+
+  @override
+  String get showRealtimeUsage => '显示实时用量';
 }

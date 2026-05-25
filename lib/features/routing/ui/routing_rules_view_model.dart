@@ -3,6 +3,7 @@ import 'package:tm/custom_routing_rules.dart';
 import 'package:tm/default.dart';
 import 'package:tm/protos/vx/common/geo/geo.pbenum.dart';
 import 'package:tm/protos/vx/router/router.pbenum.dart';
+import 'package:tm/x_controller.dart';
 
 import '../data/routing_rules_repository.dart';
 
@@ -42,16 +43,12 @@ class RoutingRulesViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> save({bool applyIfConnected = true}) async {
+  Future<void> save() async {
     saving = true;
     error = null;
     notifyListeners();
     try {
-      await _repository.saveModeRules(
-        selectedMode,
-        currentRules,
-        applyIfConnected: applyIfConnected,
-      );
+      await _repository.saveModeRules(selectedMode, currentRules);
     } catch (e) {
       error = e.toString();
     } finally {

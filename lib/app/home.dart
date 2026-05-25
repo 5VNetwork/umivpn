@@ -140,10 +140,13 @@ class _VpnHomePageState extends State<VpnHomePage> {
           },
         ),
         SizedBox(width: 8),
-        SupportUnreadIconButton(
-          route: '/supportChat',
-          icon: Icons.support_agent_rounded,
-          iconColor: colorScheme.onSurface.withValues(alpha: 0.87),
+        IconButton(
+          onPressed: () => context.go('/log'),
+          icon: Icon(
+            Icons.receipt_long_rounded,
+            color: colorScheme.onSurface.withOpacity(0.87),
+          ),
+          tooltip: AppLocalizations.of(context)!.log,
         ),
       ],
     );
@@ -176,6 +179,12 @@ class _VpnHomePageState extends State<VpnHomePage> {
             ? MoveWindow(child: Container(color: Colors.transparent))
             : null,
         actions: [
+          SupportUnreadIconButton(
+            route: '/supportChat',
+            icon: Icons.support_agent_rounded,
+            iconColor: colorScheme.onSurface.withValues(alpha: 0.87),
+          ),
+          const SizedBox(width: 8),
           IconButton(
             onPressed: () {
               context.go('/manage-plan');

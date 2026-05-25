@@ -28,7 +28,7 @@ String generateRealisticDomain() {
     'app',
     'dev',
     'code',
-    'soft'
+    'soft',
   ];
 
   // Common domain suffixes
@@ -53,7 +53,7 @@ String generateRealisticDomain() {
     'premium',
     'elite',
     'pro',
-    'expert'
+    'expert',
   ];
 
   // Randomly decide the structure
@@ -72,4 +72,12 @@ String generateRealisticDomain() {
     default:
       return 'example.com';
   }
+}
+
+String getRootDomain(String domain) {
+  final parts = domain.split('.');
+  if (parts.length > 2) {
+    return parts.sublist(parts.length - 2).join('.');
+  }
+  return domain;
 }

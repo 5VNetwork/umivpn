@@ -142,41 +142,42 @@ class _DomainSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return _RulesCard(
-      title: '${direct ? l10n.direct : l10n.proxy} ${l10n.domain}',
-      onAdd: () => _showDomainDialog(context, direct),
-      child: Consumer<RoutingRulesViewModel>(
-        builder: (context, vm, _) {
-          final list = direct
-              ? vm.currentRules.directDomains
-              : vm.currentRules.proxyDomains;
-          if (list.isEmpty) {
-            return Text(l10n.empty);
-          }
-          return ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: list.length,
-            separatorBuilder: (_, __) => const Divider(height: 1),
-            itemBuilder: (context, index) {
-              final e = list[index];
-              return ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                title: Text(_domainTypeLabel(l10n, e.type)),
-                subtitle: Text(e.value, softWrap: true),
-                trailing: IconButton(
-                  onPressed: () => vm.removeDomain(direct: direct, rule: e),
-                  icon: const Icon(Icons.close),
-                  tooltip: MaterialLocalizations.of(
-                    context,
-                  ).deleteButtonTooltip,
+    return Consumer<RoutingRulesViewModel>(
+      builder: (context, vm, _) {
+        final list = direct
+            ? vm.currentRules.directDomains
+            : vm.currentRules.proxyDomains;
+        return _RulesCard(
+          title:
+              '${direct ? l10n.direct : l10n.proxy} ${l10n.domain} (${list.length})',
+          onAdd: () => _showDomainDialog(context, direct),
+          child: list.isEmpty
+              ? Text(l10n.empty)
+              : ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: list.length,
+                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  itemBuilder: (context, index) {
+                    final e = list[index];
+                    return ListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(_domainTypeLabel(l10n, e.type)),
+                      subtitle: Text(e.value, softWrap: true),
+                      trailing: IconButton(
+                        onPressed: () =>
+                            vm.removeDomain(direct: direct, rule: e),
+                        icon: const Icon(Icons.close),
+                        tooltip: MaterialLocalizations.of(
+                          context,
+                        ).deleteButtonTooltip,
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          );
-        },
-      ),
+        );
+      },
     );
   }
 
@@ -253,40 +254,39 @@ class _IpSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return _RulesCard(
-      title: '${direct ? l10n.direct : l10n.proxy} IP',
-      onAdd: () => _showIpDialog(context, direct),
-      child: Consumer<RoutingRulesViewModel>(
-        builder: (context, vm, _) {
-          final list = direct
-              ? vm.currentRules.directIps
-              : vm.currentRules.proxyIps;
-          if (list.isEmpty) {
-            return Text(l10n.empty);
-          }
-          return ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: list.length,
-            separatorBuilder: (_, __) => const Divider(height: 1),
-            itemBuilder: (context, index) {
-              final e = list[index];
-              return ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                title: Text(e, softWrap: true),
-                trailing: IconButton(
-                  onPressed: () => vm.removeIp(direct: direct, cidr: e),
-                  icon: const Icon(Icons.close),
-                  tooltip: MaterialLocalizations.of(
-                    context,
-                  ).deleteButtonTooltip,
+    return Consumer<RoutingRulesViewModel>(
+      builder: (context, vm, _) {
+        final list = direct
+            ? vm.currentRules.directIps
+            : vm.currentRules.proxyIps;
+        return _RulesCard(
+          title: '${direct ? l10n.direct : l10n.proxy} IP (${list.length})',
+          onAdd: () => _showIpDialog(context, direct),
+          child: list.isEmpty
+              ? Text(l10n.empty)
+              : ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: list.length,
+                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  itemBuilder: (context, index) {
+                    final e = list[index];
+                    return ListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(e, softWrap: true),
+                      trailing: IconButton(
+                        onPressed: () => vm.removeIp(direct: direct, cidr: e),
+                        icon: const Icon(Icons.close),
+                        tooltip: MaterialLocalizations.of(
+                          context,
+                        ).deleteButtonTooltip,
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          );
-        },
-      ),
+        );
+      },
     );
   }
 
@@ -335,51 +335,51 @@ class _AppSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return _RulesCard(
-      title: '${direct ? l10n.direct : l10n.proxy} ${l10n.app}',
-      subtitle: Platform.isAndroid && direct
-          ? l10n.androidDirectAppDescription
-          : null,
-      addMenu: _buildAddMenu(context),
-      onMenuSelected: (value) => _onMenuSelected(context, value),
-      child: Consumer<RoutingRulesViewModel>(
-        builder: (context, vm, _) {
-          final list = direct
-              ? vm.currentRules.directApps
-              : vm.currentRules.proxyApps;
-          if (list.isEmpty) {
-            return Text(l10n.empty);
-          }
-          return ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: list.length,
-            separatorBuilder: (_, __) => const Divider(height: 1),
-            itemBuilder: (context, index) {
-              final e = list[index];
-              return ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                title: Text(e.name ?? e.value),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (e.name != null) Text(e.value),
-                    Text(_appTypeLabel(l10n, e.type)),
-                  ],
+    return Consumer<RoutingRulesViewModel>(
+      builder: (context, vm, _) {
+        final list = direct
+            ? vm.currentRules.directApps
+            : vm.currentRules.proxyApps;
+        return _RulesCard(
+          title:
+              '${direct ? l10n.direct : l10n.proxy} ${l10n.app} (${list.length})',
+          subtitle: Platform.isAndroid && direct
+              ? l10n.androidDirectAppDescription
+              : null,
+          addMenu: _buildAddMenu(context),
+          onMenuSelected: (value) => _onMenuSelected(context, value),
+          child: list.isEmpty
+              ? Text(l10n.empty)
+              : ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: list.length,
+                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  itemBuilder: (context, index) {
+                    final e = list[index];
+                    return ListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(e.name ?? e.value),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (e.name != null) Text(e.value),
+                          Text(_appTypeLabel(l10n, e.type)),
+                        ],
+                      ),
+                      trailing: IconButton(
+                        onPressed: () => vm.removeApp(direct: direct, rule: e),
+                        icon: const Icon(Icons.close),
+                        tooltip: MaterialLocalizations.of(
+                          context,
+                        ).deleteButtonTooltip,
+                      ),
+                    );
+                  },
                 ),
-                trailing: IconButton(
-                  onPressed: () => vm.removeApp(direct: direct, rule: e),
-                  icon: const Icon(Icons.close),
-                  tooltip: MaterialLocalizations.of(
-                    context,
-                  ).deleteButtonTooltip,
-                ),
-              );
-            },
-          );
-        },
-      ),
+        );
+      },
     );
   }
 

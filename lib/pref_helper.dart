@@ -47,8 +47,44 @@ extension PrefHelperExtension on SharedPreferences {
     setInt('routingMode', mode.index);
   }
 
+  bool get enableLog {
+    return getBool('enableLog') ?? false;
+  }
+
+  set enableLog(bool enable) {
+    setBool('enableLog', enable);
+  }
+
   bool get showApp {
-    return getBool('showApp') ?? false;
+    return getBool('showApp') ?? true;
+  }
+
+  void setShowApp(bool show) {
+    setBool('showApp', show);
+  }
+
+  bool get showHandler {
+    return getBool('showHandler') ?? false;
+  }
+
+  void setShowHandler(bool show) {
+    setBool('showHandler', show);
+  }
+
+  bool get showSessionOngoing {
+    return getBool('showSessionOngoing') ?? true;
+  }
+
+  void setShowSessionOngoing(bool show) {
+    setBool('showSessionOngoing', show);
+  }
+
+  bool get showRealtimeUsage {
+    return getBool('showRealtimeUsage') ?? false;
+  }
+
+  void setShowRealtimeUsage(bool show) {
+    setBool('showRealtimeUsage', show);
   }
 
   DateTime? get lastGeoUpdate {
