@@ -23,83 +23,113 @@ TextTheme? getTextTheme(Locale? locale, {bool isDark = false}) {
 // - onPrimary, onSecondary, onSurface, onBackground
 // - outline, outlineVariant
 extension AppColors on ColorScheme {
-  // Background color (very dark blue - app-specific, since background is deprecated)
-  Color get bgColor => const Color(0xFF0F172A);
+  Color get bgColor => brightness == Brightness.dark
+      ? const Color(0xFF0F172A)
+      : const Color(0xFFF8FAFC);
 
-  // Secondary background color (slate)
   Color get bgSecondary => surface;
 
-  // Inactive/secondary color (for inactive states - app-specific)
-  Color get inactiveColor => const Color(0xFF334155);
+  Color get inactiveColor => brightness == Brightness.dark
+      ? const Color(0xFF334155)
+      : const Color(0xFFCBD5E1);
 
-  // Window button colors (for desktop - app-specific)
   Color get borderColor => const Color(0xFF805306);
   Color get sidebarColor => const Color(0xFFF6A00C);
   Color get backgroundStartColor => const Color(0xFFFFD500);
   Color get backgroundEndColor => const Color(0xFFF6A00C);
 
-  // Surface overlays with opacity (for cards, containers)
   Color get surfaceOverlay => onSurface.withOpacity(0.05);
   Color get surfaceOverlayLight => onSurface.withOpacity(0.08);
   Color get surfaceOverlayLighter => onSurface.withOpacity(0.1);
 
-  // Border colors (using onSurface opacity)
   Color get borderLight => onSurface.withOpacity(0.1);
   Color get borderMedium => onSurface.withOpacity(0.24);
 
-  // Shadow colors
-  Color get shadowDark => Colors.black.withOpacity(0.54);
-  Color get shadowLight => Colors.black.withOpacity(0.26);
+  Color get shadowDark => brightness == Brightness.dark
+      ? Colors.black.withOpacity(0.54)
+      : Colors.black.withOpacity(0.12);
+  Color get shadowLight => brightness == Brightness.dark
+      ? Colors.black.withOpacity(0.26)
+      : onSurface.withOpacity(0.06);
 }
 
-// Light theme - removed, always use dark theme
-@Deprecated('Use darkTheme instead')
-ThemeData lightTheme(Locale? locale) => darkTheme(locale);
+ThemeData lightTheme(Locale? locale) =>
+    _buildTheme(_lightColorScheme, locale, isDark: false);
 
-// Dark theme
-ThemeData darkTheme(Locale? locale) {
-  final colorScheme = ColorScheme.dark(
-    primary: const Color(0xFF00FFCB),
-    secondary: const Color(0xFF00BFA6),
-    tertiary: const Color(0xFF1E293B),
-    surface: const Color(0xFF1E293B),
-    background: const Color(0xFF0F172A),
-    error: Colors.red,
-    onPrimary: Colors.black87,
-    onSecondary: Colors.white,
-    onTertiary: Colors.white,
-    onSurface: Colors.white,
-    onBackground: Colors.white,
-    onError: Colors.white,
-    
-    secondaryContainer: const Color(0xFF1E3A3A),
-    onSecondaryContainer: const Color(0xFF00FFCB),
-  );
+ThemeData darkTheme(Locale? locale) =>
+    _buildTheme(_darkColorScheme, locale, isDark: true);
 
-  final textTheme = getTextTheme(locale, isDark: true);
+final _lightColorScheme = ColorScheme.light(
+  primary: const Color(0xFF00A896),
+  secondary: const Color(0xFF00BFA6),
+  tertiary: const Color(0xFFE2E8F0),
+  surface: const Color(0xFFF1F5F9),
+  background: const Color(0xFFF8FAFC),
+  error: Colors.red,
+  onPrimary: Colors.white,
+  onSecondary: Colors.white,
+  onTertiary: const Color(0xFF0F172A),
+  onSurface: const Color(0xFF0F172A),
+  onBackground: const Color(0xFF0F172A),
+  onError: Colors.white,
+  secondaryContainer: const Color(0xFFD1FAF5),
+  onSecondaryContainer: const Color(0xFF006B5E),
+);
+
+final _darkColorScheme = ColorScheme.dark(
+  primary: const Color(0xFF00FFCB),
+  secondary: const Color(0xFF00BFA6),
+  tertiary: const Color(0xFF1E293B),
+  surface: const Color(0xFF1E293B),
+  background: const Color(0xFF0F172A),
+  error: Colors.red,
+  onPrimary: Colors.black87,
+  onSecondary: Colors.white,
+  onTertiary: Colors.white,
+  onSurface: Colors.white,
+  onBackground: Colors.white,
+  onError: Colors.white,
+  secondaryContainer: const Color(0xFF1E3A3A),
+  onSecondaryContainer: const Color(0xFF00FFCB),
+);
+
+ThemeData _buildTheme(
+  ColorScheme colorScheme,
+  Locale? locale, {
+  required bool isDark,
+}) {
+  final textTheme = getTextTheme(locale, isDark: isDark);
+  final onSurface = colorScheme.onSurface;
 
   return ThemeData(
     useMaterial3: true,
     colorScheme: colorScheme,
     textTheme: textTheme ??
-        ThemeData.dark().textTheme.copyWith(
-              bodyLarge: TextStyle(color: Colors.white),
-              bodyMedium: TextStyle(color: Colors.white),
-              bodySmall: TextStyle(color: Colors.white.withOpacity(0.87)),
-              titleLarge: TextStyle(color: Colors.white),
-              titleMedium: TextStyle(color: Colors.white),
-              titleSmall: TextStyle(color: Colors.white),
+        (isDark ? ThemeData.dark() : ThemeData.light()).textTheme.copyWith(
+              bodyLarge: TextStyle(color: onSurface),
+              bodyMedium: TextStyle(color: onSurface),
+              bodySmall: TextStyle(color: onSurface.withOpacity(0.87)),
+              titleLarge: TextStyle(color: onSurface),
+              titleMedium: TextStyle(color: onSurface),
+              titleSmall: TextStyle(color: onSurface),
             ),
     scaffoldBackgroundColor: colorScheme.bgColor,
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      iconTheme: IconThemeData(color: colorScheme.onSurface.withOpacity(0.87)),
+      iconTheme: IconThemeData(color: onSurface.withOpacity(0.87)),
       titleTextStyle: TextStyle(
-        color: colorScheme.onSurface,
+        color: onSurface,
         fontSize: 16,
         fontWeight: FontWeight.bold,
         letterSpacing: 1,
+      ),
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
+        systemNavigationBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
       ),
     ),
     cardTheme: CardThemeData(
@@ -121,21 +151,6 @@ ThemeData darkTheme(Locale? locale) {
         ),
       ),
     ),
-    // filledButtonTheme: FilledButtonThemeData(
-    //   style: FilledButton.styleFrom(
-    //     backgroundColor: colorScheme.primary,
-    //     foregroundColor: colorScheme.onPrimary,
-    //     // shape: RoundedRectangleBorder(
-    //     //   borderRadius: BorderRadius.circular(12),
-    //     // ),
-    //     // padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-    //     textStyle: const TextStyle(
-    //       fontSize: 15,
-    //       fontWeight: FontWeight.w700,
-    //       letterSpacing: 0.5,
-    //     ),
-    //   ),
-    // ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),

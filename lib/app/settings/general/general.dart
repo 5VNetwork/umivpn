@@ -38,6 +38,11 @@ class GeneralSettingPage extends StatelessWidget {
         padding: const EdgeInsets.only(top: 8, right: 8),
         child: ListView(
           children: [
+            const Padding(
+              padding: EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
+              child: ThemeModeSetting(),
+            ),
+            const Divider(),
             ListTile(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -125,6 +130,64 @@ String _countryLabel(BuildContext context, SharedPreferences pref) {
     return AppLocalizations.of(context)!.auto;
   }
   return getLocalizedCountryName(context, selectedCountry);
+}
+
+class ThemeModeSetting extends StatefulWidget {
+  const ThemeModeSetting({super.key});
+
+  @override
+  State<ThemeModeSetting> createState() => _ThemeModeSettingState();
+}
+
+class _ThemeModeSettingState extends State<ThemeModeSetting> {
+  ThemeMode _themeMode = ThemeMode.system;
+
+  @override
+  void initState() {
+    super.initState();
+    _themeMode = context.read<SharedPreferences>().themeMode;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          AppLocalizations.of(context)!.themeMode,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        const Gap(10),
+        DropdownMenu<ThemeMode>(
+          initialSelection: _themeMode,
+          requestFocusOnTap: false,
+          dropdownMenuEntries: [
+            DropdownMenuEntry(
+              value: ThemeMode.light,
+              label: AppLocalizations.of(context)!.light,
+            ),
+            DropdownMenuEntry(
+              value: ThemeMode.dark,
+              label: AppLocalizations.of(context)!.dark,
+            ),
+            DropdownMenuEntry(
+              value: ThemeMode.system,
+              label: AppLocalizations.of(context)!.system,
+            ),
+          ],
+          onSelected: (value) {
+            context.read<SharedPreferences>().setThemeMode(
+              value ?? ThemeMode.system,
+            );
+            App.of(context)?.setThemeMode(value);
+            setState(() {
+              _themeMode = value ?? ThemeMode.system;
+            });
+          },
+        ),
+      ],
+    );
+  }
 }
 
 class StartOnBootSetting extends StatefulWidget {

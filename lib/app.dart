@@ -12,6 +12,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> with WidgetsBindingObserver {
   Locale? _locale;
+  late ThemeMode _themeMode;
   late final AppLifecycleListener _listener;
   final appLinks = AppLinks();
   // AppLifecycleReactor? _appLifecycleReactor;
@@ -21,14 +22,20 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     });
   }
 
+  void setThemeMode(ThemeMode? value) {
+    setState(() {
+      _themeMode = value ?? ThemeMode.system;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       scaffoldMessengerKey: rootScaffoldMessengerKey,
       locale: _locale,
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.dark,
-      theme: darkTheme(_locale),
+      themeMode: _themeMode,
+      theme: lightTheme(_locale),
       darkTheme: darkTheme(_locale),
       builder: desktopPlatforms
           ? (context, child) => DesktopTray(child: child!)
@@ -59,6 +66,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       androidHostApi?.requestAddTile();
     }
     _locale = pref.language?.locale ?? PlatformDispatcher.instance.locale;
+    _themeMode = pref.themeMode;
     WidgetsBinding.instance.addObserver(this);
     // app link
     if (Platform.isWindows && !isRunningAsAdmin) {
