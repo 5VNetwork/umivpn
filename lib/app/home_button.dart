@@ -273,14 +273,20 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: isConnected
-                          ? colorScheme.primary.withOpacity(0.1)
-                          : colorScheme.shadowLight,
+                          ? colorScheme.connectButtonConnectedOuter
+                          : colorScheme.connectButtonDisconnectedOuter,
                       boxShadow: [
                         if (isConnected)
                           BoxShadow(
-                            color: colorScheme.primary.withOpacity(0.4),
-                            blurRadius: 40,
-                            spreadRadius: 10,
+                            color: colorScheme.connectButtonConnectedGlow,
+                            blurRadius:
+                                colorScheme.brightness == Brightness.dark
+                                    ? 40
+                                    : 32,
+                            spreadRadius:
+                                colorScheme.brightness == Brightness.dark
+                                    ? 10
+                                    : 2,
                           ),
                         BoxShadow(
                           color: colorScheme.shadowDark,
@@ -290,8 +296,8 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
                       ],
                       border: Border.all(
                         color: isConnected
-                            ? colorScheme.primary
-                            : colorScheme.borderLight,
+                            ? colorScheme.connectButtonConnectedBorder
+                            : colorScheme.connectButtonDisconnectedBorder,
                         width: 2,
                       ),
                     ),
@@ -302,25 +308,36 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: isConnected
-                              ? colorScheme.primary
-                              : colorScheme.inactiveColor,
+                              ? null
+                              : colorScheme.connectButtonDisconnectedFill,
                           gradient: isConnected
                               ? LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    colorScheme.primary,
-                                    colorScheme.secondary,
+                                    colorScheme.connectButtonConnectedFillStart,
+                                    colorScheme.connectButtonConnectedFillEnd,
                                   ],
                                 )
+                              : null,
+                          boxShadow: isConnected &&
+                                  colorScheme.brightness == Brightness.light
+                              ? [
+                                  BoxShadow(
+                                    color: colorScheme
+                                        .connectButtonConnectedInnerShadow,
+                                    blurRadius: 14,
+                                    offset: const Offset(0, 5),
+                                  ),
+                                ]
                               : null,
                         ),
                         child: Icon(
                           Icons.power_settings_new_rounded,
                           size: 60,
                           color: isConnected
-                              ? colorScheme.onPrimary
-                              : colorScheme.onSurface.withOpacity(0.70),
+                              ? colorScheme.connectButtonConnectedIcon
+                              : colorScheme.connectButtonDisconnectedIcon,
                         ),
                       ),
                     ),

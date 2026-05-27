@@ -51,6 +51,55 @@ extension AppColors on ColorScheme {
   Color get shadowLight => brightness == Brightness.dark
       ? Colors.black.withOpacity(0.26)
       : onSurface.withOpacity(0.06);
+
+  // Home connect button — light mode uses a dedicated pair of palettes;
+  // dark mode keeps the existing primary-gradient / inactive-slate look.
+
+  /// Disconnected (VPN off)
+  Color get connectButtonDisconnectedOuter => brightness == Brightness.dark
+      ? shadowLight
+      : const Color(0xFFFFFFFF);
+
+  Color get connectButtonDisconnectedBorder => brightness == Brightness.dark
+      ? borderLight
+      : const Color(0xFFE2E8F0);
+
+  Color get connectButtonDisconnectedFill => brightness == Brightness.dark
+      ? inactiveColor
+      : const Color(0xFFF1F5F9);
+
+  Color get connectButtonDisconnectedIcon => brightness == Brightness.dark
+      ? onSurface.withOpacity(0.70)
+      : const Color(0xFF94A3B8);
+
+  /// Connected (VPN on)
+  Color get connectButtonConnectedOuter => brightness == Brightness.dark
+      ? primary.withOpacity(0.1)
+      : const Color(0xFFECFDF5);
+
+  Color get connectButtonConnectedBorder => brightness == Brightness.dark
+      ? primary
+      : const Color(0xFF14B8A6);
+
+  Color get connectButtonConnectedGlow => brightness == Brightness.dark
+      ? primary.withOpacity(0.4)
+      : const Color(0xFF14B8A6).withOpacity(0.22);
+
+  Color get connectButtonConnectedFillStart => brightness == Brightness.dark
+      ? primary
+      : const Color(0xFF5EEAD4);
+
+  Color get connectButtonConnectedFillEnd => brightness == Brightness.dark
+      ? secondary
+      : const Color(0xFF0D9488);
+
+  Color get connectButtonConnectedIcon => brightness == Brightness.dark
+      ? onPrimary
+      : Colors.white;
+
+  Color get connectButtonConnectedInnerShadow => brightness == Brightness.dark
+      ? shadowDark
+      : const Color(0xFF0D9488).withOpacity(0.18);
 }
 
 ThemeData lightTheme(Locale? locale) =>
