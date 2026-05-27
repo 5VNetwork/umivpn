@@ -22,7 +22,9 @@ class ModeSelector extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          color: colorScheme.surfaceOverlayLight,
+          color: colorScheme.brightness == Brightness.dark
+              ? colorScheme.surfaceOverlayLight
+              : colorScheme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: colorScheme.borderLight),
         ),
