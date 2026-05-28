@@ -69,6 +69,7 @@ class AuthRepo extends ChangeNotifier {
       debugPrint(response.toString());
       final profile = UserProfile.fromJson(response);
       _userProfile = profile;
+      _updateStaleUser(profile);
       return profile;
     } catch (e, stackTrace) {
       logger.e('Error fetching profile', error: e, stackTrace: stackTrace);
@@ -111,6 +112,9 @@ class AuthRepo extends ChangeNotifier {
           .select('*, subscriptions(*)')
           .eq('id', userId)
           .single();
+
+      _updateStaleUser(UserProfile.fromJson(response));
+
       // --- Parse subscription data (active subscription) ---
       SubscriptionInfo? subInfo;
       final subscriptionsData = response['subscriptions'];
