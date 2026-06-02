@@ -190,14 +190,14 @@ String getServiceInstallExePath() {
   return pathToExe;
 }
 
-String getServiceExePath() {
+String getServiceExeZipPath() {
   final String localExePath = join(
     'data',
     'flutter_assets',
     'packages',
     'tm_windows',
     'assets',
-    'umi_service.exe',
+    'umi_service.zip',
   );
   String pathToExe = join(
     Directory(Platform.resolvedExecutable).parent.path,
