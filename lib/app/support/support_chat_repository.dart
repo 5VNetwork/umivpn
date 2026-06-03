@@ -85,6 +85,33 @@ class SupportChatRepository {
 
   String? get currentUserId => _client.auth.currentUser?.id;
 
+  /// Returns the user's existing support conversation id if it exists.
+  /// Does not create a new conversation.
+  Future<String?> getExistingConversationId() async {
+    if (_conversationId != null) {
+      return _conversationId;
+    }
+
+    final userId = currentUserId;
+    if (userId == null) {
+      throw StateError('Not signed in');
+    }
+
+    final row = await _client
+        .from('support_conversations')
+        .select('id')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+    if (row == null) return null;
+
+    final id = row['id'] as String?;
+    if (id == null || id.isEmpty) return null;
+
+    _conversationId = id;
+    return id;
+  }
+
   Future<String> ensureConversation() async {
     if (_conversationId != null) {
       return _conversationId!;

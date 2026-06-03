@@ -40,6 +40,8 @@ class _SupportChatPageState extends State<SupportChatPage> {
 
   bool _syncing = false;
 
+  Future<String>? _ensureConversationFuture;
+
   StreamSubscription<SupportMessage>? _subscription;
 
   @override
@@ -73,7 +75,18 @@ class _SupportChatPageState extends State<SupportChatPage> {
 
       setState(() {});
 
-      final conversationId = await _repository.ensureConversation();
+      // Only sync from network if the user already has a conversation.
+      // Do NOT create a conversation just by opening the page.
+      final conversationId = await _repository.getExistingConversationId();
+
+      if (conversationId == null) {
+        if (!mounted) return;
+        setState(() {
+          _syncing = false;
+        });
+        return;
+      }
+
       final loaded = await _repository.loadMessages(conversationId);
 
       for (final message in loaded) {
@@ -94,7 +107,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
         _syncing = false;
       });
 
-      _subscription = _repository
+      _subscription ??= _repository
           .watchMessages(conversationId)
           .listen(_onIncomingMessage);
     } catch (error) {
@@ -108,6 +121,62 @@ class _SupportChatPageState extends State<SupportChatPage> {
         _syncing = false;
       });
     }
+  }
+
+  Future<String> _ensureConversationReady() {
+    final currentUserId = _currentUserId;
+    if (currentUserId == null) {
+      return Future.error(StateError('Not signed in'));
+    }
+
+    final existingId = _conversationId;
+    if (existingId != null) {
+      return Future.value(existingId);
+    }
+
+    final inflight = _ensureConversationFuture;
+    if (inflight != null) {
+      return inflight;
+    }
+
+    final future = () async {
+      if (mounted) {
+        setState(() {
+          _syncing = true;
+          _error = null;
+        });
+      }
+
+      final conversationId = await _repository.ensureConversation();
+
+      if (!mounted) return conversationId;
+
+      setState(() {
+        _conversationId = conversationId;
+        _syncing = false;
+      });
+
+      _subscription ??= _repository
+          .watchMessages(conversationId)
+          .listen(_onIncomingMessage);
+
+      return conversationId;
+    }()
+        .catchError((error) {
+      logger.e(error);
+      if (mounted) {
+        setState(() {
+          _syncing = false;
+          _error ??= error.toString();
+        });
+      }
+      throw error;
+    }).whenComplete(() {
+      _ensureConversationFuture = null;
+    });
+
+    _ensureConversationFuture = future;
+    return future;
   }
 
   Future<void> _populateFromCache(String userId) async {
@@ -180,9 +249,10 @@ class _SupportChatPageState extends State<SupportChatPage> {
     final trimmed = text.trim();
     if (trimmed.isEmpty) return;
 
-    final conversationId = _conversationId;
     final userId = _currentUserId;
-    if (conversationId == null || userId == null) return;
+    if (userId == null) return;
+
+    final conversationId = await _ensureConversationReady();
 
     final pendingId = supportChatNewLocalTextId();
     final pending = supportChatPendingTextMessage(
@@ -252,9 +322,10 @@ class _SupportChatPageState extends State<SupportChatPage> {
   }
 
   Future<void> _handleAttachmentTap() async {
-    final conversationId = _conversationId;
     final userId = _currentUserId;
-    if (conversationId == null || userId == null) return;
+    if (userId == null) return;
+
+    await _ensureConversationReady();
 
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
@@ -271,9 +342,10 @@ class _SupportChatPageState extends State<SupportChatPage> {
   }
 
   Future<void> _sendImageBytes(Uint8List bytes, String fileName) async {
-    final conversationId = _conversationId;
     final userId = _currentUserId;
-    if (conversationId == null || userId == null) return;
+    if (userId == null) return;
+
+    final conversationId = await _ensureConversationReady();
 
     final dimensions = await decodeSupportImageDimensions(bytes);
     final pendingId = 'local-image-${DateTime.now().microsecondsSinceEpoch}';
