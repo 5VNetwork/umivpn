@@ -30,6 +30,7 @@ jobs:
         run: |
           touch ../umivpn-plugin/tm_linux/assets/x.so
           touch ../umivpn-plugin/tm_linux/assets/x
+          touch ../umivpn-plugin/tm_windows/assets/umi_service.zip
           mkdir -p assets/google_fonts
           mkdir -p assets/geo
           mkdir -p assets/ads
