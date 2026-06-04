@@ -48,7 +48,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "D:\a\umivpn\umivpn\build\windows\x64\runner\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "D:\a\umivpn\umivpn\service_install.exe"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "D:\a\umivpn\umivpn\umi_service.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\a\umivpn\umivpn\umi_service.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -59,7 +59,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 ; 🔹 Install the service during setup
 ;  ""{app}""
 Filename: "{app}\service_install.exe"; \
-    Parameters: "install ""{app}\data\flutter_assets\packages\tm_windows\assets\umi_service.exe"""; \
+    Parameters: "install"; \
     Flags: waituntilterminated runhidden
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 

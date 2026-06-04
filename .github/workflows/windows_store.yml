@@ -81,7 +81,6 @@ jobs:
       - name: copy files to umivpn_plugin
         run: |
           cp x_win_x86_64/x.dll ../umivpn-plugin/tm_windows/assets/x.dll
-        #  cp x_win_x86_64/umi_service.exe ../umivpn-plugin/tm_windows/assets/umi_service.exe
 
       - name: zip umi_service.exe
         shell: powershell
