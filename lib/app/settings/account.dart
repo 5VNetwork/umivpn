@@ -40,6 +40,24 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
+  void _showSetPasswordDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => _SetPasswordDialog(
+        onSuccess: () {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.passwordUpdated),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,27 +94,26 @@ class _AccountPageState extends State<AccountPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 16),
+
                 Center(
                   child: Row(
                     children: [
-                      if (!isProduction() ||
-                          authRepo.user?.plan != SubscriptionPlan.free)
-                        ElevatedButton(
-                          onPressed: () {
-                            context.go('/sign-in');
-                            context.read<AuthProvider>().logOut();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(
-                              context,
-                            ).colorScheme.primary,
-                            foregroundColor: Theme.of(
-                              context,
-                            ).colorScheme.onPrimary,
-                          ),
-                          child: Text(AppLocalizations.of(context)!.logout),
+                      ElevatedButton(
+                        onPressed: () {
+                          context.go('/sign-in');
+                          context.read<AuthProvider>().logOut();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onPrimary,
                         ),
+                        child: Text(AppLocalizations.of(context)!.logout),
+                      ),
                       ElevatedButton(
                         onPressed: () {
                           showDialog(
@@ -244,11 +261,149 @@ class _AccountPageState extends State<AccountPage> {
                     label: Text(AppLocalizations.of(context)!.managePlan),
                   ),
                 ),
+                const SizedBox(height: 16),
+                Text(
+                  AppLocalizations.of(context)!.setPasswordDesc,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: _showSetPasswordDialog,
+                    icon: const Icon(Icons.lock_outline),
+                    label: Text(AppLocalizations.of(context)!.setPassword),
+                  ),
+                ),
               ],
             ),
           );
         },
       ),
+    );
+  }
+}
+
+class _SetPasswordDialog extends StatefulWidget {
+  const _SetPasswordDialog({required this.onSuccess});
+
+  final VoidCallback onSuccess;
+
+  @override
+  State<_SetPasswordDialog> createState() => _SetPasswordDialogState();
+}
+
+class _SetPasswordDialogState extends State<_SetPasswordDialog> {
+  final _newPasswordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  String? _newPasswordError;
+  String? _confirmPasswordError;
+  bool _isSaving = false;
+
+  @override
+  void dispose() {
+    _newPasswordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _save() async {
+    final l10n = AppLocalizations.of(context)!;
+    final newPassword = _newPasswordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    String? nextNewPasswordError;
+    String? nextConfirmPasswordError;
+    if (newPassword.length < 6) {
+      nextNewPasswordError = l10n.passwordTooShort;
+    }
+    if (confirmPassword != newPassword) {
+      nextConfirmPasswordError = l10n.passwordsDoNotMatch;
+    }
+
+    if (nextNewPasswordError != null || nextConfirmPasswordError != null) {
+      setState(() {
+        _newPasswordError = nextNewPasswordError;
+        _confirmPasswordError = nextConfirmPasswordError;
+      });
+      return;
+    }
+
+    setState(() {
+      _isSaving = true;
+      _newPasswordError = null;
+      _confirmPasswordError = null;
+    });
+
+    try {
+      await context.read<AuthProvider>().updatePassword(newPassword);
+      if (!mounted) return;
+      Navigator.pop(context);
+      widget.onSuccess();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      setState(() => _isSaving = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return AlertDialog(
+      title: Text(l10n.setPassword),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(l10n.setPasswordDesc),
+          const SizedBox(height: 16),
+          TextField(
+            controller: _newPasswordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: l10n.newPassword,
+              errorText: _newPasswordError,
+            ),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _confirmPasswordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: l10n.confirmPassword,
+              errorText: _confirmPasswordError,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: _isSaving ? null : () => Navigator.pop(context),
+          child: Text(l10n.cancel),
+        ),
+        ElevatedButton(
+          onPressed: _isSaving ? null : _save,
+          child: _isSaving
+              ? SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                )
+              : Text(l10n.save),
+        ),
+      ],
     );
   }
 }

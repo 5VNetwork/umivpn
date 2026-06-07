@@ -285,6 +285,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addToDirect => 'Add to Direct?';
 
   @override
+  String get addToVpnBlock => 'Add to \"Block VPN websites\"';
+
+  @override
+  String get vpnBlockDomains => 'Block VPN websites';
+
+  @override
+  String get vpnBlockDomainsDesc => 'Websites that block VPN traffic will be specially handled in our VPN servers. However, this does not guarantee normal access.';
+
+  @override
+  String get addVpnBlockDomain => 'Add domain';
+
+  @override
   String get default0 => 'Default';
 
   @override
@@ -1167,6 +1179,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAccountConfirm => 'Are you sure you want to delete your account? This action cannot be undone. This email will not be used to login again.';
+
+  @override
+  String get setPassword => 'Set Password';
+
+  @override
+  String get setPasswordDesc => 'Set a password to sign in on other devices using your email and password.';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get passwordTooShort => 'Password must be at least 6 characters';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get passwordUpdated => 'Password updated successfully';
 
   @override
   String get domainSetDescription => 'The following domain set uses proxy DNS server (default 8.8.8.8 and 1.1.1.1) to resolve, other domains use direct DNS server (default is dns servers of your primary physical nic, or 223.5.5.5 and 114.114.114.114 if the former cannot be known) to resolve';
@@ -2181,6 +2214,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacy5Desc => 'To prevent abuse and violation of Terms of Service';
+
+  @override
+  String get privacy6 => 'Device Model';
+
+  @override
+  String get privacy6Desc => 'To prevent account sharing';
 
   @override
   String get privacyAssurance0 => 'We do not collect other personal data, such as browsing history, IP address.';

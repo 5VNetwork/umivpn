@@ -285,6 +285,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addToDirect => '添加到直连?';
 
   @override
+  String get addToVpnBlock => '添加到“禁止VPN的网站”';
+
+  @override
+  String get vpnBlockDomains => '禁止VPN的网站';
+
+  @override
+  String get vpnBlockDomainsDesc => '部分网站会封锁 VPN 流量，请将这些网站添加到列表里，它们的流量在服务器会被特殊处理。但是，这依旧无法保证能正常访问';
+
+  @override
+  String get addVpnBlockDomain => '添加域名';
+
+  @override
   String get default0 => '默认';
 
   @override
@@ -1117,6 +1129,27 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get deleteAccountConfirm => '确定要删除账户吗？此操作无法撤销。此邮箱将无法再次用于登录。';
+
+  @override
+  String get setPassword => '设置密码';
+
+  @override
+  String get setPasswordDesc => '设置密码后，可在其他设备使用邮箱和密码登录。';
+
+  @override
+  String get newPassword => '新密码';
+
+  @override
+  String get confirmPassword => '确认密码';
+
+  @override
+  String get passwordTooShort => '密码至少需要6个字符';
+
+  @override
+  String get passwordsDoNotMatch => '两次输入的密码不一致';
+
+  @override
+  String get passwordUpdated => '密码已更新';
 
   @override
   String get domainSetDescription => '以下域名集合使用代理DNS服务器（默认为8.8.8.8和1.1.1.1）解析，其余域名使用直连DNS服务器（默认是物理网卡的DNS服务器，或223.5.5.5和114.114.114.114如果物理网卡的DNS服务器无法获取到）解析';
@@ -2131,6 +2164,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get privacy5Desc => '用于防止违反服务条款的滥用行为';
+
+  @override
+  String get privacy6 => '设备型号';
+
+  @override
+  String get privacy6Desc => '用于防止账户共享';
 
   @override
   String get privacyAssurance0 => '我们不收集其他个人信息，比如浏览历史、IP地址等。';

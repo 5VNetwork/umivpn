@@ -649,6 +649,30 @@ abstract class AppLocalizations {
   /// **'Add to Direct?'**
   String get addToDirect;
 
+  /// No description provided for @addToVpnBlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to \"Block VPN websites\"'**
+  String get addToVpnBlock;
+
+  /// No description provided for @vpnBlockDomains.
+  ///
+  /// In en, this message translates to:
+  /// **'Block VPN websites'**
+  String get vpnBlockDomains;
+
+  /// No description provided for @vpnBlockDomainsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Websites that block VPN traffic will be specially handled in our VPN servers. However, this does not guarantee normal access.'**
+  String get vpnBlockDomainsDesc;
+
+  /// No description provided for @addVpnBlockDomain.
+  ///
+  /// In en, this message translates to:
+  /// **'Add domain'**
+  String get addVpnBlockDomain;
+
   /// No description provided for @default0.
   ///
   /// In en, this message translates to:
@@ -2172,6 +2196,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete your account? This action cannot be undone. This email will not be used to login again.'**
   String get deleteAccountConfirm;
+
+  /// No description provided for @setPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Password'**
+  String get setPassword;
+
+  /// No description provided for @setPasswordDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a password to sign in on other devices using your email and password.'**
+  String get setPasswordDesc;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPassword;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
+
+  /// No description provided for @passwordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordTooShort;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @passwordUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Password updated successfully'**
+  String get passwordUpdated;
 
   /// No description provided for @domainSetDescription.
   ///
@@ -4116,6 +4182,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'To prevent abuse and violation of Terms of Service'**
   String get privacy5Desc;
+
+  /// No description provided for @privacy6.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Model'**
+  String get privacy6;
+
+  /// No description provided for @privacy6Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'To prevent account sharing'**
+  String get privacy6Desc;
 
   /// No description provided for @privacyAssurance0.
   ///

@@ -27,7 +27,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
-import 'package:tm/activate.dart';
 import 'package:tm/common.dart';
 import 'package:tm/root_certs.dart';
 import 'package:tm/tm.dart';
@@ -168,7 +167,6 @@ void main() async {
     Bloc.observer = const AppBlocObserver();
   }
   initRouter(authProvider);
-  boot(storage, authProvider);
   logger.d(
     "App start time: ${DateTime.now().difference(startTime).inSeconds}s",
   );
@@ -186,7 +184,7 @@ void main() async {
         create: (_) => SupportUnreadBadgeController()..start(),
         lazy: false,
       ),
-      ChangeNotifierProvider.value(value: AuthRepo(authProvider)),
+      ChangeNotifierProvider.value(value: AuthRepo(authProvider, storage)),
       Provider.value(value: pref),
       Provider.value(value: storage),
       Provider<LogUploadService>(

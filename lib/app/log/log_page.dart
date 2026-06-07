@@ -880,6 +880,7 @@ class _LogListState extends State<LogList> {
     bool showTrailing = true,
   }) {
     bool domainAdded = false;
+    bool vpnBlockAdded = false;
     return ListTile(
       title: Row(
         children: [
@@ -898,42 +899,80 @@ class _LogListState extends State<LogList> {
           ? null
           : StatefulBuilder(
               builder: (context, setState) {
-                return IconButton.filledTonal(
-                  icon: domainAdded
-                      ? const Icon(Icons.check_rounded, size: 18)
-                      : const Icon(Icons.add_rounded, size: 18),
-                  constraints: const BoxConstraints(
-                    minWidth: 32,
-                    minHeight: 32,
-                  ),
-                  padding: EdgeInsets.zero,
-                  onPressed: domainAdded
-                      ? null
-                      : () async {
-                          final xController = context.read<XController>();
-                          List<String> domains = [];
-                          if (domain.contains(',')) {
-                            domains = domain.split(',');
-                          } else {
-                            domains.add(domain);
-                          }
-                          final logRoutingHelper = LogRoutingHelper(
-                            pref: context.read<SharedPreferences>(),
-                            xController: xController,
-                          );
-                          for (var domain in domains) {
-                            if (isDomain(domain)) {
-                              await logRoutingHelper.addDomain(
-                                direct: !isDirect,
-                                type: Domain_Type.RootDomain,
-                                value: domain,
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton.filledTonal(
+                      icon: vpnBlockAdded
+                          ? const Icon(Icons.check_rounded, size: 18)
+                          : const Icon(Icons.vpn_key_off_rounded, size: 18),
+                      constraints: const BoxConstraints(
+                        minWidth: 32,
+                        minHeight: 32,
+                      ),
+                      padding: EdgeInsets.zero,
+                      tooltip: AppLocalizations.of(context)!.addToVpnBlock,
+                      onPressed: vpnBlockAdded
+                          ? null
+                          : () async {
+                              final xController = context.read<XController>();
+                              final domains = domain.contains(',')
+                                  ? domain.split(',')
+                                  : [domain];
+                              for (final d in domains) {
+                                if (isDomain(d)) {
+                                  await xController.addVpnBlockDomain(
+                                    Domain(
+                                      type: Domain_Type.RootDomain,
+                                      value: d,
+                                    ),
+                                  );
+                                }
+                              }
+                              setState(() {
+                                vpnBlockAdded = true;
+                              });
+                            },
+                    ),
+                    Gap(5),
+                    IconButton.filledTonal(
+                      icon: domainAdded
+                          ? const Icon(Icons.check_rounded, size: 18)
+                          : const Icon(Icons.add_rounded, size: 18),
+                      constraints: const BoxConstraints(
+                        minWidth: 32,
+                        minHeight: 32,
+                      ),
+                      padding: EdgeInsets.zero,
+                      onPressed: domainAdded
+                          ? null
+                          : () async {
+                              final xController = context.read<XController>();
+                              List<String> domains = [];
+                              if (domain.contains(',')) {
+                                domains = domain.split(',');
+                              } else {
+                                domains.add(domain);
+                              }
+                              final logRoutingHelper = LogRoutingHelper(
+                                pref: context.read<SharedPreferences>(),
+                                xController: xController,
                               );
-                            }
-                          }
-                          setState(() {
-                            domainAdded = true;
-                          });
-                        },
+                              for (var domain in domains) {
+                                if (isDomain(domain)) {
+                                  await logRoutingHelper.addDomain(
+                                    direct: !isDirect,
+                                    type: Domain_Type.RootDomain,
+                                    value: domain,
+                                  );
+                                }
+                              }
+                              setState(() {
+                                domainAdded = true;
+                              });
+                            },
+                    ),
+                  ],
                 );
               },
             ),
@@ -947,6 +986,8 @@ class _LogListState extends State<LogList> {
     String resolver = '',
   }) {
     bool domainAdded = false;
+    bool vpnBlockAdded = false;
+    final isDomainDestination = isDomain(destination);
     final destinationTextStyle = Theme.of(context).textTheme.bodyLarge;
     final dst = Text(destination, maxLines: 3, style: destinationTextStyle);
     return ListTile(
@@ -980,52 +1021,86 @@ class _LogListState extends State<LogList> {
           ? null
           : StatefulBuilder(
               builder: (context, setState) {
-                return IconButton.filledTonal(
-                  icon: domainAdded
-                      ? const Icon(Icons.check_rounded, size: 18)
-                      : const Icon(Icons.add_rounded, size: 18),
-                  constraints: const BoxConstraints(
-                    minWidth: 32,
-                    minHeight: 32,
-                  ),
-                  padding: EdgeInsets.zero,
-                  onPressed: domainAdded
-                      ? null
-                      : () async {
-                          try {
-                            final xController = context.read<XController>();
-                            final logRoutingHelper = LogRoutingHelper(
-                              pref: context.read<SharedPreferences>(),
-                              xController: xController,
-                            );
-                            // check if dst is an ip
-                            final domain = isDomain(destination);
-                            if (domain) {
-                              final d = Domain(
-                                type: Domain_Type.Full,
-                                value: destination,
-                              );
-                              await logRoutingHelper.addDomain(
-                                direct: !isDirect,
-                                type: Domain_Type.RootDomain,
-                                value: destination,
-                              );
-                            } else {
-                              final normalizedIp = normalizeIp(destination);
-                              if (isValidIp(normalizedIp)) {
-                                await logRoutingHelper.addIp(
-                                  direct: !isDirect,
-                                  cidr: ipToCidrString(normalizedIp),
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (isDomainDestination)
+                      IconButton.filledTonal(
+                        icon: vpnBlockAdded
+                            ? const Icon(Icons.check_rounded, size: 18)
+                            : const Icon(Icons.vpn_key_off_rounded, size: 18),
+                        constraints: const BoxConstraints(
+                          minWidth: 32,
+                          minHeight: 32,
+                        ),
+                        padding: EdgeInsets.zero,
+                        tooltip: AppLocalizations.of(context)!.addToVpnBlock,
+                        onPressed: vpnBlockAdded
+                            ? null
+                            : () async {
+                                try {
+                                  final xController = context
+                                      .read<XController>();
+                                  await xController.addVpnBlockDomain(
+                                    Domain(
+                                      type: Domain_Type.RootDomain,
+                                      value: destination,
+                                    ),
+                                  );
+                                  setState(() {
+                                    vpnBlockAdded = true;
+                                  });
+                                } catch (e) {
+                                  logger.d(
+                                    'add vpn block domain error',
+                                    error: e,
+                                  );
+                                }
+                              },
+                      ),
+                    Gap(5),
+                    IconButton.filledTonal(
+                      icon: domainAdded
+                          ? const Icon(Icons.check_rounded, size: 18)
+                          : const Icon(Icons.add_rounded, size: 18),
+                      constraints: const BoxConstraints(
+                        minWidth: 32,
+                        minHeight: 32,
+                      ),
+                      padding: EdgeInsets.zero,
+                      onPressed: domainAdded
+                          ? null
+                          : () async {
+                              try {
+                                final xController = context.read<XController>();
+                                final logRoutingHelper = LogRoutingHelper(
+                                  pref: context.read<SharedPreferences>(),
+                                  xController: xController,
                                 );
+                                if (isDomainDestination) {
+                                  await logRoutingHelper.addDomain(
+                                    direct: !isDirect,
+                                    type: Domain_Type.RootDomain,
+                                    value: destination,
+                                  );
+                                } else {
+                                  final normalizedIp = normalizeIp(destination);
+                                  if (isValidIp(normalizedIp)) {
+                                    await logRoutingHelper.addIp(
+                                      direct: !isDirect,
+                                      cidr: ipToCidrString(normalizedIp),
+                                    );
+                                  }
+                                }
+                                setState(() {
+                                  domainAdded = true;
+                                });
+                              } catch (e) {
+                                logger.d('add address error', error: e);
                               }
-                            }
-                            setState(() {
-                              domainAdded = true;
-                            });
-                          } catch (e) {
-                            logger.d('add address error', error: e);
-                          }
-                        },
+                            },
+                    ),
+                  ],
                 );
               },
             ),

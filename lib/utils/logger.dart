@@ -144,12 +144,9 @@ Future<void> startShareLog() async {
   // Pass all uncaught asynchronous errors that aren't handled
   // by the Flutter framework to Crashlytics
   PlatformDispatcher.instance.onError = (error, stack) {
-    if (error.toString().contains('UUID')) {
-      return false;
-    }
-    reportError(
+    logger.d(
       "PlatformDispatcher.instance.onError",
-      error,
+      error: error,
       stackTrace: stack,
     );
     return true;
@@ -192,16 +189,13 @@ Future<void> setDebugLoggerDevlopment() async {
   final logDirPath = getFlutterLogDir().path;
   final l = Logger(
     filter: ProductionFilter(),
-    printer: SimplePrinter(
-        printTime:
-            true) /* PrettyPrinter(
+    printer: SimplePrinter(printTime: true) /* PrettyPrinter(
         methodCount: 2, // Number of method calls to be displayed
         errorMethodCount: 8, // Number of method calls if stacktrace is provided
         lineLength: 120, // Width of the output
         // Should each log print contain a timestamp
         dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
-       /*  colors: true */) */
-    ,
+       /*  colors: true */) */,
     output: MultiOutput([
       // if (!kDebugMode)
       AdvancedFileOutput(
@@ -271,8 +265,9 @@ class SimplePrinter extends LogPrinter {
     var messageStr = _stringifyMessage(event.message);
     var errorStr = event.error != null ? '  ERROR: ${event.error}' : '';
     var timeStr = printTime ? 'TIME: ${event.time.toIso8601String()}' : '';
-    var stackTraceStr =
-        event.stackTrace != null ? '\n${event.stackTrace?.toString()}' : '';
+    var stackTraceStr = event.stackTrace != null
+        ? '\n${event.stackTrace?.toString()}'
+        : '';
     return [
       '${_labelFor(event.level)} $timeStr $messageStr$errorStr$stackTraceStr',
     ];

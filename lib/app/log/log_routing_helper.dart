@@ -57,6 +57,17 @@ class LogRoutingHelper {
     );
   }
 
+  Future<void> addVpnBlockDomain({
+    required Domain_Type type,
+    required String value,
+  }) async {
+    final v = value.trim();
+    if (v.isEmpty) {
+      return;
+    }
+    await _xController.addGeoDomain(vpnBlock, Domain(type: type, value: v));
+  }
+
   Future<void> addIp({required bool direct, required String cidr}) async {
     final mode = _pref.routingMode;
     final rules = await _repository.loadModeRules(mode);

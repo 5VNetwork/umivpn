@@ -17,9 +17,7 @@ class InitialPage extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text(l10n.privacyPolicy)),
-      ),
+      appBar: AppBar(title: Center(child: Text(l10n.privacyPolicy))),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -34,8 +32,9 @@ class InitialPage extends StatelessWidget {
                       children: [
                         Text(
                           l10n.personalDataWeCollect,
-                          style: theme.textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w600),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         const SizedBox(height: 24),
                         _PrivacySection(
@@ -78,6 +77,13 @@ class InitialPage extends StatelessWidget {
                           iconColor: colorScheme.primary,
                           title: l10n.privacy5,
                           description: l10n.privacy5Desc,
+                          theme: theme,
+                        ),
+                        _PrivacySection(
+                          icon: Icons.schedule_outlined,
+                          iconColor: colorScheme.primary,
+                          title: l10n.privacy6,
+                          description: l10n.privacy6Desc,
                           theme: theme,
                         ),
                         const SizedBox(height: 16),

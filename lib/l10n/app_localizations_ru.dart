@@ -285,6 +285,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get addToDirect => 'Добавить в Direct?';
 
   @override
+  String get addToVpnBlock => 'Обход блокировки VPN';
+
+  @override
+  String get vpnBlockDomains => 'Обход VPN-блокировки';
+
+  @override
+  String get vpnBlockDomainsDesc => 'Сайты, блокирующие VPN-трафик, будут подключаться напрямую без туннеля';
+
+  @override
+  String get addVpnBlockDomain => 'Добавить домен для обхода';
+
+  @override
   String get default0 => 'По умолчанию';
 
   @override
@@ -1167,6 +1179,27 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get deleteAccountConfirm => 'Вы уверены, что хотите удалить свою учётную запись? Это действие не может быть отменено.';
+
+  @override
+  String get setPassword => 'Установить пароль';
+
+  @override
+  String get setPasswordDesc => 'Установите пароль, чтобы входить на других устройствах с помощью email и пароля.';
+
+  @override
+  String get newPassword => 'Новый пароль';
+
+  @override
+  String get confirmPassword => 'Подтвердите пароль';
+
+  @override
+  String get passwordTooShort => 'Пароль должен содержать не менее 6 символов';
+
+  @override
+  String get passwordsDoNotMatch => 'Пароли не совпадают';
+
+  @override
+  String get passwordUpdated => 'Пароль успешно обновлён';
 
   @override
   String get domainSetDescription => 'Следующий набор доменов использует прокси-DNS-сервер (по умолчанию 8.8.8.8 и 1.1.1.1) для разрешения, другие домены используют прямой DNS-сервер (по умолчанию это DNS-серверы вашей основной физической сетевой карты или 223.5.5.5 и 114.114.114.114, если первый неизвестен) для разрешения';
@@ -2181,6 +2214,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get privacy5Desc => 'To prevent abuse and violation of Terms of Service';
+
+  @override
+  String get privacy6 => 'Device Model';
+
+  @override
+  String get privacy6Desc => 'To prevent account sharing';
 
   @override
   String get privacyAssurance0 => 'We do not collect other personal data, such as browsing history, IP address.';
