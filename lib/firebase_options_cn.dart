@@ -31,10 +31,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -60,4 +57,14 @@ class DefaultFirebaseOptions {
     storageBucket: 'umivpn.firebasestorage.app',
     iosBundleId: 'com.umivpn.cn',
   );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBKFsIENEmO-fEgw-_KDf6qGfaQsBbFKU8',
+    appId: '1:44508252344:ios:85b42f9c6d2afdaf364c4d',
+    messagingSenderId: '44508252344',
+    projectId: 'umivpn',
+    storageBucket: 'umivpn.firebasestorage.app',
+    iosBundleId: 'com.umivpn.cn',
+  );
+
 }

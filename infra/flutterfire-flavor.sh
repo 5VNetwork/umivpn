@@ -44,7 +44,9 @@ case $1 in
       --project=umivpn \
       --out=lib/firebase_options_cn.dart \
       --ios-bundle-id=com.umivpn.cn \
-      --ios-out=ios/flavors/cn/GoogleService-Info.plist 
+      --ios-out=ios/flavors/cn/GoogleService-Info.plist \
+      --macos-bundle-id=com.umivpn.cn \
+      --macos-out=macos/flavors/cn/GoogleService-Info.plist 
     ;;
   *)
     echo "Error: Invalid environment specified. Use 'staging' or 'production'."
