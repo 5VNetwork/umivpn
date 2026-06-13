@@ -91,7 +91,7 @@ class AllPlans extends StatelessWidget {
           }
         },
       );
-      if (Platform.isIOS && appFlavor == 'cn') {
+      if (applePlatform && appFlavor == 'cn') {
         return Center(
           child: Text(
             AppLocalizations.of(context)!.testflightPurchaseNotSupported,
