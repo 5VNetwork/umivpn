@@ -118,7 +118,7 @@ Future<void> _ensureFcmLocalNotificationsInitialized() async {
   const androidInit = AndroidInitializationSettings('@drawable/ic_stat_notify');
   const darwinInit = DarwinInitializationSettings();
   await flutterLocalNotificationsPlugin.initialize(
-    const InitializationSettings(
+    settings: const InitializationSettings(
       android: androidInit,
       iOS: darwinInit,
       macOS: darwinInit,
