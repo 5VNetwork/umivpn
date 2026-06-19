@@ -40,6 +40,7 @@ import 'package:umivpn/utils/review_prompt.dart';
 import 'package:umivpn/widgets/pro_icon.dart';
 import 'package:flutter_common/widgets/app_bar.dart';
 import 'package:tm_windows/tm_windows_bindings_generated.dart';
+import 'package:flutter_sparkle/flutter_sparkle.dart';
 
 enum SettingItem {
   account(icon: Icon(Icons.person_rounded), pathSegment: 'account'),
@@ -181,6 +182,20 @@ List<Widget> _getBottomButtons(BuildContext context, User? user) {
     const Version(),
     const Gap(5),
     if (autoUpdateSupported) const CheckUpdateButton(),
+    if (isPkg)
+      Column(children: [
+        Divider(),
+        Padding(
+            padding: EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
+            child: TextButton(
+              onPressed: () async {
+                FlutterSparkle.checkMacUpdate(isProduction()
+                    ? 'https://umivpn.r2.5vnetwork.com/appcast.xml'
+                    : 'https://pub-ffc1bef2c4eb4b8fb433f0706418dabe.r2.dev/appcast.xml');
+              },
+              child: Text(AppLocalizations.of(context)!.checkUpdate),
+            ))
+      ]),
     ...getPrivateBottomButtons(context, user),
   ];
 }
