@@ -36,6 +36,7 @@ import 'package:tm/status_cubit.dart';
 import 'package:tm/ads/app_lifecycle.dart';
 import 'package:tm/ads/start_ad.dart';
 import 'package:umivpn/app/privacy.dart';
+import 'package:umivpn/app/settings/ads.dart';
 import 'package:umivpn/auth/user.dart';
 import 'package:umivpn/utils/android_host_api.g.dart';
 import 'package:umivpn/app/choice_cubit.dart';
@@ -233,7 +234,7 @@ void main() async {
         lazy: false,
       ),
       if (autoUpdateSupported)
-        Provider(
+        ChangeNotifierProvider(
           lazy: false,
           create: (ctx) {
             final a = AutoUpdateService(

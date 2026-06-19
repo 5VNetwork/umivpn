@@ -2,29 +2,38 @@ part of 'home.dart';
 
 class TrafficCardViewModel extends ChangeNotifier {
   TrafficCardViewModel({required this.authRepo}) {
-    _startPeriodicProfileFetch();
+    _fetchProfile();
   }
   final AuthRepo authRepo;
   UserProfile? get userProfile => _userProfile;
   UserProfile? _userProfile;
-  Timer? _profileFetchTimer;
+  bool _isRefreshing = false;
+  bool get isRefreshing => _isRefreshing;
+  DateTime? _lastManualRefreshAt;
 
-  void _startPeriodicProfileFetch() async {
-    // Then fetch every 5 minutes
-    _profileFetchTimer = Timer.periodic(
-      const Duration(minutes: 5),
-      (_) => _fetchProfile(),
-    );
-    _fetchProfile();
+  static const _manualRefreshCooldown = Duration(minutes: 1);
+
+  bool get canManualRefresh =>
+      _lastManualRefreshAt == null ||
+      DateTime.now().difference(_lastManualRefreshAt!) >=
+          _manualRefreshCooldown;
+
+  Future<void> manualRefresh() async {
+    if (!canManualRefresh || _isRefreshing) {
+      return;
+    }
+    _isRefreshing = true;
+    notifyListeners();
+    try {
+      await _fetchProfile();
+      _lastManualRefreshAt = DateTime.now();
+    } finally {
+      _isRefreshing = false;
+      notifyListeners();
+    }
   }
 
-  @override
-  void dispose() {
-    _profileFetchTimer?.cancel();
-    super.dispose();
-  }
-
-  void _fetchProfile() async {
+  Future<void> _fetchProfile() async {
     final userProfile = await authRepo.fetchProfile();
     _userProfile = userProfile;
     notifyListeners();
@@ -186,6 +195,41 @@ class _TrafficCard extends StatelessWidget {
                                 height: 1.8,
                               ),
                             ),
+                            const SizedBox(width: 4),
+                            viewModel.canManualRefresh
+                                ? IconButton(
+                                    onPressed:
+                                        viewModel.canManualRefresh &&
+                                            !viewModel.isRefreshing
+                                        ? viewModel.manualRefresh
+                                        : null,
+                                    icon: viewModel.isRefreshing
+                                        ? SizedBox(
+                                            width: 18,
+                                            height: 18,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: colorScheme.onSurface
+                                                  .withOpacity(0.70),
+                                            ),
+                                          )
+                                        : Icon(
+                                            Icons.refresh_rounded,
+                                            size: 20,
+                                            color: viewModel.canManualRefresh
+                                                ? colorScheme.onSurface
+                                                      .withOpacity(0.70)
+                                                : colorScheme.onSurface
+                                                      .withOpacity(0.30),
+                                          ),
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(
+                                      minWidth: 32,
+                                      minHeight: 32,
+                                    ),
+                                    visualDensity: VisualDensity.compact,
+                                  )
+                                : const SizedBox.shrink(),
                             const Spacer(),
                             Text(
                               "${AppLocalizations.of(context)!.dataRefresh}: ${AppLocalizations.of(context)!.days(refreshDate.difference(DateTime.now()).inDays)}",

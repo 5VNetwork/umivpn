@@ -64,15 +64,26 @@ class AuthRepo extends ChangeNotifier {
     if (_user == null) {
       return null;
     }
-    final userId = _user!.id;
+    final token = await getAccessToken();
+    if (token == null) {
+      return null;
+    }
     try {
-      final response = await supabase
-          .from('profiles')
-          .select()
-          .eq('id', userId)
-          .single();
-      debugPrint(response.toString());
-      final profile = UserProfile.fromJson(response);
+      final response = await supabase.functions.invoke(
+        'get-profile',
+        headers: {
+          'Authorization': 'Bearer $token',
+          'User-Agent': 'UmiVPN/$version',
+        },
+      );
+      if (response.status != 200 || response.data == null) {
+        throw Exception(
+          'get-profile failed: ${response.status} ${response.data}',
+        );
+      }
+      final profile = UserProfile.fromJson(
+        Map<String, dynamic>.from(response.data as Map),
+      );
       _userProfile = profile;
       _updateStaleUser(profile);
       return profile;
@@ -108,27 +119,41 @@ class AuthRepo extends ChangeNotifier {
     if (_user == null) {
       return null;
     }
-    final userId = _user!.id;
+    final token = await getAccessToken();
+    if (token == null) {
+      return null;
+    }
 
     try {
-      // Join profiles with subscriptions to fetch profile and its active subscription
-      final response = await supabase
-          .from('profiles')
-          .select('*, subscriptions(*)')
-          .eq('id', userId)
-          .single();
+      final response = await supabase.functions.invoke(
+        'get-profile',
+        headers: {
+          'Authorization': 'Bearer $token',
+          'User-Agent': 'UmiVPN/$version',
+        },
+        body: {'include_subscription': true},
+      );
+      if (response.status != 200 || response.data == null) {
+        logger.e(
+          'get-profile (subscription) failed',
+          error: '${response.status} ${response.data}',
+        );
+        return null;
+      }
 
-      _updateStaleUser(UserProfile.fromJson(response));
+      final data = Map<String, dynamic>.from(response.data as Map);
+      _updateStaleUser(UserProfile.fromJson(data));
 
-      // --- Parse subscription data (active subscription) ---
       SubscriptionInfo? subInfo;
-      final subscriptionsData = response['subscriptions'];
+      final subscriptionsData = data['subscriptions'];
 
       Map<String, dynamic>? subscriptionRow;
       if (subscriptionsData is List && subscriptionsData.isNotEmpty) {
-        subscriptionRow = subscriptionsData.first as Map<String, dynamic>;
+        subscriptionRow = Map<String, dynamic>.from(
+          subscriptionsData.first as Map,
+        );
       } else if (subscriptionsData is Map) {
-        subscriptionRow = subscriptionsData as Map<String, dynamic>;
+        subscriptionRow = Map<String, dynamic>.from(subscriptionsData);
       }
 
       if (subscriptionRow != null && subscriptionRow.isNotEmpty) {

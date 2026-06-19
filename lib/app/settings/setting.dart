@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_common/common.dart';
 import 'package:flutter_common/services/auto_update.dart';
 import 'package:flutter_common/widgets/progress.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -49,7 +50,8 @@ enum SettingItem {
   openSourceSoftwareNotice(
     icon: Icon(Icons.code_rounded),
     pathSegment: 'openSourceSoftwareNotice',
-  );
+  ),
+  ads(icon: Icon(Icons.ads_click_outlined), pathSegment: 'ads');
 
   final Widget icon;
   final String pathSegment;
@@ -86,6 +88,8 @@ enum SettingItem {
         return Text(AppLocalizations.of(context)!.contactUs);
       case SettingItem.openSourceSoftwareNotice:
         return Text(AppLocalizations.of(context)!.openSourceSoftwareNotice);
+      case SettingItem.ads:
+        return Text(AppLocalizations.of(context)!.promote);
     }
   }
 
@@ -100,6 +104,8 @@ enum SettingItem {
       case SettingItem.contactUs:
         return null;
       case SettingItem.openSourceSoftwareNotice:
+        return null;
+      case SettingItem.ads:
         return null;
     }
   }
@@ -144,6 +150,19 @@ List<Widget> _getBottomButtons(BuildContext context, User? user) {
         icon: const Icon(Icons.rate_review_outlined),
       ),
     ),
+    if (!applePlatform) ...[
+      SizedBox(height: 5),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: OutlinedButton.icon(
+          onPressed: () async {
+            launchUrl(Uri.parse(adWantedUrl));
+          },
+          label: Text(AppLocalizations.of(context)!.adWanted),
+          icon: const Icon(Icons.ads_click_outlined),
+        ),
+      ),
+    ],
     if (Platform.isWindows && isWinStore) ...[
       const Gap(5),
       Padding(
@@ -158,6 +177,8 @@ List<Widget> _getBottomButtons(BuildContext context, User? user) {
     ...getPrivateBottomButtons(context, user),
   ];
 }
+
+const adWantedUrl = 'https://vx.5vnetwork.com/zh/advertise';
 
 class CompactSettingScreen extends StatelessWidget {
   const CompactSettingScreen({super.key});
@@ -358,45 +379,51 @@ class CheckUpdateButton extends StatefulWidget {
 
 class _CheckUpdateButtonState extends State<CheckUpdateButton> {
   bool _checkingUpdate = false;
-  bool _downloadingUpdate = false;
-  String? _version;
 
   @override
   Widget build(BuildContext context) {
+    final autoUpdateService = context.watch<AutoUpdateService>();
+    final isDownloading = autoUpdateService.isDownloading;
+
     return TextButton(
-      onPressed: () async {
-        setState(() {
-          _checkingUpdate = true;
-        });
-        try {
-          final autoUpdateService = context.read<AutoUpdateService>();
-          final release = await autoUpdateService.getLatestRelease();
-          if (release != null) {
-            setState(() {
-              _checkingUpdate = false;
-              _downloadingUpdate = true;
-              _version = release.version;
-            });
-            await autoUpdateService.updateToRelease(release);
-          } else {
-            snack(AppLocalizations.of(context)!.noNewVersion);
-          }
-        } catch (e, stackTrace) {
-          logger.e('Error checking update', error: e, stackTrace: stackTrace);
-          snack(e.toString());
-        } finally {
-          setState(() {
-            _downloadingUpdate = false;
-            _checkingUpdate = false;
-            _version = null;
-          });
-        }
-      },
+      onPressed: (_checkingUpdate || isDownloading)
+          ? null
+          : () async {
+              setState(() {
+                _checkingUpdate = true;
+              });
+              try {
+                final release = await autoUpdateService.getLatestRelease();
+                if (release != null) {
+                  setState(() {
+                    _checkingUpdate = false;
+                  });
+                  await autoUpdateService.updateToRelease(release);
+                } else {
+                  snack(AppLocalizations.of(context)!.noNewVersion);
+                }
+              } catch (e, stackTrace) {
+                logger.e(
+                  'Error checking update',
+                  error: e,
+                  stackTrace: stackTrace,
+                );
+                snack(e.toString());
+              } finally {
+                if (mounted) {
+                  setState(() {
+                    _checkingUpdate = false;
+                  });
+                }
+              }
+            },
       child: _checkingUpdate
           ? smallCircularProgressIndicator()
           : Text(
-              _downloadingUpdate
-                  ? AppLocalizations.of(context)!.downloading(_version ?? '')
+              isDownloading
+                  ? AppLocalizations.of(
+                      context,
+                    )!.downloading(autoUpdateService.downloadingVersion ?? '')
                   : AppLocalizations.of(context)!.checkUpdate,
             ),
     );

@@ -83,6 +83,7 @@ extension UserExtension on Session {
     // Extract the 'pro' claim from JWT
     final plan = claims['plan'] as String? ?? 'free';
     final cycleEndAt = claims['cycle_end_at'] as int?;
+    logger.d('plan: $plan, cycleEndAt: $cycleEndAt');
     return User(
       id: user.id,
       email: user.email!,
