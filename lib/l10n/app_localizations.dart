@@ -1621,6 +1621,12 @@ abstract class AppLocalizations {
   /// **'No selected node'**
   String get startFailedReasonNoSelected;
 
+  /// No description provided for @noServersInDesiredCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'No servers of your desired country are found. Please change country'**
+  String get noServersInDesiredCountry;
+
   /// No description provided for @failedToUpdateSub.
   ///
   /// In en, this message translates to:

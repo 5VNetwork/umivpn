@@ -304,6 +304,7 @@
   "startFailedReasonNoNode": "No node",
   "startFailedReasonNoEnabledNode": "No enabled nodes, enable at least one node",
   "startFailedReasonNoSelected": "No selected node",
+  "noServersInDesiredCountry": "Sorry, no servers of desired country are found. Please change country",
   "failedToUpdateSub": "Failed to update subscription: {value}",
   "@failedToUpdateSub": {
     "placeholders": {

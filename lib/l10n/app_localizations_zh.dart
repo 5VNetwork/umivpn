@@ -797,6 +797,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get startFailedReasonNoSelected => '未选择节点';
 
   @override
+  String get noServersInDesiredCountry => '未找到您所选国家的服务器，请更换国家';
+
+  @override
   String failedToUpdateSub(String value) {
     return '更新订阅“$value”失败';
   }

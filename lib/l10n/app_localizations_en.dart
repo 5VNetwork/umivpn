@@ -811,6 +811,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startFailedReasonNoSelected => 'No selected node';
 
   @override
+  String get noServersInDesiredCountry => 'No servers of your desired country are found. Please change country';
+
+  @override
   String failedToUpdateSub(String value) {
     return 'Failed to update subscription: $value';
   }

@@ -811,6 +811,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get startFailedReasonNoSelected => 'Узел не выбран';
 
   @override
+  String get noServersInDesiredCountry => 'Серверы в выбранной стране не найдены. Пожалуйста, смените страну';
+
+  @override
   String failedToUpdateSub(String value) {
     return 'Не удалось обновить подписку: $value';
   }

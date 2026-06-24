@@ -304,6 +304,7 @@
   "startFailedReasonNoNode": "Нет узла",
   "startFailedReasonNoEnabledNode": "Нет включенных узлов, включите хотя бы один узел",
   "startFailedReasonNoSelected": "Узел не выбран",
+  "noServersInDesiredCountry": "Серверы в выбранной стране не найдены. Пожалуйста, смените страну",
   "failedToUpdateSub": "Не удалось обновить подписку: {value}",
   "@failedToUpdateSub": {
     "placeholders": {

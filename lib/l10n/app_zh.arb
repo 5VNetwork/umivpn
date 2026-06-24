@@ -307,6 +307,7 @@
   "startFailedReasonNoNode": "无节点",
   "startFailedReasonNoEnabledNode": "无启用节点，请至少启用一个节点",
   "startFailedReasonNoSelected": "未选择节点",
+  "noServersInDesiredCountry": "抱歉，当前没有您所选国家的服务器，请更换国家",
   "failedToUpdateSub": "更新订阅“{value}”失败",
   "@failedToUpdateSub": {
     "placeholders": {
