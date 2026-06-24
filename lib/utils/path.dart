@@ -109,8 +109,12 @@ Future<String> getFallbackDomainPath() async {
 }
 
 Future<String> getWintunDir() async {
-  return join((await resourceDir()).path, 'wintun', 'bin');
+  return join(
+    Directory(Platform.resolvedExecutable).parent.path,
+    join('data', 'flutter_assets', 'packages', 'tm_windows', 'assets'),
+  );
 }
+
 
 Future<String> configFilePath() async {
   return join((await resourceDir()).path, 'config');

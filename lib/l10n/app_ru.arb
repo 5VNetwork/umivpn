@@ -95,6 +95,7 @@
   "vpnBlockDomains": "Обход VPN-блокировки",
   "vpnBlockDomainsDesc": "Сайты, блокирующие VPN-трафик, будут подключаться напрямую без туннеля",
   "addVpnBlockDomain": "Добавить домен для обхода",
+  "vpnBlockDomainTooShort": "Домен должен содержать не менее 5 символов",
   "default0": "По умолчанию",
   "website": "Веб-сайт",
   "endTime": "Конец Времени",
@@ -112,6 +113,7 @@
   "noNode": "Нет узла",
   "failedToChangeOutboundMode": "Не удалось изменить исходящий режим",
   "failedToChangeFakeDns": "Не удалось изменить поддельный DNS",
+  "failedToChangeBalanceMode": "Не удалось изменить режим балансировки",
   "failedToChangeRoutingMode": "Не удалось изменить режим маршрутизации.",
   "disableInAuto": "Отключить в автоматическом режиме",
   "area": "Область",
@@ -594,6 +596,8 @@
   "ad": "Реклама",
   "advancedSettingDesc": "Настройки, связанные с VPN",
   "fakeDnsDesc": "FakeDNS can reduce latency",
+  "balanceMode": "Режим балансировки",
+  "balanceModeDesc": "Использовать несколько серверов одновременно",
   "general": "Общий",
   "light": "Свет",
   "dark": "Темный",
@@ -827,5 +831,9 @@
   "failedToReactivateSubscription": "Не удалось повторно активировать подписку",
   "failedToCancelSubscription": "Не удалось отменить подписку",
   "selectLocation": "Выберите локацию",
-  "supportWelcomeMessage": "Добро пожаловать! Вы можете задать любой вопрос или сообщить о проблеме, например о невозможности открыть некоторые сайты. Спасибо за обратную связь!"
+  "supportWelcomeMessage": "Добро пожаловать! Вы можете задать любой вопрос или сообщить о проблеме, например о невозможности открыть некоторые сайты. Спасибо за обратную связь!",
+  "directAppTipTitle": "Набор приложений Direct",
+  "directAppTipDesc": "Для лучшей производительности и экономии заряда рекомендуем добавлять приложения, которым не нужен VPN, в набор Direct.",
+  "viewDirectAppTutorial": "Открыть инструкцию",
+  "tutorial": "Инструкция"
 }

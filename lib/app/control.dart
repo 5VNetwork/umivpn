@@ -31,7 +31,13 @@ class Control extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [const FakeDns(), const SizedBox(height: 8), const VpnBlockDomains()],
+      children: [
+        const FakeDns(),
+        const SizedBox(height: 8),
+        const BalanceModeSwich(),
+        const SizedBox(height: 8),
+        const VpnBlockDomains(),
+      ],
     );
   }
 }
@@ -91,6 +97,62 @@ class _FakeDnsState extends State<FakeDns> {
               context.read<SharedPreferences>().setFakeDns(!value);
             }
             snack(rootLocalizations()?.failedToChangeFakeDns);
+          }
+        },
+      ),
+    );
+  }
+}
+
+class BalanceModeSwich extends StatefulWidget {
+  const BalanceModeSwich({super.key});
+
+  @override
+  State<BalanceModeSwich> createState() => _BalanceModeSwichState();
+}
+
+class _BalanceModeSwichState extends State<BalanceModeSwich> {
+  late bool _balanceMode;
+
+  @override
+  void initState() {
+    super.initState();
+    _balanceMode = context.read<SharedPreferences>().balanceMode;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Card(
+      elevation: 0,
+      color: colorScheme.surfaceContainer,
+      child: SwitchListTile(
+        title: Text(
+          l10n.balanceMode,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        subtitle: Text(
+          l10n.balanceModeDesc,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: colorScheme.onSurface.withValues(alpha: 0.8),
+          ),
+        ),
+        value: _balanceMode,
+        onChanged: (value) async {
+          setState(() {
+            _balanceMode = value;
+          });
+          context.read<SharedPreferences>().setBalanceMode(value);
+          try {
+            await context.read<XController>().toggleBalanceMode(value);
+          } catch (e) {
+            logger.e('setBalanceMode error', error: e);
+            snack(rootLocalizations()?.failedToChangeBalanceMode);
           }
         },
       ),

@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tm/common.dart';
+import 'package:tm/fetch_result_provider.dart';
 import 'package:tm/private.dart';
 import 'package:tm/x_controller.dart';
 import 'package:tm/status_cubit.dart';
@@ -35,6 +36,7 @@ import 'package:umivpn/theme.dart';
 import 'package:tm/default.dart';
 import 'package:tm/ads/ad.dart';
 import 'package:ads/ad.dart' as my;
+import 'package:url_launcher/url_launcher.dart';
 
 part 'home_country_selector.dart';
 part 'home_mode_selector.dart';
@@ -51,55 +53,15 @@ class VpnHomePage extends StatefulWidget {
 
 class _VpnHomePageState extends State<VpnHomePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  static const _directAppTutorialUrl = 'https://www.umivpn.com/add-direct-apps';
 
   @override
   void initState() {
     super.initState();
     final pref = context.read<SharedPreferences>();
-    if (Platform.isAndroid && !pref.hasShownVpnServiceInfo) {
-      pref.setHasShownVpnServiceInfo(true);
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) {
-            final theme = Theme.of(context);
-            final l10n = AppLocalizations.of(context)!;
-            return AlertDialog(
-              contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              title: Row(
-                children: [
-                  Icon(
-                    Icons.shield,
-                    color: theme.colorScheme.primary,
-                    size: 28,
-                  ),
-                  const SizedBox(width: 8),
-                  Text('VPN Service'),
-                ],
-              ),
-              content: Text(
-                l10n.vpnServiceDesc,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  height: 1.5,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              actions: [
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => context.pop(),
-                    child: Text(l10n.okay),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
+    if (Platform.isAndroid) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showAndroidFirstLaunchTips();
       });
     } else if (pref.userCountry == null) {
       // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -108,6 +70,109 @@ class _VpnHomePageState extends State<VpnHomePage> {
       //             firstLaunch: true,
       //           )));
       // });
+    }
+  }
+
+  Future<void> _showAndroidFirstLaunchTips() async {
+    final pref = context.read<SharedPreferences>();
+    if (!pref.hasShownVpnServiceInfo) {
+      pref.setHasShownVpnServiceInfo(true);
+      await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          final theme = Theme.of(context);
+          final l10n = AppLocalizations.of(context)!;
+          return AlertDialog(
+            contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Row(
+              children: [
+                Icon(
+                  Icons.shield,
+                  color: theme.colorScheme.primary,
+                  size: 28,
+                ),
+                const SizedBox(width: 8),
+                Text('VPN Service'),
+              ],
+            ),
+            content: Text(
+              l10n.vpnServiceDesc,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                height: 1.5,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            actions: [
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => context.pop(),
+                  child: Text(l10n.okay),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    if (!mounted) return;
+    if (!pref.hasShownDirectAppTip) {
+      pref.setHasShownDirectAppTip(true);
+      await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          final theme = Theme.of(context);
+          final l10n = AppLocalizations.of(context)!;
+          return AlertDialog(
+            contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Row(
+              children: [
+                Icon(
+                  Icons.apps_outlined,
+                  color: theme.colorScheme.primary,
+                  size: 28,
+                ),
+                const SizedBox(width: 8),
+                Expanded(child: Text(l10n.directAppTipTitle)),
+              ],
+            ),
+            content: Text(
+              l10n.directAppTipDesc,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                height: 1.5,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            actions: [
+              TextButton.icon(
+                onPressed: () async {
+                  final uri = Uri.parse(_directAppTutorialUrl);
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  }
+                },
+                icon: const Icon(Icons.open_in_new),
+                label: Text(l10n.viewDirectAppTutorial),
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => context.pop(),
+                  child: Text(l10n.okay),
+                ),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 

@@ -297,6 +297,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addVpnBlockDomain => '添加域名';
 
   @override
+  String get vpnBlockDomainTooShort => '域名至少需要5个字符';
+
+  @override
   String get default0 => '默认';
 
   @override
@@ -346,6 +349,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get failedToChangeFakeDns => '设置Fake DNS失败';
+
+  @override
+  String get failedToChangeBalanceMode => '设置均衡模式失败';
 
   @override
   String get failedToChangeRoutingMode => '设置路由模式失败';
@@ -779,7 +785,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get startFailedReasonServiceNotInstalled => 'Service尚未安装，请以管理员身份重新运行UmiVPN，届时在连接过程中Service将会自动安装，或更换入站模式。';
+  String get startFailedReasonServiceNotInstalled => 'Service尚未安装，请先退出UmiVPN(右键点击右下角UmiVPN图标后再点击退出),然后以管理员身份重新运行UmiVPN，届时在连接过程中Service将会自动安装，或更换入站模式。';
 
   @override
   String get startFailedReasonNoNode => '无节点';
@@ -1368,6 +1374,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get fakeDnsDesc => 'FakeDNS可以降低延迟。但部分网站可能无法正常访问';
+
+  @override
+  String get balanceMode => '均衡模式';
+
+  @override
+  String get balanceModeDesc => '同时使用多个服务器';
 
   @override
   String get general => '通用';
@@ -2182,6 +2194,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get vpnServiceDesc => 'UmiVPN利用VPNService使您的上网体验更加安全，私密与稳定。在使用VPNService的过程中，我们会根据您的IP地址来为您提供最优服务器，我们不会分享或储存您的IP地址。';
+
+  @override
+  String get directAppTipTitle => '直联应用集';
+
+  @override
+  String get directAppTipDesc => '建议将不需要走 VPN 的应用添加到直联应用集，以获得更好的性能和续航。';
+
+  @override
+  String get viewDirectAppTutorial => '查看教程';
+
+  @override
+  String get tutorial => '教程';
 
   @override
   String get autoCheck => 'Automatically Check New Version';

@@ -102,6 +102,7 @@
   "vpnBlockDomains": "禁止VPN的网站",
   "vpnBlockDomainsDesc": "部分网站会封锁 VPN 流量，请将这些网站添加到列表里，它们的流量在服务器会被特殊处理。但是，这依旧无法保证能正常访问",
   "addVpnBlockDomain": "添加域名",
+  "vpnBlockDomainTooShort": "域名至少需要5个字符",
   "default0": "默认",
   "update": "更新",
   "website": "网站",
@@ -119,6 +120,7 @@
   "noNode": "无节点",
   "failedToChangeOutboundMode": "无法设置出站选择",
   "failedToChangeFakeDns": "设置Fake DNS失败",
+  "failedToChangeBalanceMode": "设置均衡模式失败",
   "failedToChangeRoutingMode": "设置路由模式失败",
   "disableInAuto": "自动模式下禁用",
   "area": "地区",
@@ -301,7 +303,7 @@
       }
     }
   },
-  "startFailedReasonServiceNotInstalled": "Service尚未安装，请以管理员身份重新运行UmiVPN，届时在连接过程中Service将会自动安装，或更换入站模式。",
+  "startFailedReasonServiceNotInstalled": "Service尚未安装，请先退出UmiVPN(右键点击右下角UmiVPN图标后再点击退出),然后以管理员身份重新运行UmiVPN，届时在连接过程中Service将会自动安装，或更换入站模式。",
   "startFailedReasonNoNode": "无节点",
   "startFailedReasonNoEnabledNode": "无启用节点，请至少启用一个节点",
   "startFailedReasonNoSelected": "未选择节点",
@@ -604,6 +606,8 @@
   "ad": "广告",
   "advancedSettingDesc": "VPN相关设置",
   "fakeDnsDesc": "FakeDNS可以降低延迟。但部分网站可能无法正常访问",
+  "balanceMode": "均衡模式",
+  "balanceModeDesc": "同时使用多个服务器",
   "general": "通用",
   "light": "亮色",
   "dark": "暗色",
@@ -928,6 +932,10 @@
   "privacyAssurance1": "我们不会向第三方出售、交易或出租您的个人信息。",
   "personalDataWeCollect": "我们收集的个人数据：",
   "vpnServiceDesc": "UmiVPN利用VPNService使您的上网体验更加安全，私密与稳定。在使用VPNService的过程中，我们会根据您的IP地址来为您提供最优服务器，我们不会分享或储存您的IP地址。",
+  "directAppTipTitle": "直联应用集",
+  "directAppTipDesc": "建议将不需要走 VPN 的应用添加到直联应用集，以获得更好的性能和续航。",
+  "viewDirectAppTutorial": "查看教程",
+  "tutorial": "教程",
   "failedToFetchProfile": "Failed to fetch profile {error}",
   "@failedToFetchProfile": {
     "placeholders": {

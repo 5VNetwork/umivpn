@@ -26,6 +26,14 @@ extension PrefHelperExtension on SharedPreferences {
     setBool('hasShownVpnServiceInfo', value);
   }
 
+  bool get hasShownDirectAppTip {
+    return getBool('hasShownDirectAppTip') ?? false;
+  }
+
+  void setHasShownDirectAppTip(bool value) {
+    setBool('hasShownDirectAppTip', value);
+  }
+
   bool get hasShownPrivacyInfo {
     return getBool('hasShownPrivacyInfo') ?? false;
   }
@@ -282,6 +290,14 @@ extension PrefHelperExtension on SharedPreferences {
 
   void setFakeDns(bool enable) {
     setBool('fakeDns', enable);
+  }
+
+  bool get balanceMode {
+    return getBool('balanceMode') ?? false;
+  }
+
+  void setBalanceMode(bool enable) {
+    setBool('balanceMode', enable);
   }
 
   String get selectedCountry {

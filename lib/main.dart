@@ -28,6 +28,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'package:tm/common.dart';
+import 'package:tm/fetch_result_provider.dart';
 import 'package:tm/root_certs.dart';
 import 'package:tm/tm.dart';
 import 'package:tm/x_controller.dart';
@@ -172,7 +173,7 @@ void main() async {
     "App start time: ${DateTime.now().difference(startTime).inSeconds}s",
   );
 
-  periodicFetchCountries(pref);
+  // periodicFetchCountries(pref);
   periodicFetchGeo(pref);
 
   final app = MultiProvider(
@@ -228,10 +229,24 @@ void main() async {
           if (Platform.isWindows) {
             MessageFlutterApi.setUp(controller);
           }
-          httpClient.setHandlerConfigGetter(controller);
           return controller;
         },
         lazy: false,
+      ),
+      ChangeNotifierProvider<FetchResultProvider>(
+        lazy: false,
+        create: (ctx) {
+          final f = FetchResultProvider(
+            xApiClient: ctx.read<XApiClient>(),
+            pref: pref,
+            secureStorage: storage,
+            supabase: supabase,
+            authRepo: ctx.read<AuthRepo>(),
+            xController: ctx.read<XController>(),
+          );
+          httpClient.setHandlerConfigGetter(f);
+          return f;
+        },
       ),
       if (autoUpdateSupported)
         ChangeNotifierProvider(
@@ -558,21 +573,21 @@ Future<void> setStartOnBoot(SharedPreferences pref) async {
   }
 }
 
-void periodicFetchCountries(SharedPreferences pref) async {
-  PeriodicTask(
-    task: () async {
-      try {
-        final response = await directDownloadMemory(countryUrl);
-        pref.setCountries(utf8.decode(response));
-      } catch (e) {
-        logger.e('Error fetching countries', error: e);
-      }
-    },
-    sharedPreferences: pref,
-    period: const Duration(hours: 6),
-    lastRunKey: 'last_country_fetch',
-  ).start();
-}
+// void periodicFetchCountries(SharedPreferences pref) async {
+//   PeriodicTask(
+//     task: () async {
+//       try {
+//         final response = await directDownloadMemory(countryUrl);
+//         pref.setCountries(utf8.decode(response));
+//       } catch (e) {
+//         logger.e('Error fetching countries', error: e);
+//       }
+//     },
+//     sharedPreferences: pref,
+//     period: const Duration(hours: 6),
+//     lastRunKey: 'last_country_fetch',
+//   ).start();
+// }
 
 ScheduledTask? _geoScheduledTask;
 

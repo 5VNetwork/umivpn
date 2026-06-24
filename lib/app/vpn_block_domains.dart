@@ -39,20 +39,27 @@ class _VpnBlockDomainsState extends State<VpnBlockDomains> {
     final l10n = AppLocalizations.of(context)!;
     final controller = TextEditingController();
     Domain_Type type = Domain_Type.RootDomain;
+    String? valueError;
     final added = await showDialog<bool>(
       context: context,
       builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setState) => AlertDialog(
+        builder: (ctx, setDialogState) => AlertDialog(
           title: Text(l10n.addVpnBlockDomain),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: controller,
+                onChanged: (_) {
+                  if (valueError != null) {
+                    setDialogState(() => valueError = null);
+                  }
+                },
                 decoration: InputDecoration(
                   labelText: l10n.domain,
                   border: const OutlineInputBorder(),
                   hintText: 'example.com',
+                  errorText: valueError,
                 ),
                 autofocus: true,
               ),
@@ -74,7 +81,7 @@ class _VpnBlockDomainsState extends State<VpnBlockDomains> {
                         .toList(),
                 onChanged: (v) {
                   if (v != null) {
-                    setState(() => type = v);
+                    setDialogState(() => type = v);
                   }
                 },
                 decoration: InputDecoration(
@@ -90,7 +97,15 @@ class _VpnBlockDomainsState extends State<VpnBlockDomains> {
               child: Text(l10n.cancel),
             ),
             FilledButton(
-              onPressed: () => Navigator.of(ctx).pop(true),
+              onPressed: () {
+                if (controller.text.trim().length < 5) {
+                  setDialogState(
+                    () => valueError = l10n.vpnBlockDomainTooShort,
+                  );
+                  return;
+                }
+                Navigator.of(ctx).pop(true);
+              },
               child: Text(l10n.add),
             ),
           ],
@@ -101,7 +116,7 @@ class _VpnBlockDomainsState extends State<VpnBlockDomains> {
       return;
     }
     final value = controller.text.trim();
-    if (value.isEmpty) {
+    if (value.length < 5) {
       return;
     }
     try {
@@ -211,13 +226,13 @@ class _VpnBlockDomainsState extends State<VpnBlockDomains> {
 String _domainTypeLabel(AppLocalizations l10n, Domain_Type type) {
   switch (type) {
     case Domain_Type.Plain:
-      return l10n.exact;
+      return l10n.keyword;
     case Domain_Type.Regex:
       return l10n.regularExpression;
     case Domain_Type.RootDomain:
       return l10n.rootDomain;
     case Domain_Type.Full:
-      return l10n.domain;
+      return l10n.exact;
     default:
       return type.name;
   }

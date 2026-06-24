@@ -297,6 +297,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get addVpnBlockDomain => 'Добавить домен для обхода';
 
   @override
+  String get vpnBlockDomainTooShort => 'Домен должен содержать не менее 5 символов';
+
+  @override
   String get default0 => 'По умолчанию';
 
   @override
@@ -346,6 +349,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get failedToChangeFakeDns => 'Не удалось изменить поддельный DNS';
+
+  @override
+  String get failedToChangeBalanceMode => 'Не удалось изменить режим балансировки';
 
   @override
   String get failedToChangeRoutingMode => 'Не удалось изменить режим маршрутизации.';
@@ -1420,6 +1426,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get fakeDnsDesc => 'FakeDNS can reduce latency';
 
   @override
+  String get balanceMode => 'Режим балансировки';
+
+  @override
+  String get balanceModeDesc => 'Использовать несколько серверов одновременно';
+
+  @override
   String get general => 'Общий';
 
   @override
@@ -2232,6 +2244,18 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get vpnServiceDesc => 'UmiVPN uses VPNService to make your internet experience more secure, private, and stable. During the use of VPNService, we will provide you with the best server based on your IP address, and we will not share or store your IP address.';
+
+  @override
+  String get directAppTipTitle => 'Набор приложений Direct';
+
+  @override
+  String get directAppTipDesc => 'Для лучшей производительности и экономии заряда рекомендуем добавлять приложения, которым не нужен VPN, в набор Direct.';
+
+  @override
+  String get viewDirectAppTutorial => 'Открыть инструкцию';
+
+  @override
+  String get tutorial => 'Инструкция';
 
   @override
   String get autoCheck => 'Automatically Check New Version';

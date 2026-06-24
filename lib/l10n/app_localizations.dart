@@ -673,6 +673,12 @@ abstract class AppLocalizations {
   /// **'Add domain'**
   String get addVpnBlockDomain;
 
+  /// No description provided for @vpnBlockDomainTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain must be at least 5 characters'**
+  String get vpnBlockDomainTooShort;
+
   /// No description provided for @default0.
   ///
   /// In en, this message translates to:
@@ -774,6 +780,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to change fake dns'**
   String get failedToChangeFakeDns;
+
+  /// No description provided for @failedToChangeBalanceMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to change balance mode'**
+  String get failedToChangeBalanceMode;
 
   /// No description provided for @failedToChangeRoutingMode.
   ///
@@ -2647,6 +2659,18 @@ abstract class AppLocalizations {
   /// **'FakeDNS can reduce latency'**
   String get fakeDnsDesc;
 
+  /// No description provided for @balanceMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance Mode'**
+  String get balanceMode;
+
+  /// No description provided for @balanceModeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Use multiple servers at the same time'**
+  String get balanceModeDesc;
+
   /// No description provided for @general.
   ///
   /// In en, this message translates to:
@@ -4218,6 +4242,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'UmiVPN uses VPNService to make your internet experience more secure, private, and stable. During the use of VPNService, we will provide you with the best server based on your IP address, and we will not share or store your IP address.'**
   String get vpnServiceDesc;
+
+  /// No description provided for @directAppTipTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct App Set'**
+  String get directAppTipTitle;
+
+  /// No description provided for @directAppTipDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'For better performance and battery life, we recommend adding apps that don\'t need VPN protection to the Direct app set.'**
+  String get directAppTipDesc;
+
+  /// No description provided for @viewDirectAppTutorial.
+  ///
+  /// In en, this message translates to:
+  /// **'View tutorial'**
+  String get viewDirectAppTutorial;
+
+  /// No description provided for @tutorial.
+  ///
+  /// In en, this message translates to:
+  /// **'Tutorial'**
+  String get tutorial;
 
   /// No description provided for @autoCheck.
   ///
