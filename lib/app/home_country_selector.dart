@@ -150,7 +150,8 @@ class _CountryListState extends State<_CountryList> {
                   final allCountries = [...mainCountries, ...fallbackCountries];
                   final allCountriesSet = allCountries.toSet();
                   bool currentCountryIsUnselectable = false;
-                  if (currentCountry.isNotEmpty && !allCountriesSet.contains(currentCountry)) {
+                  if (currentCountry.isNotEmpty &&
+                      !allCountriesSet.contains(currentCountry)) {
                     allCountriesSet.add(currentCountry);
                     currentCountryIsUnselectable = true;
                   }
@@ -321,7 +322,19 @@ class _CountryListState extends State<_CountryList> {
                     ),
                   );
                 } else {
-                  return Text('This should not happen');
+                  logger.e('This should not happen');
+                  return Center(
+                    child: Column(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            p.makeSureFetchResult();
+                          },
+                          child: Text('Fetch'),
+                        ),
+                      ],
+                    ),
+                  );
                 }
               },
             ),

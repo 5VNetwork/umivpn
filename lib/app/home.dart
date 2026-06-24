@@ -28,6 +28,7 @@ import 'package:umivpn/l10n/app_localizations.dart';
 import 'package:umivpn/main.dart';
 import 'package:umivpn/pref_helper.dart';
 import 'package:umivpn/utils/default_network.dart';
+import 'package:umivpn/utils/logger.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:flutter_common/common.dart';
 import 'package:flutter_common/util/country.dart';
