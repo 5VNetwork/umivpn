@@ -96,7 +96,7 @@ class _CountryListState extends State<_CountryList> {
   // List<String> _unselectableCountries = [];
   List<String> _recentlyUsedCountries = [];
   SharedPreferences? _pref;
-
+  bool _fetchOnce = false;
   @override
   void initState() {
     super.initState();
@@ -129,18 +129,44 @@ class _CountryListState extends State<_CountryList> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            AppLocalizations.of(context)!.selectLocation,
-            style: textTheme.titleLarge?.copyWith(
-              color: colorScheme.onSurface,
-              fontWeight: FontWeight.bold,
-            ),
+          Row(
+            children: [
+              Text(
+                AppLocalizations.of(context)!.selectLocation,
+                style: textTheme.titleLarge?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Spacer(),
+              StatefulBuilder(
+                builder: (ctx, setState) {
+                  if (_fetchOnce) {
+                    return const SizedBox.shrink();
+                  }
+                  return IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _fetchOnce = true;
+                      });
+                      context.read<FetchResultProvider>().fetch();
+                    },
+                    icon: Icon(Icons.refresh_rounded),
+                  );
+                },
+              ),
+            ],
           ),
           const SizedBox(height: 20),
           Flexible(
             child: Consumer<FetchResultProvider>(
               builder: (ctx, p, child) {
-                if (p.fetchResult != null) {
+                if (p.fetching) {
+                  return SizedBox(
+                    height: 100,
+                    child: const Center(child: CircularProgressIndicator()),
+                  );
+                } else if (p.fetchResult != null) {
                   final mainCountries = p.fetchResult!.mains.map(
                     (e) => e.country,
                   );
@@ -299,8 +325,6 @@ class _CountryListState extends State<_CountryList> {
                       );
                     },
                   );
-                } else if (p.fetching) {
-                  return const Center(child: CircularProgressIndicator());
                 } else if (p.fetchError != null) {
                   return Center(
                     child: Column(
