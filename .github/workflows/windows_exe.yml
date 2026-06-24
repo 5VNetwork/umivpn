@@ -37,6 +37,12 @@ jobs:
           mkdir ../umivpn-plugin/tm_android/android/libs
           mkdir -p ../flutter_common/packages/ads/assets/ads
 
+      - name: Download wintun.dll
+        shell: bash
+        run: |
+          mkdir -p ../umivpn-plugin/tm_windows/assets
+          curl -fL "https://download.5vnetwork.com/wintun.dll" -o ../umivpn-plugin/tm_windows/assets/wintun.dll
+
       - name: Cache fonts
         id: cache-fonts
         uses: actions/cache@v4

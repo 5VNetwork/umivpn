@@ -29,6 +29,7 @@ jobs:
         run: |
           touch ../umivpn-plugin/tm_windows/assets/x.dll
           touch ../umivpn-plugin/tm_windows/assets/umi_service.zip
+          touch ../umivpn-plugin/tm_windows/assets/wintun.dll
           touch ../umivpn-plugin/tm_linux/assets/x.so
           touch ../umivpn-plugin/tm_linux/assets/x
           mkdir ../umivpn-plugin/tm_android/android/libs
