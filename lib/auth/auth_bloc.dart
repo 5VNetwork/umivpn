@@ -64,7 +64,7 @@ class AuthRepo extends ChangeNotifier {
     if (_user == null) {
       return null;
     }
-    final token = await getAccessToken();
+    final token = await getValidAccessToken();
     if (token == null) {
       return null;
     }
@@ -111,15 +111,38 @@ class AuthRepo extends ChangeNotifier {
   late final StreamSubscription<Session?> _userSubscription;
   late String deviceToken;
 
-  Future<String?> getAccessToken() async {
-    return _authProvider.currentSession?.accessToken;
+  /// Returns a non-expired access token, refreshing the Supabase session
+  /// when the current one is expired or about to expire.
+  Future<String?> getValidAccessToken() async {
+    var session = _authProvider.currentSession;
+    if (session == null) {
+      return null;
+    }
+    // Refresh a bit before the actual expiry to avoid races with the server.
+    const skewSeconds = 60;
+    final expiresAt = session.expiresAt;
+    final nowSeconds = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    final needsRefresh =
+        session.isExpired ||
+        (expiresAt != null && expiresAt - nowSeconds <= skewSeconds);
+    if (needsRefresh) {
+      try {
+        logger?.i('Refreshing Supabase session');
+        await _authProvider.refreshUser();
+        session = _authProvider.currentSession;
+      } catch (e) {
+        logger?.e('Failed to refresh Supabase session', error: e);
+        return null;
+      }
+    }
+    return session?.accessToken;
   }
 
   Future<SubscriptionInfo?> fetchSubscriptionInfo() async {
     if (_user == null) {
       return null;
     }
-    final token = await getAccessToken();
+    final token = await getValidAccessToken();
     if (token == null) {
       return null;
     }

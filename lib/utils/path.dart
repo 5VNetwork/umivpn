@@ -211,6 +211,20 @@ String getServiceExeZipPath() {
   return pathToExe;
 }
 
+/// Real, non-virtualized per-machine folder used to host the Windows service
+/// executable. This must NOT be under the user's AppData, because MSIX
+/// redirects AppData writes into a package-private location that the
+/// SYSTEM-run Windows service (outside the MSIX container) cannot see.
+Directory getProgramDataDir() {
+  final programDataPath =
+      Platform.environment['ProgramData'] ?? r'C:\ProgramData';
+  final dir = Directory(join(programDataPath, 'com.5vnetwork', 'umivpn'));
+  if (!dir.existsSync()) {
+    dir.createSync(recursive: true);
+  }
+  return dir;
+}
+
 String getServicePath() {
-  return join((resourceDirectory).path, 'umi_service.exe');
+  return join(getProgramDataDir().path, 'umi_service.exe');
 }

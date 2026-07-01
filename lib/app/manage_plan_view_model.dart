@@ -157,7 +157,7 @@ class ManagePlanViewModel extends ChangeNotifier {
   }
 
   Future<void> cancelSubscription() async {
-    final token = await authRepo.getAccessToken();
+    final token = await authRepo.getValidAccessToken();
     if (token == null) {
       throw Exception('No token found');
     }
@@ -210,7 +210,7 @@ class ManagePlanViewModel extends ChangeNotifier {
           isReactivating = true;
           notifyListeners();
           try {
-            final token = await authRepo.getAccessToken();
+            final token = await authRepo.getValidAccessToken();
             if (token == null) {
               throw Exception('No token found');
             }

@@ -273,6 +273,7 @@ void main() async {
                 }
                 showDialog(
                   context: rootNavigationKey.currentContext!,
+                  barrierDismissible: false,
                   builder: (context) => HasNewerVersionDialog(
                     release: release,
                     setSkipCurrentVersion: () {
@@ -316,6 +317,7 @@ void main() async {
                 }
                 showDialog(
                   context: rootNavigationKey.currentContext!,
+                  barrierDismissible: false,
                   builder: (context) => InstallNewerVersionDialog(
                     downloadedInstaller: downloadedInstaller,
                     setSkipCurrentInstaller: rootNavigationKey.currentContext!
