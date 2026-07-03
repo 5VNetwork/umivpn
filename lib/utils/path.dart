@@ -5,6 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:umivpn/common/common.dart';
 import 'package:umivpn/main.dart';
 import 'package:umivpn/utils/logger.dart';
 
@@ -12,6 +13,9 @@ final macPkg = Platform.isMacOS && appFlavor == 'pkg';
 
 /// dir to hold geosite, geoip, wintun.dll, unix socket
 Future<Directory> resourceDir() async {
+  if (Platform.isWindows && isWinStore) {
+    return getProgramDataDir();
+  }
   if (Platform.isWindows || Platform.isAndroid || Platform.isLinux) {
     return await getApplicationSupportDirectory();
   }
@@ -114,7 +118,6 @@ Future<String> getWintunDir() async {
     join('data', 'flutter_assets', 'packages', 'tm_windows', 'assets'),
   );
 }
-
 
 Future<String> configFilePath() async {
   return join((await resourceDir()).path, 'config');
