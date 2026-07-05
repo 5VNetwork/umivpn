@@ -22,6 +22,7 @@ class AndroidHostApiImpl(
     private val flutterApi: PigeonFlutterApi
 ) : AndroidHostApi {
     private var defaultNetworkCallbackObject: ConnectivityManager.NetworkCallback? = null
+    private var networkCallbackObject: ConnectivityManager.NetworkCallback? = null
 
     override fun startXApiServer(config: ByteArray, callback: (Result<Unit>) -> Unit) {
         try {
@@ -108,35 +109,35 @@ class AndroidHostApiImpl(
         connectivityManager.registerDefaultNetworkCallback(defaultNetworkCallbackObject!!)
 
         // This only monitor default physical network change
-//        val networkRequest = NetworkRequest.Builder()
-//            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-//            .removeTransportType(NetworkCapabilities.TRANSPORT_VPN)
-//            .build()
-//        networkChangeCallbackObject = object : ConnectivityManager.NetworkCallback() {
-//            override fun onAvailable(network: Network) {
-//                super.onAvailable(network)
-//                Log.d("NetworkChangeMonitor", "Network is available $network")
-//            }
-//
-//            override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
-//                super.onLinkPropertiesChanged(network, linkProperties)
-//                Log.d("NetworkChangeMonitor", "Link properties changed: $linkProperties")
-//                onNetworkChange(network)
-//            }
-//        }
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-//            connectivityManager.registerBestMatchingNetworkCallback(
-//                networkRequest,
-//                networkChangeCallbackObject!!,
-//                handler
-//            )
-//        } else {
-//            connectivityManager.requestNetwork(
-//                networkRequest,
-//                networkChangeCallbackObject!!,
-//                handler
-//            )
-//        }
+        val networkRequest = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .removeTransportType(NetworkCapabilities.TRANSPORT_VPN)
+            .build()
+        networkCallbackObject = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                Log.d("NetworkChangeMonitor", "Network is available $network")
+            }
+
+            override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
+                super.onLinkPropertiesChanged(network, linkProperties)
+                Log.d("NetworkChangeMonitor", "Link properties changed: $linkProperties")
+                onNetworkChange(network)
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            connectivityManager.registerBestMatchingNetworkCallback(
+                networkRequest,
+                networkCallbackObject!!,
+                handler
+            )
+        } else {
+            connectivityManager.requestNetwork(
+                networkRequest,
+                networkCallbackObject!!,
+                handler
+            )
+        }
     }
 
     private fun notifyFlutter(networkCapabilities: NetworkCapabilities) {

@@ -33,6 +33,7 @@
   "connecting": "连接中",
   "connected": "已连接",
   "changingCountry": "正在切换国家",
+  "changingInboundMode": "正在切换入站模式",
   "disconnecting": "正在断开连接",
   "disconnected": "未连接",
   "disconnectedUnexpectedly": "连接意外断开。原因: {reason}",

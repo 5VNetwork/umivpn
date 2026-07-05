@@ -307,6 +307,12 @@ abstract class AppLocalizations {
   /// **'Changing country'**
   String get changingCountry;
 
+  /// No description provided for @changingInboundMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing inbound'**
+  String get changingInboundMode;
+
   /// No description provided for @disconnecting.
   ///
   /// In en, this message translates to:
@@ -1624,7 +1630,7 @@ abstract class AppLocalizations {
   /// No description provided for @noServersInDesiredCountry.
   ///
   /// In en, this message translates to:
-  /// **'No servers of your desired country are found. Please change country'**
+  /// **'Sorry, no servers of desired country are found. Please change country'**
   String get noServersInDesiredCountry;
 
   /// No description provided for @failedToUpdateSub.

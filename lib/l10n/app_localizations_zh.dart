@@ -114,6 +114,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get changingCountry => '正在切换国家';
 
   @override
+  String get changingInboundMode => '正在切换入站模式';
+
+  @override
   String get disconnecting => '正在断开连接';
 
   @override
@@ -797,7 +800,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get startFailedReasonNoSelected => '未选择节点';
 
   @override
-  String get noServersInDesiredCountry => '未找到您所选国家的服务器，请更换国家';
+  String get noServersInDesiredCountry => '抱歉，当前没有您所选国家的服务器，请更换国家';
 
   @override
   String failedToUpdateSub(String value) {

@@ -33,6 +33,7 @@
   "connecting": "Подключение",
   "connected": "Подключен",
   "changingCountry": "Смена страны",
+  "changingInboundMode": "Смена входящего",
   "disconnecting": "Отключение",
   "disconnected": "Отключен",
   "subscription": "Подписка",

@@ -111,35 +111,37 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
   }
 
   void _updateAnimations(XStatus status) {
-    // Determine if we should be in "forward" state (preparing, connecting, or connected)
+    // Keep status/button forward while disconnecting; reverse only when disconnected.
     final shouldBeForward =
         status == XStatus.preparing ||
         status == XStatus.connecting ||
-        status == XStatus.connected;
-
-    // Determine if we should be in "backward" state (disconnecting or disconnected)
-    final shouldBeBackward =
-        status == XStatus.disconnecting || status == XStatus.disconnected;
+        status == XStatus.connected ||
+        status == XStatus.disconnecting;
 
     // Get previous state
     final wasForward =
         _previousStatus == XStatus.preparing ||
         _previousStatus == XStatus.connecting ||
-        _previousStatus == XStatus.connected;
+        _previousStatus == XStatus.connected ||
+        _previousStatus == XStatus.disconnecting;
 
     // Only update animations if state actually changed
     if (shouldBeForward != wasForward) {
       if (shouldBeForward) {
-        // Start animations when preparing, connecting, or connected
+        // Start animations when preparing, connecting, connected, or disconnecting
         _buttonSlideController.forward();
         _statusController.forward();
-        _pulseController.forward();
+        if (status == XStatus.preparing ||
+            status == XStatus.connecting ||
+            status == XStatus.connected) {
+          _pulseController.forward();
+        }
         // Start timer only when we reach connected state
         if (status == XStatus.connected) {
           _startTimer();
         }
-      } else if (shouldBeBackward) {
-        // Reverse animations when disconnecting or disconnected
+      } else {
+        // Reverse animations when disconnected
         _buttonSlideController.reverse();
         _statusController.reverse();
         _pulseController.reset();
@@ -150,8 +152,10 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
       if (status == XStatus.connected && _previousStatus != XStatus.connected) {
         // Start timer when we transition to connected (from preparing/connecting)
         _startTimer();
-      } else if (shouldBeBackward && _previousStatus == XStatus.connected) {
-        // Stop timer when we transition away from connected to disconnecting/disconnected
+      } else if (status == XStatus.disconnecting &&
+          _previousStatus == XStatus.connected) {
+        // Stop pulsing and timer when disconnect begins
+        _pulseController.reset();
         _stopTimer();
       }
     }
@@ -174,6 +178,37 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
     });
   }
 
+  List<Widget> _buildStatusRowChildren(
+    BuildContext context,
+    ColorScheme colorScheme,
+    UmiStatus status,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
+    final textStyle = TextStyle(
+      color: colorScheme.primary,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 1.5,
+    );
+
+    if (status.changingCountry) {
+      return [Text(l10n.changingCountry, style: textStyle)];
+    }
+
+    return switch (status.status) {
+      XStatus.preparing ||
+      XStatus.connecting => [Text(l10n.connecting, style: textStyle)],
+      XStatus.disconnecting => [Text(l10n.disconnecting, style: textStyle)],
+      XStatus.connected when status.realtimeCountry != null => [
+        getCountryIcon(status.realtimeCountry!, height: 22, width: 22),
+        const SizedBox(width: 6),
+        Text(l10n.securelyConnected, style: textStyle),
+      ],
+      XStatus.connected => [Text(l10n.securelyConnected, style: textStyle)],
+      XStatus.disconnected => [Text(l10n.disconnected, style: textStyle)],
+      _ => [Text(l10n.unknown, style: textStyle)],
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -184,16 +219,14 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
       },
       child: BlocBuilder<StatusCubit, UmiStatus>(
         builder: (context, status) {
-          // Show connected appearance when preparing, connecting, or connected
+          // Show connected appearance when connected or disconnecting
           final isConnected = status.status == XStatus.connected;
-          final isConnecting =
-              status.status == XStatus.preparing ||
-              status.status == XStatus.connecting;
-          final isTransitioning =
+          final isDisconnecting = status.status == XStatus.disconnecting;
+          final isConnectedAppearance = isConnected || isDisconnecting;
+          final isButtonDisabled =
               status.status == XStatus.preparing ||
               status.status == XStatus.connecting ||
               status.status == XStatus.disconnecting;
-          final isChangingCountry = status.changingCountry;
           return Column(
             children: [
               AnimatedBuilder(
@@ -214,42 +247,11 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: isChangingCountry
-                                ? [
-                                    Text(
-                                      AppLocalizations.of(context)!
-                                          .changingCountry,
-                                      style: TextStyle(
-                                        color: colorScheme.primary,
-                                        fontWeight: FontWeight.w600,
-                                        letterSpacing: 1.5,
-                                      ),
-                                    ),
-                                  ]
-                                : [
-                                    if (isConnected &&
-                                        status.realtimeCountry != null)
-                                      getCountryIcon(
-                                        status.realtimeCountry!,
-                                        height: 22,
-                                        width: 22,
-                                      ),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      isConnecting
-                                          ? AppLocalizations.of(
-                                              context,
-                                            )!.connecting
-                                          : AppLocalizations.of(
-                                              context,
-                                            )!.securelyConnected,
-                                      style: TextStyle(
-                                        color: colorScheme.primary,
-                                        fontWeight: FontWeight.w600,
-                                        letterSpacing: 1.5,
-                                      ),
-                                    ),
-                                  ],
+                            children: _buildStatusRowChildren(
+                              context,
+                              colorScheme,
+                              status,
+                            ),
                           ),
                           const SizedBox(height: 10),
                           const _Timer(),
@@ -265,79 +267,84 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
               // 3. Connect Button
               SlideTransition(
                 position: _buttonSlideAnimation,
-                child: GestureDetector(
-                  onTap: isTransitioning ? null : _toggleConnection,
-                  child: Container(
-                    height: 180,
-                    width: 180,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isConnected
-                          ? colorScheme.connectButtonConnectedOuter
-                          : colorScheme.connectButtonDisconnectedOuter,
-                      boxShadow: [
-                        if (isConnected)
+                child: Opacity(
+                  opacity: isButtonDisabled ? 0.6 : 1,
+                  child: GestureDetector(
+                    onTap: isButtonDisabled ? null : _toggleConnection,
+                    child: Container(
+                      height: 180,
+                      width: 180,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isConnectedAppearance
+                            ? colorScheme.connectButtonConnectedOuter
+                            : colorScheme.connectButtonDisconnectedOuter,
+                        boxShadow: [
+                          if (isConnectedAppearance)
+                            BoxShadow(
+                              color: colorScheme.connectButtonConnectedGlow,
+                              blurRadius:
+                                  colorScheme.brightness == Brightness.dark
+                                  ? 40
+                                  : 32,
+                              spreadRadius:
+                                  colorScheme.brightness == Brightness.dark
+                                  ? 10
+                                  : 2,
+                            ),
                           BoxShadow(
-                            color: colorScheme.connectButtonConnectedGlow,
-                            blurRadius:
-                                colorScheme.brightness == Brightness.dark
-                                    ? 40
-                                    : 32,
-                            spreadRadius:
-                                colorScheme.brightness == Brightness.dark
-                                    ? 10
-                                    : 2,
+                            color: colorScheme.shadowDark,
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
                           ),
-                        BoxShadow(
-                          color: colorScheme.shadowDark,
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
+                        ],
+                        border: Border.all(
+                          color: isConnectedAppearance
+                              ? colorScheme.connectButtonConnectedBorder
+                              : colorScheme.connectButtonDisconnectedBorder,
+                          width: 2,
                         ),
-                      ],
-                      border: Border.all(
-                        color: isConnected
-                            ? colorScheme.connectButtonConnectedBorder
-                            : colorScheme.connectButtonDisconnectedBorder,
-                        width: 2,
                       ),
-                    ),
-                    child: Center(
-                      child: Container(
-                        height: 140,
-                        width: 140,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: isConnected
-                              ? null
-                              : colorScheme.connectButtonDisconnectedFill,
-                          gradient: isConnected
-                              ? LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    colorScheme.connectButtonConnectedFillStart,
-                                    colorScheme.connectButtonConnectedFillEnd,
-                                  ],
-                                )
-                              : null,
-                          boxShadow: isConnected &&
-                                  colorScheme.brightness == Brightness.light
-                              ? [
-                                  BoxShadow(
-                                    color: colorScheme
-                                        .connectButtonConnectedInnerShadow,
-                                    blurRadius: 14,
-                                    offset: const Offset(0, 5),
-                                  ),
-                                ]
-                              : null,
-                        ),
-                        child: Icon(
-                          Icons.power_settings_new_rounded,
-                          size: 60,
-                          color: isConnected
-                              ? colorScheme.connectButtonConnectedIcon
-                              : colorScheme.connectButtonDisconnectedIcon,
+                      child: Center(
+                        child: Container(
+                          height: 140,
+                          width: 140,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isConnectedAppearance
+                                ? null
+                                : colorScheme.connectButtonDisconnectedFill,
+                            gradient: isConnectedAppearance
+                                ? LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      colorScheme
+                                          .connectButtonConnectedFillStart,
+                                      colorScheme.connectButtonConnectedFillEnd,
+                                    ],
+                                  )
+                                : null,
+                            boxShadow:
+                                isConnectedAppearance &&
+                                    colorScheme.brightness == Brightness.light
+                                ? [
+                                    BoxShadow(
+                                      color: colorScheme
+                                          .connectButtonConnectedInnerShadow,
+                                      blurRadius: 14,
+                                      offset: const Offset(0, 5),
+                                    ),
+                                  ]
+                                : null,
+                          ),
+                          child: Icon(
+                            Icons.power_settings_new_rounded,
+                            size: 60,
+                            color: isConnectedAppearance
+                                ? colorScheme.connectButtonConnectedIcon
+                                : colorScheme.connectButtonDisconnectedIcon,
+                          ),
                         ),
                       ),
                     ),

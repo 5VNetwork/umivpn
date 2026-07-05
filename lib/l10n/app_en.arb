@@ -34,6 +34,7 @@
   "connecting": "Connecting",
   "connected": "Connected",
   "changingCountry": "Changing country",
+  "changingInboundMode": "Changing inbound",
   "disconnecting": "Disconnecting",
   "disconnected": "Disconnected",
   "subscription": "Subscription",

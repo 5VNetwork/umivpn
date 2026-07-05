@@ -246,16 +246,11 @@ class SupportChatRepository {
         .channel('support_messages:$conversationId')
         .onPostgresChanges(
           event: PostgresChangeEvent.insert,
-
           schema: 'public',
-
           table: 'support_messages',
-
           filter: PostgresChangeFilter(
             type: PostgresChangeFilterType.eq,
-
             column: 'conversation_id',
-
             value: conversationId,
           ),
 

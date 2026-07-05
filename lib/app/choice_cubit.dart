@@ -110,11 +110,14 @@ class ChoiceCubit extends Cubit<Choice> {
 DefaultRouteMode _getMode(AuthRepo authRepo, SharedPreferences pref) {
   final isFreeUser = authRepo.user?.plan == SubscriptionPlan.free;
   if (isFreeUser) {
-    final isInChina = userInChina(pref);
-    final freeUserAllowedMode = isInChina
-        ? DefaultRouteMode.gfw
-        : DefaultRouteMode.proxyAll;
-    return freeUserAllowedMode;
+    if (userInChina(pref)) {
+      final saved = pref.routingMode;
+      if (saved == DefaultRouteMode.gfw || saved == DefaultRouteMode.cn) {
+        return saved;
+      }
+      return DefaultRouteMode.gfw;
+    }
+    return DefaultRouteMode.proxyAll;
   }
   return pref.routingMode;
 }

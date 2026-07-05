@@ -408,6 +408,12 @@ void main() async {
         },
         lazy: false,
       ),
+      ChangeNotifierProvider(
+        create: (context) => InboundModeController(
+          pref: context.read<SharedPreferences>(),
+          xController: context.read<XController>(),
+        ),
+      ),
     ],
     child: const App(),
   );

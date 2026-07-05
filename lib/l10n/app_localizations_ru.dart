@@ -114,6 +114,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get changingCountry => 'Смена страны';
 
   @override
+  String get changingInboundMode => 'Смена входящего';
+
+  @override
   String get disconnecting => 'Отключение';
 
   @override
