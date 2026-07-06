@@ -6,6 +6,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:umivpn/app/support/support_message_local_store.dart';
 
+import 'package:umivpn/utils/logger.dart';
+
 import 'package:umivpn/main.dart';
 
 class SupportMessage {
@@ -145,23 +147,7 @@ class SupportChatRepository {
     await _localStore.ensureWelcomeMessage(userId);
 
     try {
-      final afterId = await _localStore.lastFetchMaxMessageId(userId);
-
-      var query = _client
-          .from('support_messages')
-          .select()
-          .eq('conversation_id', conversationId);
-      if (afterId > 0) {
-        query = query.gt('id', afterId);
-      }
-      final rows = await query.order('created_at', ascending: true);
-
-      final remote = (rows as List)
-          .map((row) => SupportMessage.fromJson(row as Map<String, dynamic>))
-          .toList();
-
-      await _localStore.mergeRemoteMessages(userId, remote);
-      await _localStore.updateLastFetchMaxMessageId(userId, remote);
+      await _fetchNewMessages(conversationId, userId);
       await _localStore.setLastRemoteFetchAt(userId, DateTime.now().toUtc());
       await _localStore.prune(userId);
     } catch (_) {
@@ -239,43 +225,123 @@ class SupportChatRepository {
     );
   }
 
+  Future<List<SupportMessage>> _fetchNewMessages(
+    String conversationId,
+    String userId,
+  ) async {
+    final afterId = await _localStore.lastFetchMaxMessageId(userId);
+
+    var query = _client
+        .from('support_messages')
+        .select()
+        .eq('conversation_id', conversationId);
+    if (afterId > 0) {
+      query = query.gt('id', afterId);
+    }
+    final rows = await query.order('created_at', ascending: true);
+
+    final remote = (rows as List)
+        .map((row) => SupportMessage.fromJson(row as Map<String, dynamic>))
+        .toList();
+
+    if (remote.isNotEmpty) {
+      await _localStore.mergeRemoteMessages(userId, remote);
+      await _localStore.updateLastFetchMaxMessageId(userId, remote);
+    }
+
+    return remote;
+  }
+
   Stream<SupportMessage> watchMessages(String conversationId) {
     final controller = StreamController<SupportMessage>.broadcast();
+    Timer? pollTimer;
+    var cancelled = false;
 
-    final channel = _client
-        .channel('support_messages:$conversationId')
-        .onPostgresChanges(
-          event: PostgresChangeEvent.insert,
-          schema: 'public',
-          table: 'support_messages',
-          filter: PostgresChangeFilter(
-            type: PostgresChangeFilterType.eq,
-            column: 'conversation_id',
-            value: conversationId,
-          ),
+    Future<void> pollNewMessages() async {
+      if (cancelled || controller.isClosed) {
+        return;
+      }
 
-          callback: (payload) async {
-            final record = payload.newRecord;
+      final userId = currentUserId;
+      if (userId == null) {
+        return;
+      }
 
-            if (record.isEmpty) return;
+      try {
+        final remote = await _fetchNewMessages(conversationId, userId);
+        if (remote.isNotEmpty) {
+          await _localStore.setLastRemoteFetchAt(
+            userId,
+            DateTime.now().toUtc(),
+          );
+        }
 
-            final message = SupportMessage.fromJson(record);
-
-            final userId = currentUserId;
-
-            if (userId != null) {
-              await _localStore.upsertMessage(userId, message);
-            }
-
+        for (final message in remote) {
+          if (!controller.isClosed) {
             controller.add(message);
-          },
-        )
-        .subscribe();
+          }
+        }
+      } catch (error, stack) {
+        logger.e(
+          'Support message poll failed ($conversationId)',
+          error: error,
+          stackTrace: stack,
+        );
+      }
+    }
+
+    unawaited(pollNewMessages());
+    pollTimer = Timer.periodic(
+      const Duration(seconds: 5),
+      (_) => unawaited(pollNewMessages()),
+    );
 
     controller.onCancel = () {
-      _client.removeChannel(channel);
+      logger.d('support message stream canceld');
+      cancelled = true;
+      pollTimer?.cancel();
     };
 
     return controller.stream;
   }
 }
+
+// Stream<SupportMessage> watchMessages(String conversationId) {
+//   final controller = StreamController<SupportMessage>.broadcast();
+
+//   final channel = _client
+//       .channel('support_messages:$conversationId')
+//       .onPostgresChanges(
+//         event: PostgresChangeEvent.insert,
+//         schema: 'public',
+//         table: 'support_messages',
+//         filter: PostgresChangeFilter(
+//           type: PostgresChangeFilterType.eq,
+//           column: 'conversation_id',
+//           value: conversationId,
+//         ),
+
+//         callback: (payload) async {
+//           final record = payload.newRecord;
+
+//           if (record.isEmpty) return;
+
+//           final message = SupportMessage.fromJson(record);
+
+//           final userId = currentUserId;
+
+//           if (userId != null) {
+//             await _localStore.upsertMessage(userId, message);
+//           }
+
+//           controller.add(message);
+//         },
+//       )
+//       .subscribe();
+
+//   controller.onCancel = () {
+//     _client.removeChannel(channel);
+//   };
+
+//   return controller.stream;
+// }
