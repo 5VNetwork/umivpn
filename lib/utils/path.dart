@@ -231,3 +231,19 @@ Directory getProgramDataDir() {
 String getServicePath() {
   return join(getProgramDataDir().path, 'umi_service.exe');
 }
+
+Future<Directory> getDebugFlutterLogDir() async {
+  final dir = Directory(join((await resourceDir()).path, "debug_flutter_logs"));
+  if (!dir.existsSync()) {
+    dir.createSync(recursive: true);
+  }
+  return dir;
+}
+
+Future<Directory> getDebugTunnelLogDir() async {
+  final dir = Directory(join((await resourceDir()).path, "debug_tunnel_logs"));
+  if (!dir.existsSync()) {
+    dir.createSync(recursive: true);
+  }
+  return dir;
+}

@@ -38,6 +38,7 @@ import 'package:tm/ads/app_lifecycle.dart';
 import 'package:tm/ads/start_ad.dart';
 import 'package:umivpn/app/privacy.dart';
 import 'package:umivpn/app/settings/ads.dart';
+import 'package:umivpn/app/settings/debug.dart';
 import 'package:umivpn/auth/user.dart';
 import 'package:umivpn/utils/android_host_api.g.dart';
 import 'package:umivpn/app/choice_cubit.dart';
@@ -145,7 +146,7 @@ void main() async {
     }),
   ]);
 
-  final apiClient = XApiClient()..init();
+  final apiClient = XApiClient(pref)..init();
   final httpClient = HttpClient0(
     crts: crt,
     logger: logger,

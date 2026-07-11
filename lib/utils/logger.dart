@@ -18,6 +18,10 @@ Future<void> initLogger(SharedPreferences pref) async {
     if (pref.shareLog == true) {
       await startShareLog();
     }
+    if (pref.enableDebugLog) {
+      // no debug flutter log in production
+      // await setDebugLoggerProduction();
+    }
   } else {
     final redirectStdErr = !kDebugMode && (Platform.isIOS || Platform.isMacOS);
     if (redirectStdErr) {
@@ -290,3 +294,25 @@ class SimplePrinter extends LogPrinter {
     }
   }
 }
+
+// Future<void> setDebugLoggerProduction() async {
+//   final logDirPath = getFlutterLogDir().path;
+
+//   final l = Logger(
+//     filter: ProductionFilter(),
+//     printer: SimplePrinter(printTime: true),
+//     output: AdvancedFileOutput(
+//       writeImmediately: [Level.error],
+//       path: await getDebugFlutterLogDir().then((value) => value.path),
+//       latestFileName: 'latest.txt',
+//       fileNameFormatter: (DateTime date) {
+//         return '${date.year}-${date.month}-${date.day}.txt';
+//       },
+//     ),
+//     level: Level.debug,
+//   );
+//   logger.logger = l;
+//   logger.d(
+//     'Logger initialized in debug mode - output to console and file: $logDirPath',
+//   );
+// }

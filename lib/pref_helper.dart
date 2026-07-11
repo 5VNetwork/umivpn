@@ -10,6 +10,14 @@ import 'package:umivpn/l10n/app_localizations.dart';
 import 'package:tm/default.dart';
 
 extension PrefHelperExtension on SharedPreferences {
+  bool get enableDebugLog {
+    return getBool('enableDebugLog') ?? false;
+  }
+
+  void setEnableDebugLog(bool enable) {
+    setBool('enableDebugLog', enable);
+  }
+
   bool get initialLaunch {
     return getBool('initialLaunch') ?? false;
   }

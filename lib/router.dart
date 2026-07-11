@@ -119,6 +119,13 @@ void initRouter(AuthProvider authProvider) {
                 pageBuilder: (context, state) =>
                     const CupertinoPage(child: PromotionPage()),
               ),
+              GoRoute(
+                parentNavigatorKey: rootNavigationKey,
+                path: 'debug',
+                pageBuilder: (context, state) => const CupertinoPage(
+                  child: DebugLogPage(),
+                ),
+              ),
             ],
           ),
         ],

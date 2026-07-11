@@ -47,6 +47,7 @@ enum SettingItem {
   general(icon: Icon(Icons.settings), pathSegment: 'general'),
   privacyPolicy(icon: Icon(Icons.info), pathSegment: 'privacy'),
   contactUs(icon: Icon(Icons.email_outlined), pathSegment: 'contactUs'),
+  debug(icon: Icon(Icons.bug_report_rounded), pathSegment: 'debug'),
   openSourceSoftwareNotice(
     icon: Icon(Icons.code_rounded),
     pathSegment: 'openSourceSoftwareNotice',
@@ -86,6 +87,8 @@ enum SettingItem {
         return Text(AppLocalizations.of(context)!.privacyPolicy);
       case SettingItem.contactUs:
         return Text(AppLocalizations.of(context)!.contactUs);
+      case SettingItem.debug:
+        return Text(AppLocalizations.of(context)!.debugLog);
       case SettingItem.openSourceSoftwareNotice:
         return Text(AppLocalizations.of(context)!.openSourceSoftwareNotice);
       case SettingItem.ads:
@@ -102,6 +105,8 @@ enum SettingItem {
       case SettingItem.privacyPolicy:
         return null;
       case SettingItem.contactUs:
+        return null;
+      case SettingItem.debug:
         return null;
       case SettingItem.openSourceSoftwareNotice:
         return null;
