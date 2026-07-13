@@ -45,6 +45,10 @@ final InAppReview inAppReview = InAppReview.instance;
 enum SettingItem {
   account(icon: Icon(Icons.person_rounded), pathSegment: 'account'),
   general(icon: Icon(Icons.settings), pathSegment: 'general'),
+  announcements(
+    icon: Icon(Icons.campaign_outlined),
+    pathSegment: 'announcements',
+  ),
   privacyPolicy(icon: Icon(Icons.info), pathSegment: 'privacy'),
   contactUs(icon: Icon(Icons.email_outlined), pathSegment: 'contactUs'),
   debug(icon: Icon(Icons.bug_report_rounded), pathSegment: 'debug'),
@@ -83,6 +87,8 @@ enum SettingItem {
         return Text(AppLocalizations.of(context)!.account);
       case SettingItem.general:
         return Text(AppLocalizations.of(context)!.general);
+      case SettingItem.announcements:
+        return Text(AppLocalizations.of(context)!.announcements);
       case SettingItem.privacyPolicy:
         return Text(AppLocalizations.of(context)!.privacyPolicy);
       case SettingItem.contactUs:
@@ -101,6 +107,8 @@ enum SettingItem {
       case SettingItem.account:
         return null;
       case SettingItem.general:
+        return null;
+      case SettingItem.announcements:
         return null;
       case SettingItem.privacyPolicy:
         return null;

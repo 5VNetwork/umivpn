@@ -65,6 +65,12 @@ void initRouter(AuthProvider authProvider) {
                 const CupertinoPage(child: SupportChatPage()),
           ),
           GoRoute(
+            parentNavigatorKey: rootNavigationKey,
+            path: 'announcements',
+            pageBuilder: (context, state) =>
+                const CupertinoPage(child: AnnouncementsPage()),
+          ),
+          GoRoute(
             path: 'route',
             parentNavigatorKey: rootNavigationKey,
             pageBuilder: (context, state) =>
@@ -112,6 +118,12 @@ void initRouter(AuthProvider authProvider) {
                 pageBuilder: (context, state) => const CupertinoPage(
                   child: OpenSourceSoftwareNoticeScreen(),
                 ),
+              ),
+              GoRoute(
+                parentNavigatorKey: rootNavigationKey,
+                path: 'announcements',
+                pageBuilder: (context, state) =>
+                    const CupertinoPage(child: AnnouncementsPage()),
               ),
               GoRoute(
                 parentNavigatorKey: rootNavigationKey,

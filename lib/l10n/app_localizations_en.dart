@@ -2312,4 +2312,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get showRealtimeUsage => 'Show Realtime Usage';
+
+  @override
+  String get announcements => 'Notifications';
+
+  @override
+  String get noAnnouncements => 'No announcements yet';
+
+  @override
+  String get failedToLoadAnnouncements => 'Failed to load announcements';
+
+  @override
+  String get learnMore => 'Learn more';
 }

@@ -2312,4 +2312,16 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get showRealtimeUsage => 'Show Realtime Usage';
+
+  @override
+  String get announcements => 'Уведомления';
+
+  @override
+  String get noAnnouncements => 'Пока нет объявлений';
+
+  @override
+  String get failedToLoadAnnouncements => 'Не удалось загрузить объявления';
+
+  @override
+  String get learnMore => 'Подробнее';
 }

@@ -4374,6 +4374,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show Realtime Usage'**
   String get showRealtimeUsage;
+
+  /// No description provided for @announcements.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get announcements;
+
+  /// No description provided for @noAnnouncements.
+  ///
+  /// In en, this message translates to:
+  /// **'No announcements yet'**
+  String get noAnnouncements;
+
+  /// No description provided for @failedToLoadAnnouncements.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load announcements'**
+  String get failedToLoadAnnouncements;
+
+  /// No description provided for @learnMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn more'**
+  String get learnMore;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

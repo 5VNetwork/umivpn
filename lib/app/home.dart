@@ -17,6 +17,7 @@ import 'package:umivpn/app/choice_cubit.dart';
 import 'package:umivpn/app/control.dart';
 import 'package:umivpn/app/manage_plan.dart';
 import 'package:umivpn/app/settings/general/country.dart';
+import 'package:umivpn/app/announcements/announcements_provider.dart';
 import 'package:umivpn/app/support/support_unread_badge.dart';
 import 'package:umivpn/auth/auth_bloc.dart';
 import 'package:umivpn/auth/user.dart';
@@ -91,11 +92,7 @@ class _VpnHomePageState extends State<VpnHomePage> {
             ),
             title: Row(
               children: [
-                Icon(
-                  Icons.shield,
-                  color: theme.colorScheme.primary,
-                  size: 28,
-                ),
+                Icon(Icons.shield, color: theme.colorScheme.primary, size: 28),
                 const SizedBox(width: 8),
                 Text('VPN Service'),
               ],
@@ -245,20 +242,8 @@ class _VpnHomePageState extends State<VpnHomePage> {
             ? MoveWindow(child: Container(color: Colors.transparent))
             : null,
         actions: [
-          SupportUnreadIconButton(
-            route: '/supportChat',
-            icon: Icons.support_agent_rounded,
-            iconColor: colorScheme.onSurface.withValues(alpha: 0.87),
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            onPressed: () {
-              context.go('/manage-plan');
-            },
-            icon: Icon(
-              Icons.credit_card_rounded,
-              color: colorScheme.onSurface.withOpacity(0.87),
-            ),
+          _HomeOverflowMenu(
+            colorScheme: colorScheme,
           ),
           if (Platform.isWindows || Platform.isLinux)
             Padding(
@@ -318,6 +303,86 @@ class _VpnHomePageState extends State<VpnHomePage> {
           },
         ),
       ),
+    );
+  }
+}
+
+class _HomeOverflowMenu extends StatelessWidget {
+  const _HomeOverflowMenu({required this.colorScheme});
+
+  final ColorScheme colorScheme;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final announcementUnread = context.select<AnnouncementsProvider, int>(
+      (p) => p.unreadCount,
+    );
+    final supportUnread = fcmEnabled
+        ? context.select<SupportUnreadBadgeController, bool>((c) => c.hasUnread)
+        : false;
+    final showMenuBadge = announcementUnread > 0 || supportUnread;
+    final menuBadgeLabel = announcementUnread > 0
+        ? (announcementUnread > 99 ? '99+' : '$announcementUnread')
+        : null;
+
+    return MenuAnchor(
+      builder: (context, controller, child) {
+        return IconButton(
+          tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+          onPressed: () {
+            if (controller.isOpen) {
+              controller.close();
+            } else {
+              controller.open();
+            }
+          },
+          icon: Badge(
+            isLabelVisible: showMenuBadge,
+            label: menuBadgeLabel != null ? Text(menuBadgeLabel) : null,
+            smallSize: 8,
+            backgroundColor: Colors.redAccent,
+            child: Icon(
+              Icons.more_vert_rounded,
+              color: colorScheme.onSurface.withValues(alpha: 0.87),
+            ),
+          ),
+        );
+      },
+      menuChildren: [
+        MenuItemButton(
+          leadingIcon: Badge(
+            isLabelVisible: announcementUnread > 0,
+            label: Text(
+              announcementUnread > 99 ? '99+' : '$announcementUnread',
+            ),
+            backgroundColor: Colors.redAccent,
+            child: const Icon(Icons.campaign_outlined),
+          ),
+          onPressed: () => context.go('/announcements'),
+          child: Text(l10n.announcements),
+        ),
+        MenuItemButton(
+          leadingIcon: Badge(
+            isLabelVisible: supportUnread,
+            smallSize: 8,
+            backgroundColor: Colors.redAccent,
+            child: const Icon(Icons.support_agent_rounded),
+          ),
+          onPressed: () {
+            if (fcmEnabled) {
+              context.read<SupportUnreadBadgeController>().clear();
+            }
+            context.go('/supportChat');
+          },
+          child: Text(l10n.contactUs),
+        ),
+        MenuItemButton(
+          leadingIcon: const Icon(Icons.credit_card_rounded),
+          onPressed: () => context.go('/manage-plan'),
+          child: Text(l10n.managePlan),
+        ),
+      ],
     );
   }
 }

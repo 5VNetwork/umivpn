@@ -2262,4 +2262,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get showRealtimeUsage => '显示实时用量';
+
+  @override
+  String get announcements => '通知';
+
+  @override
+  String get noAnnouncements => '暂无通知';
+
+  @override
+  String get failedToLoadAnnouncements => '加载通知失败';
+
+  @override
+  String get learnMore => '了解更多';
 }

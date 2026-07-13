@@ -837,5 +837,9 @@
   "directAppTipTitle": "Набор приложений Direct",
   "directAppTipDesc": "Для лучшей производительности и экономии заряда рекомендуем добавлять приложения, которым не нужен VPN, в набор Direct.",
   "viewDirectAppTutorial": "Открыть инструкцию",
-  "tutorial": "Инструкция"
+  "tutorial": "Инструкция",
+  "announcements": "Уведомления",
+  "noAnnouncements": "Пока нет объявлений",
+  "failedToLoadAnnouncements": "Не удалось загрузить объявления",
+  "learnMore": "Подробнее"
 }

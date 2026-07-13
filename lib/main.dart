@@ -49,6 +49,8 @@ import 'package:umivpn/app/top_bar.dart';
 import 'package:umivpn/app/welcome.dart';
 import 'package:umivpn/app/settings/account.dart';
 import 'package:umivpn/app/settings/contact.dart';
+import 'package:umivpn/app/announcements/announcements_page.dart';
+import 'package:umivpn/app/announcements/announcements_provider.dart';
 import 'package:umivpn/app/support/support_chat_page.dart';
 import 'package:umivpn/app/support/support_fcm_service.dart';
 import 'package:umivpn/app/support/support_unread_badge.dart';
@@ -185,6 +187,10 @@ void main() async {
       ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
       ChangeNotifierProvider(
         create: (_) => SupportUnreadBadgeController()..start(),
+        lazy: false,
+      ),
+      ChangeNotifierProvider(
+        create: (_) => AnnouncementsProvider(preferences: pref)..start(),
         lazy: false,
       ),
       ChangeNotifierProvider.value(value: AuthRepo(authProvider, storage)),
