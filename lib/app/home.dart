@@ -226,10 +226,12 @@ class _VpnHomePageState extends State<VpnHomePage> {
       key: _scaffoldKey,
       backgroundColor: colorScheme.bgColor,
       drawer: ControlDrawer(),
+      endDrawer: ControlDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Platform.isMacOS ? null : settingButton,
+        automaticallyImplyLeading: Platform.isMacOS ? false : true,
         leadingWidth: desktopPlatform ? 148 : 168,
         title: desktopPlatform
             ? ConstrainedBox(
@@ -242,9 +244,7 @@ class _VpnHomePageState extends State<VpnHomePage> {
             ? MoveWindow(child: Container(color: Colors.transparent))
             : null,
         actions: [
-          _HomeOverflowMenu(
-            colorScheme: colorScheme,
-          ),
+          _HomeOverflowMenu(colorScheme: colorScheme),
           if (Platform.isWindows || Platform.isLinux)
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -260,8 +260,43 @@ class _VpnHomePageState extends State<VpnHomePage> {
             ),
           if (Platform.isMacOS)
             Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: settingButton,
+              padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () => context.go('/log'),
+                    icon: Icon(
+                      Icons.receipt_long_rounded,
+                      color: colorScheme.onSurface.withOpacity(0.87),
+                    ),
+                    tooltip: AppLocalizations.of(context)!.log,
+                  ),
+                  SizedBox(width: 8),
+                  IconButton(
+                    icon: Icon(
+                      Icons.settings_rounded,
+                      color: colorScheme.onSurface.withOpacity(0.87),
+                    ),
+                    onPressed: () {
+                      context.go('/setting');
+                    },
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: IconButton(
+                      onPressed: () {
+                        _scaffoldKey.currentState?.openEndDrawer();
+                      },
+                      icon: Icon(
+                        Icons.tune_rounded,
+                        color: colorScheme.onSurface.withOpacity(0.87),
+                      ),
+                      tooltip: AppLocalizations.of(context)!.advanced,
+                    ),
+                  ),
+                ],
+              ),
             ),
         ],
       ),
