@@ -1623,7 +1623,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get handlerCopiedSuccess => '复制节点成功！该节点已加入默认分组';
 
   @override
-  String get hysteriaRejectQuic => 'Hysteria拒绝QUIC';
+  String get hysteriaRejectQuic => '拒绝QUIC';
 
   @override
   String get syncBackup => '同步与备份';
@@ -2057,6 +2057,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get selectBillingPeriod => '选择计费周期';
+
+  @override
+  String get subscriptionBillingNotice => '银联卡可能无法支付。这是订阅服务，每个计费周期会自动扣费。您可以随时取消。';
 
   @override
   String get activeSubscriptionFound => '发现活动订阅';

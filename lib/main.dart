@@ -27,6 +27,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
+import 'package:tm/activate.dart';
 import 'package:tm/common.dart';
 import 'package:tm/fetch_result_provider.dart';
 import 'package:tm/root_certs.dart';
@@ -131,6 +132,8 @@ void main() async {
     _initFcm();
   }
 
+  await getConstDeviceInfo();
+
   version = (await PackageInfo.fromPlatform()).version;
 
   FlutterSecureStorage storage = await getSecureStorage();
@@ -176,7 +179,6 @@ void main() async {
     "App start time: ${DateTime.now().difference(startTime).inSeconds}s",
   );
 
-  // periodicFetchCountries(pref);
   periodicFetchGeo(pref);
 
   final app = MultiProvider(
@@ -368,16 +370,16 @@ void main() async {
           xController: context.read<XController>(),
         ),
       ),
-      if (Platform.isAndroid)
-        ChangeNotifierProvider(
-          create: (context) {
-            final vpnMonitor = DefaultNetworkMonitor(
-              androidHostApi: androidHostApi,
-            );
-            return vpnMonitor;
-          },
-          lazy: false,
-        ),
+      // if (Platform.isAndroid)
+      //   ChangeNotifierProvider(
+      //     create: (context) {
+      //       final vpnMonitor = DefaultNetworkMonitor(
+      //         androidHostApi: androidHostApi,
+      //       );
+      //       return vpnMonitor;
+      //     },
+      //     lazy: false,
+      //   ),
       // if (isAdPlatforms)
       //   Provider<OpenAdManager>(
       //     create: (context) {

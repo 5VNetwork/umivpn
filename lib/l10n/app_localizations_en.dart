@@ -1673,7 +1673,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get handlerCopiedSuccess => 'Copy succeeded. The node has been added to the Default group';
 
   @override
-  String get hysteriaRejectQuic => 'Hysteria Reject QUIC';
+  String get hysteriaRejectQuic => 'Reject QUIC';
 
   @override
   String get syncBackup => 'Sync & Backup';
@@ -2107,6 +2107,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectBillingPeriod => 'Select Billing Period';
+
+  @override
+  String get subscriptionBillingNotice => 'UnionPay (China Union) cards may be declined. This is a subscription—you are billed each billing cycle. You can cancel anytime.';
 
   @override
   String get activeSubscriptionFound => 'Active Subscription Found';

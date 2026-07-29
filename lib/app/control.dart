@@ -34,6 +34,8 @@ class Control extends StatelessWidget {
       children: [
         const FakeDns(),
         const SizedBox(height: 8),
+        const HysteriaRejectQuic(),
+        const SizedBox(height: 8),
         const BalanceModeSwich(),
         const SizedBox(height: 8),
         const VpnBlockDomains(),
@@ -97,6 +99,67 @@ class _FakeDnsState extends State<FakeDns> {
               context.read<SharedPreferences>().setFakeDns(!value);
             }
             snack(rootLocalizations()?.failedToChangeFakeDns);
+          }
+        },
+      ),
+    );
+  }
+}
+
+class HysteriaRejectQuic extends StatefulWidget {
+  const HysteriaRejectQuic({super.key});
+
+  @override
+  State<HysteriaRejectQuic> createState() => _HysteriaRejectQuicState();
+}
+
+class _HysteriaRejectQuicState extends State<HysteriaRejectQuic> {
+  late bool _hysteriaRejectQuic;
+
+  @override
+  void initState() {
+    super.initState();
+    _hysteriaRejectQuic = context.read<SharedPreferences>().hysteriaRejectQuic;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Card(
+      elevation: 0,
+      color: colorScheme.surfaceContainer,
+      child: SwitchListTile(
+        title: Text(
+          l10n.hysteriaRejectQuic,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        subtitle: Text(
+          '开启后可能会提高速度，但是一些网站可能会遇到问题',
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: colorScheme.onSurface.withValues(alpha: 0.8),
+          ),
+        ),
+        value: _hysteriaRejectQuic,
+        onChanged: (value) async {
+          setState(() {
+            _hysteriaRejectQuic = value;
+          });
+          context.read<SharedPreferences>().setHysteriaRejectQuic(value);
+          try {
+            await context.read<XController>().applyHysteriaRejectQuic();
+          } catch (e) {
+            logger.e('setHysteriaRejectQuic error', error: e);
+            if (mounted) {
+              setState(() {
+                _hysteriaRejectQuic = !value;
+              });
+              context.read<SharedPreferences>().setHysteriaRejectQuic(!value);
+            }
           }
         },
       ),

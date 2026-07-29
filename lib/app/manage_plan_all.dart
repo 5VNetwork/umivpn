@@ -188,7 +188,7 @@ class AllPlansList extends StatelessWidget {
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
                     onPressed: () async {
-                      final url = Uri.parse('https://umivpn.5vnetwork.com');
+                      final url = Uri.parse('https://www.umivpn.com/pricing');
                       await launchUrl(url);
                     },
                     icon: const Icon(Icons.open_in_new),
@@ -653,90 +653,105 @@ class AllPlansList extends StatelessWidget {
           width: double.maxFinite,
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: planData.priceOptions.map((priceOption) {
-              final isCurrentPlan =
-                  subscriptionInfo?.planAndPeriod.$1 ==
-                      planData.subscriptionPlan &&
-                  currentPeriod == priceOption.period;
-              bool canSelectCurrent = !isCurrentPlan;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: InkWell(
-                  onTap: canSelectCurrent
-                      ? () => Navigator.pop(context, priceOption)
-                      : null,
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: colorScheme.surfaceOverlay,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: colorScheme.borderLight,
-                        width: 1,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...planData.priceOptions.map((priceOption) {
+                final isCurrentPlan =
+                    subscriptionInfo?.planAndPeriod.$1 ==
+                        planData.subscriptionPlan &&
+                    currentPeriod == priceOption.period;
+                bool canSelectCurrent = !isCurrentPlan;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: InkWell(
+                    onTap: canSelectCurrent
+                        ? () => Navigator.pop(context, priceOption)
+                        : null,
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceOverlay,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: colorScheme.borderLight,
+                          width: 1,
+                        ),
                       ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    priceOption.price,
-                                    style: textTheme.titleMedium?.copyWith(
-                                      color: colorScheme.onSurface,
-                                      fontWeight: FontWeight.bold,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      priceOption.price,
+                                      style: textTheme.titleMedium?.copyWith(
+                                        color: colorScheme.onSurface,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  if (isCurrentPlan) ...[
-                                    const SizedBox(width: 8),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 2,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: colorScheme.primary,
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      child: Text(
-                                        'Current',
-                                        style: TextStyle(
-                                          color: colorScheme.onPrimary,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
+                                    if (isCurrentPlan) ...[
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: colorScheme.primary,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Current',
+                                          style: TextStyle(
+                                            color: colorScheme.onPrimary,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ],
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                priceOption.period.label(context),
-                                style: TextStyle(
-                                  color: colorScheme.onSurface.withOpacity(0.7),
-                                  fontSize: 12,
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 4),
+                                Text(
+                                  priceOption.period.label(context),
+                                  style: TextStyle(
+                                    color: colorScheme.onSurface.withOpacity(
+                                      0.7,
+                                    ),
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                          color: colorScheme.onSurface.withOpacity(0.5),
-                        ),
-                      ],
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                            color: colorScheme.onSurface.withOpacity(0.5),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                );
+              }),
+              const SizedBox(height: 8),
+              Text(
+                AppLocalizations.of(context)!.subscriptionBillingNotice,
+                style: TextStyle(
+                  color: colorScheme.onSurface.withOpacity(0.6),
+                  fontSize: 12,
                 ),
-              );
-            }).toList(),
+              ),
+            ],
           ),
         ),
         actions: [

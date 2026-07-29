@@ -31,10 +31,6 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
       duration: const Duration(seconds: 2),
     );
 
-    // _pulseAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
-    //   CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
-    // );
-
     _pulseController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _pulseController.reverse();

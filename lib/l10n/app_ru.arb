@@ -832,6 +832,7 @@
   "subscriptionCancelDialogStripeReactivationInfo": "Вы можете повторно активировать подписку в любое время.",
   "failedToReactivateSubscription": "Не удалось повторно активировать подписку",
   "failedToCancelSubscription": "Не удалось отменить подписку",
+  "subscriptionBillingNotice": "Карты UnionPay (China Union) могут быть отклонены. Это подписка — оплата списывается в каждом расчетном периоде. Отменить можно в любое время.",
   "selectLocation": "Выберите локацию",
   "supportWelcomeMessage": "Добро пожаловать! Вы можете задать любой вопрос или сообщить о проблеме, например о невозможности открыть некоторые сайты. Спасибо за обратную связь!",
   "directAppTipTitle": "Набор приложений Direct",

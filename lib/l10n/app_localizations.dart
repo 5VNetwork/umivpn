@@ -3136,7 +3136,7 @@ abstract class AppLocalizations {
   /// No description provided for @hysteriaRejectQuic.
   ///
   /// In en, this message translates to:
-  /// **'Hysteria Reject QUIC'**
+  /// **'Reject QUIC'**
   String get hysteriaRejectQuic;
 
   /// No description provided for @syncBackup.
@@ -3972,6 +3972,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select Billing Period'**
   String get selectBillingPeriod;
+
+  /// No description provided for @subscriptionBillingNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'UnionPay (China Union) cards may be declined. This is a subscription—you are billed each billing cycle. You can cancel anytime.'**
+  String get subscriptionBillingNotice;
 
   /// No description provided for @activeSubscriptionFound.
   ///

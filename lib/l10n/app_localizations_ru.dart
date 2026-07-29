@@ -2109,6 +2109,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get selectBillingPeriod => 'Select Billing Period';
 
   @override
+  String get subscriptionBillingNotice => 'Карты UnionPay (China Union) могут быть отклонены. Это подписка — оплата списывается в каждом расчетном периоде. Отменить можно в любое время.';
+
+  @override
   String get activeSubscriptionFound => 'Active Subscription Found';
 
   @override
