@@ -293,7 +293,7 @@ extension PrefHelperExtension on SharedPreferences {
   }
 
   bool get fakeDns {
-    return getBool('fakeDns') ?? false;
+    return getBool('fakeDns') ?? true;
   }
 
   void setFakeDns(bool enable) {
@@ -301,7 +301,7 @@ extension PrefHelperExtension on SharedPreferences {
   }
 
   bool get hysteriaRejectQuic {
-    return getBool('hysteriaRejectQuic') ?? false;
+    return getBool('hysteriaRejectQuic') ?? true;
   }
 
   void setHysteriaRejectQuic(bool enable) {
