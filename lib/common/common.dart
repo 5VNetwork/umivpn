@@ -37,7 +37,8 @@ final useStripe =
     Platform.isWindows ||
     (Platform.isAndroid && appFlavor != 'production') ||
     appFlavor == "pkg" ||
-    Platform.isLinux || (Platform.isIOS && appFlavor == 'cn');
+    Platform.isLinux ||
+    (Platform.isIOS && appFlavor == 'cn');
 
 final androidNonStore = Platform.isAndroid && appFlavor != 'production';
 const isWinStore = bool.fromEnvironment('STORE');

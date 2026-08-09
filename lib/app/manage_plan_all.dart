@@ -336,19 +336,19 @@ class AllPlansList extends StatelessWidget {
               const SizedBox(height: 4),
               if (userHasNoSub || consistentSub) ...[
                 _getPriceWidget(context, planData),
-                if (plan != SubscriptionPlan.free)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      AppLocalizations.of(
-                        context,
-                      )!.threeDayFreeTrialFirstTimeCustomers,
-                      style: textTheme.bodySmall?.copyWith(
-                        color: colorScheme.primary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
+                // if (plan != SubscriptionPlan.free)
+                //   Padding(
+                //     padding: const EdgeInsets.only(top: 4),
+                //     child: Text(
+                //       AppLocalizations.of(
+                //         context,
+                //       )!.threeDayFreeTrialFirstTimeCustomers,
+                //       style: textTheme.bodySmall?.copyWith(
+                //         color: colorScheme.primary,
+                //         fontWeight: FontWeight.w500,
+                //       ),
+                //     ),
+                //   ),
               ],
             ],
           ),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
@@ -6,7 +7,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart' hide User;
+import 'package:tm/common.dart';
 import 'package:umivpn/app/manage_plan.dart';
 import 'package:umivpn/auth/user.dart';
 import 'package:umivpn/common/common.dart';
@@ -60,6 +63,60 @@ class AuthRepo extends ChangeNotifier {
 
   UserProfile? get userProfile => _userProfile;
   UserProfile? _userProfile;
+
+  Future<Map<String, dynamic>> _fetchProfileJson({
+    required String token,
+    bool includeSubscription = false,
+  }) async {
+    final response = await supabase.functions.invoke(
+      'get-profile',
+      headers: {
+        'Authorization': 'Bearer $token',
+        'User-Agent': 'UmiVPN/$version',
+      },
+    );
+    if (response.status != 200 || response.data == null) {
+      throw Exception(
+        'get-profile failed: ${response.status} ${response.data}',
+      );
+    }
+
+    return Map<String, dynamic>.from(response.data as Map);
+  }
+
+  Future<Map<String, dynamic>> _fetchProfileJson1({
+    required String token,
+    bool includeSubscription = false,
+  }) async {
+    final uri = Uri.parse('$vworkerUrl/get-profile');
+    logger.d('Fetching profile from $uri');
+    final headers = {
+      'Authorization': 'Bearer $token',
+      'User-Agent': 'UmiVPN/$version',
+      'Content-Type': 'application/json',
+    };
+    final http.Response response;
+    if (includeSubscription) {
+      response = await http.post(
+        uri,
+        headers: headers,
+        body: jsonEncode({'include_subscription': true}),
+      );
+    } else {
+      response = await http.get(uri, headers: headers);
+    }
+    if (response.statusCode != 200) {
+      throw Exception(
+        'get-profile failed: ${response.statusCode} ${response.body}',
+      );
+    }
+    final decoded = jsonDecode(response.body);
+    if (decoded is! Map) {
+      throw Exception('get-profile returned invalid JSON');
+    }
+    return Map<String, dynamic>.from(decoded);
+  }
+
   Future<UserProfile?> fetchProfile() async {
     if (_user == null) {
       return null;
@@ -68,22 +125,20 @@ class AuthRepo extends ChangeNotifier {
     if (token == null) {
       return null;
     }
+
     try {
-      final response = await supabase.functions.invoke(
-        'get-profile',
-        headers: {
-          'Authorization': 'Bearer $token',
-          'User-Agent': 'UmiVPN/$version',
-        },
-      );
-      if (response.status != 200 || response.data == null) {
-        throw Exception(
-          'get-profile failed: ${response.status} ${response.data}',
-        );
-      }
-      final profile = UserProfile.fromJson(
-        Map<String, dynamic>.from(response.data as Map),
-      );
+      final data = await _fetchProfileJson1(token: token);
+      final profile = UserProfile.fromJson(data);
+      _userProfile = profile;
+      _updateStaleUser(profile);
+      return profile;
+    } catch (e, stackTrace) {
+      logger.e('Error fetching profile1', error: e, stackTrace: stackTrace);
+    }
+
+    try {
+      final data = await _fetchProfileJson(token: token);
+      final profile = UserProfile.fromJson(data);
       _userProfile = profile;
       _updateStaleUser(profile);
       return profile;
@@ -148,24 +203,18 @@ class AuthRepo extends ChangeNotifier {
     }
 
     try {
-      final response = await supabase.functions.invoke(
-        'get-profile',
-        headers: {
-          'Authorization': 'Bearer $token',
-          'User-Agent': 'UmiVPN/$version',
-        },
-        body: {'include_subscription': true},
-      );
-      if (response.status != 200 || response.data == null) {
-        logger.e(
-          'get-profile (subscription) failed',
-          error: '${response.status} ${response.data}',
+      Map<String, dynamic> data;
+      try {
+        data = await _fetchProfileJson1(
+          token: token,
+          includeSubscription: true,
         );
-        return null;
+        _updateStaleUser(UserProfile.fromJson(data));
+      } catch (e, stackTrace) {
+        logger.e('Error _fetchProfileJson1', error: e, stackTrace: stackTrace);
+        data = await _fetchProfileJson(token: token, includeSubscription: true);
+        _updateStaleUser(UserProfile.fromJson(data));
       }
-
-      final data = Map<String, dynamic>.from(response.data as Map);
-      _updateStaleUser(UserProfile.fromJson(data));
 
       SubscriptionInfo? subInfo;
       final subscriptionsData = data['subscriptions'];

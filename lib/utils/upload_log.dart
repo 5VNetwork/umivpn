@@ -264,6 +264,7 @@ class LogUploadService {
       tunnelLog: tunnelLogZipBase64 ?? '',
       deviceInfo: await getDeviceInfo(),
       reason: reason,
+      winStore: isWinStore,
     );
 
     await uploadLogData(logData);
@@ -385,6 +386,8 @@ class LogData {
   final String tunnelLog;
   final String deviceInfo;
   final String? reason;
+  final bool winStore;
+
 
   LogData({
     required this.version,
@@ -394,6 +397,7 @@ class LogData {
     required this.tunnelLog,
     required this.deviceInfo,
     this.reason,
+    this.winStore = false,
   });
 
   factory LogData.fromJson(Map<String, dynamic> json) =>

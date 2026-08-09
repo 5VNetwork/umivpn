@@ -46,7 +46,7 @@ class AnnouncementsProvider extends ChangeNotifier {
   int get unreadCount {
     if (_messages.isEmpty) return 0;
     final lastSeen = _lastSeenPublishedAt;
-    if (lastSeen == null) return _messages.length;
+    if (lastSeen == null) return 0;
     return _messages.where((m) => m.publishedAt.isAfter(lastSeen)).length;
   }
 
@@ -110,6 +110,14 @@ class AnnouncementsProvider extends ChangeNotifier {
     final lastSeen = _preferences.getString(_lastSeenPublishedAtKey);
     if (lastSeen != null) {
       _lastSeenPublishedAt = DateTime.tryParse(lastSeen)?.toUtc();
+    }
+    // New install: baseline = now so existing announcements aren't unread.
+    if (_lastSeenPublishedAt == null) {
+      _lastSeenPublishedAt = DateTime.now().toUtc();
+      _preferences.setString(
+        _lastSeenPublishedAtKey,
+        _lastSeenPublishedAt!.toIso8601String(),
+      );
     }
 
     final cached = _preferences.getString(_cachedMessagesKey);

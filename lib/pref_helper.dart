@@ -284,7 +284,13 @@ extension PrefHelperExtension on SharedPreferences {
 
   InboundMode get inboundMode {
     final mode = getInt('inboundMode');
-    if (mode == null) return InboundMode.tun;
+    if (mode == null) {
+      if (isWinStore) {
+        return InboundMode.systemProxy;
+      } else {
+        return InboundMode.tun;
+      }
+    }
     return InboundMode.values[mode];
   }
 
