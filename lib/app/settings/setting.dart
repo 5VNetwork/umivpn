@@ -200,9 +200,15 @@ class CompactSettingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = context.watch<AuthRepo>().user;
     return Scaffold(
-      appBar: adaptiveClosableAppBar(
-        context,
-        title: AppLocalizations.of(context)!.settings,
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.settings),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back_rounded),
+        ),
       ),
       body: ListView(
         children: SettingItem.values.map<Widget>((se) {

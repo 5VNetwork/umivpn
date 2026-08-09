@@ -510,21 +510,21 @@ Future<void> _initWindow(SharedPreferences pref) async {
     if (Platform.isMacOS) {
       await WindowManipulator.initialize();
 
-      WindowManipulator.hideTitle();
-      WindowManipulator.makeTitlebarTransparent();
-      WindowManipulator.enableFullSizeContentView();
-      WindowManipulator.overrideStandardWindowButtonPosition(
-        buttonType: NSWindowButtonType.closeButton,
-        offset: const Offset(15, 20),
-      );
-      WindowManipulator.overrideStandardWindowButtonPosition(
-        buttonType: NSWindowButtonType.miniaturizeButton,
-        offset: const Offset(35, 20),
-      );
-      WindowManipulator.overrideStandardWindowButtonPosition(
-        buttonType: NSWindowButtonType.zoomButton,
-        offset: const Offset(55, 20),
-      );
+      // WindowManipulator.hideTitle();
+      // WindowManipulator.makeTitlebarTransparent();
+      // WindowManipulator.enableFullSizeContentView();
+      // WindowManipulator.overrideStandardWindowButtonPosition(
+      //   buttonType: NSWindowButtonType.closeButton,
+      //   offset: const Offset(15, 20),
+      // );
+      // WindowManipulator.overrideStandardWindowButtonPosition(
+      //   buttonType: NSWindowButtonType.miniaturizeButton,
+      //   offset: const Offset(35, 20),
+      // );
+      // WindowManipulator.overrideStandardWindowButtonPosition(
+      //   buttonType: NSWindowButtonType.zoomButton,
+      //   offset: const Offset(55, 20),
+      // );
     }
     if (Platform.isWindows || Platform.isLinux) {
       WindowOptions windowOptions = WindowOptions(
