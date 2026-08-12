@@ -223,11 +223,11 @@ class _CountryListState extends State<_CountryList> {
                           currentCountryIsUnselectable;
 
                       return Container(
-                        margin: EdgeInsets.only(
-                          bottom: index < _recentlyUsedCountries.length - 1
-                              ? 0
-                              : 8,
-                        ),
+                        // margin: EdgeInsets.only(
+                        //   bottom: index < _recentlyUsedCountries.length - 1
+                        //       ? 0
+                        //       : 8,
+                        // ),
                         decoration: BoxDecoration(
                           color: isCurrent
                               ? colorScheme.primary.withOpacity(0.15)
