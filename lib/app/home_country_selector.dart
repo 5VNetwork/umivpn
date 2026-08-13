@@ -149,7 +149,7 @@ class _CountryListState extends State<_CountryList> {
                       setState(() {
                         _fetchOnce = true;
                       });
-                      context.read<FetchResultProvider>().fetch();
+                      context.read<FetchResultProvider>().fetch(reason: 'refresh');
                     },
                     icon: Icon(Icons.refresh_rounded),
                   );

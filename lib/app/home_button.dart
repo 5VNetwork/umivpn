@@ -249,6 +249,10 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
                               status,
                             ),
                           ),
+                          if (isConnected) ...[
+                            const SizedBox(height: 8),
+                            const _RealtimeTraffic(),
+                          ],
                           const SizedBox(height: 10),
                           const _Timer(),
                         ],
@@ -351,6 +355,46 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
           );
         },
       ),
+    );
+  }
+}
+
+class _RealtimeTraffic extends StatelessWidget {
+  const _RealtimeTraffic();
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final style = TextStyle(
+      color: colorScheme.onSurface.withOpacity(0.70),
+      fontSize: 13,
+      fontWeight: FontWeight.w500,
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
+    return ValueListenableBuilder(
+      valueListenable: context.read<XController>().trafficRate,
+      builder: (context, rate, _) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.arrow_upward_rounded,
+              size: 14,
+              color: colorScheme.onSurface.withOpacity(0.70),
+            ),
+            const SizedBox(width: 2),
+            Text('${bytesToReadable(rate.up)}/s', style: style),
+            const SizedBox(width: 10),
+            Icon(
+              Icons.arrow_downward_rounded,
+              size: 14,
+              color: colorScheme.onSurface.withOpacity(0.70),
+            ),
+            const SizedBox(width: 2),
+            Text('${bytesToReadable(rate.down)}/s', style: style),
+          ],
+        );
+      },
     );
   }
 }
