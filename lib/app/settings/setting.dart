@@ -124,7 +124,7 @@ enum SettingItem {
   }
 }
 
-const String websiteUrl = 'https://umivpn.5vnetwork.com';
+const String websiteUrl = 'https://www.umivpn.com';
 
 List<Widget> _getBottomButtons(BuildContext context, User? user) {
   return [
@@ -136,7 +136,7 @@ List<Widget> _getBottomButtons(BuildContext context, User? user) {
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: OutlinedButton.icon(
               onPressed: () {
-                launchUrl(Uri.parse(websiteUrl));
+                launchUrl(Uri.parse(websiteUrl), mode: LaunchMode.externalApplication);
               },
               label: Text(AppLocalizations.of(context)!.website),
               icon: const Icon(Icons.link),
