@@ -3871,6 +3871,18 @@ abstract class AppLocalizations {
   /// **'Select location'**
   String get selectLocation;
 
+  /// No description provided for @byArea.
+  ///
+  /// In en, this message translates to:
+  /// **'By area'**
+  String get byArea;
+
+  /// No description provided for @byServer.
+  ///
+  /// In en, this message translates to:
+  /// **'By server'**
+  String get byServer;
+
   /// No description provided for @expired.
   ///
   /// In en, this message translates to:

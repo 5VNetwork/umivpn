@@ -2000,6 +2000,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get selectLocation => '选择地区';
 
   @override
+  String get byArea => '按地区';
+
+  @override
+  String get byServer => '按服务器';
+
+  @override
   String get expired => '已过期';
 
   @override

@@ -2050,6 +2050,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get selectLocation => 'Выберите локацию';
 
   @override
+  String get byArea => 'По региону';
+
+  @override
+  String get byServer => 'По серверу';
+
+  @override
   String get expired => 'Expired';
 
   @override

@@ -330,6 +330,15 @@ extension PrefHelperExtension on SharedPreferences {
     setString('selectedCountry', country);
   }
 
+  /// 0 means select by area (country), not by specific server.
+  int get selectedServerId {
+    return getInt('selectedServerId') ?? 0;
+  }
+
+  void setSelectedServerId(int serverId) {
+    setInt('selectedServerId', serverId);
+  }
+
   String? get userCountry {
     return getString('userCountry');
   }

@@ -19,27 +19,32 @@ import 'package:equatable/equatable.dart';
 
 class Choice extends Equatable {
   final String country;
+  /// 0 means select by area; non-zero pins a specific server.
+  final int serverId;
   final DefaultRouteMode routeMode;
   // when country is auto, this is the actual country that the user is connected to
   final String? realtimeCountry;
 
   Choice({
     required this.country,
+    this.serverId = 0,
     required this.routeMode,
     this.realtimeCountry,
   });
 
   @override
-  List<Object?> get props => [country, routeMode, realtimeCountry];
+  List<Object?> get props => [country, serverId, routeMode, realtimeCountry];
 
   Choice copyWith({
     XStatus? status,
     String? country,
+    int? serverId,
     DefaultRouteMode? routeMode,
     ValueGetter<String?>? realtimeCountry,
   }) {
     return Choice(
       country: country ?? this.country,
+      serverId: serverId ?? this.serverId,
       routeMode: routeMode ?? this.routeMode,
       realtimeCountry: realtimeCountry != null
           ? realtimeCountry()
@@ -63,6 +68,7 @@ class ChoiceCubit extends Cubit<Choice> {
        super(
          Choice(
            country: _getCountry(pref),
+           serverId: pref.selectedServerId,
            routeMode: _getMode(authRepo, pref),
          ),
        ) {
@@ -92,12 +98,23 @@ class ChoiceCubit extends Cubit<Choice> {
   Completer<void>? _completer;
 
   Future<void> changeCountry(String country) async {
-    if (country == state.country) {
+    if (country == state.country && state.serverId == 0) {
       return;
     }
     _pref.setSelectedCountry(country);
-    emit(state.copyWith(country: country));
+    _pref.setSelectedServerId(0);
+    emit(state.copyWith(country: country, serverId: 0));
     await _xController.countryChange(country);
+  }
+
+  Future<void> changeServerId(int serverId) async {
+    if (serverId == state.serverId && serverId != 0) {
+      return;
+    }
+    _pref.setSelectedServerId(serverId);
+    _pref.setSelectedCountry('');
+    emit(state.copyWith(country: '', serverId: serverId));
+    await _xController.serverIdChange(serverId);
   }
 
   Future<void> changeRouteMode(DefaultRouteMode routeMode) async {

@@ -2050,6 +2050,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectLocation => 'Select location';
 
   @override
+  String get byArea => 'By area';
+
+  @override
+  String get byServer => 'By server';
+
+  @override
   String get expired => 'Expired';
 
   @override

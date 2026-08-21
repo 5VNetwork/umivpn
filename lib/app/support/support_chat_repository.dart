@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_common/support/support_chat.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:umivpn/app/support/support_message_local_store.dart';
+import 'package:umivpn/common/common.dart';
 
 import 'package:umivpn/utils/logger.dart';
 
@@ -120,11 +122,35 @@ class SupportChatRepository {
     }
 
     final conversationId =
-        await _client.rpc('get_or_create_support_conversation') as String;
+        await _client.rpc(
+              'get_or_create_support_conversation',
+              params: {
+                'p_device_platform': Platform.operatingSystem,
+                'p_device_version': version,
+                'p_device_is_store_version': _isStoreVersion(),
+              },
+            )
+            as String;
 
     _conversationId = conversationId;
 
     return conversationId;
+  }
+
+  bool _isStoreVersion() {
+    if (Platform.isAndroid) {
+      return !androidNonStore;
+    }
+    if (Platform.isWindows) {
+      return isWinStore;
+    }
+    if (Platform.isIOS) {
+      return true;
+    }
+    if (Platform.isMacOS) {
+      return !isPkg;
+    }
+    return false;
   }
 
   /// Device cache only (no network). Used for instant chat UI on open.

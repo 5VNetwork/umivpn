@@ -552,7 +552,7 @@ class _HomeBody extends StatelessWidget {
                         const SizedBox(height: 15),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10.0),
-                          child: const CountrySelector(),
+                          child: const Selector(),
                         ),
                       ],
                     );
