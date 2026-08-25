@@ -86,27 +86,27 @@ class AndroidHostApiImpl(
     private fun startMonitorDefaultNIC() {
         val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
         // This monitor default network change, both VPN or physical
-        defaultNetworkCallbackObject = object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                super.onAvailable(network)
-                Log.d("NetworkChangeMonitor", "Network is available $network")
-            }
-
-            override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
-                super.onLinkPropertiesChanged(network, linkProperties)
-                Log.d("NetworkChangeMonitor", "Link properties changed: $linkProperties")
-            }
-
-            override fun onCapabilitiesChanged(
-                network: Network,
-                networkCapabilities: NetworkCapabilities
-            ) {
-                super.onCapabilitiesChanged(network, networkCapabilities)
-                Log.d("NetworkChangeMonitor", "capabilities changed: $networkCapabilities")
-                notifyFlutter(networkCapabilities)
-            }
-        }
-        connectivityManager.registerDefaultNetworkCallback(defaultNetworkCallbackObject!!)
+//        defaultNetworkCallbackObject = object : ConnectivityManager.NetworkCallback() {
+//            override fun onAvailable(network: Network) {
+//                super.onAvailable(network)
+//                Log.d("NetworkChangeMonitor", "Network is available $network")
+//            }
+//
+//            override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
+//                super.onLinkPropertiesChanged(network, linkProperties)
+//                Log.d("NetworkChangeMonitor", "Link properties changed: $linkProperties")
+//            }
+//
+//            override fun onCapabilitiesChanged(
+//                network: Network,
+//                networkCapabilities: NetworkCapabilities
+//            ) {
+//                super.onCapabilitiesChanged(network, networkCapabilities)
+//                Log.d("NetworkChangeMonitor", "capabilities changed: $networkCapabilities")
+//                notifyFlutter(networkCapabilities)
+//            }
+//        }
+//        connectivityManager.registerDefaultNetworkCallback(defaultNetworkCallbackObject!!)
 
         // This only monitor default physical network change
         val networkRequest = NetworkRequest.Builder()
@@ -140,13 +140,13 @@ class AndroidHostApiImpl(
         }
     }
 
-    private fun notifyFlutter(networkCapabilities: NetworkCapabilities) {
-        if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)) {
-            handler.post { flutterApi.defaultNetwork(true) }
-        } else if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
-            handler.post { flutterApi.defaultNetwork(false) }
-        }
-    }
+//    private fun notifyFlutter(networkCapabilities: NetworkCapabilities) {
+//        if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)) {
+//            handler.post { flutterApi.defaultNetwork(true) }
+//        } else if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+//            handler.post { flutterApi.defaultNetwork(false) }
+//        }
+//    }
 
     // get current active network and notify nic listeners
     private fun onNetworkChange(network: Network) {

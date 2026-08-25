@@ -2308,7 +2308,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get oneYear => 'One Year';
 
   @override
-  String get supportWelcomeMessage => 'Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback!';
+  String supportWelcomeMessage(String faqUrl) {
+    return 'Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback! (Normally, we respond within 24 hours.). You can also visit our website to see FAQ: $faqUrl';
+  }
 
   @override
   String get hideSessionOngoingIndicator => 'Hide Session Ongoing Indicator';

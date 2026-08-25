@@ -216,6 +216,10 @@ class _SupportChatPageState extends State<SupportChatPage> {
     }
   }
 
+  String _getFaqUrl() {
+    return 'https://www.umivpn.com/faq';
+  }
+
   Message _toChatMessage(SupportMessage message, String currentUserId) {
     final authorId = message.isFromSupport ? _supportUserId : currentUserId;
 
@@ -224,7 +228,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
         id: message.id,
         authorId: _supportUserId,
         createdAt: message.createdAt,
-        text: AppLocalizations.of(context)!.supportWelcomeMessage,
+        text: AppLocalizations.of(context)!.supportWelcomeMessage(_getFaqUrl()),
       );
     }
 

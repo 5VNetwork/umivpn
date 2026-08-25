@@ -4366,8 +4366,8 @@ abstract class AppLocalizations {
   /// No description provided for @supportWelcomeMessage.
   ///
   /// In en, this message translates to:
-  /// **'Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback!'**
-  String get supportWelcomeMessage;
+  /// **'Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback! (Normally, we respond within 24 hours.). You can also visit our website to see FAQ: {faqUrl}'**
+  String supportWelcomeMessage(String faqUrl);
 
   /// No description provided for @hideSessionOngoingIndicator.
   ///

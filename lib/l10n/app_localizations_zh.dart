@@ -2258,7 +2258,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get oneYear => '一年';
 
   @override
-  String get supportWelcomeMessage => '欢迎！您可以随时提问、反馈问题（例如无法访问某些网站）。感谢您的反馈！';
+  String supportWelcomeMessage(String faqUrl) {
+    return '欢迎！您可以随时提问、反馈问题（例如无法访问某些网站）。感谢您的反馈！（通常会在24小时内回复）。您也可以访问我们的网站查看常见问题的解答：$faqUrl';
+  }
 
   @override
   String get hideSessionOngoingIndicator => '隐藏会话进行中指示器';

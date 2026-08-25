@@ -9,8 +9,9 @@ class Selector extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        final initialTab =
-            context.read<ChoiceCubit>().state.serverId != 0 ? 1 : 0;
+        final initialTab = context.read<ChoiceCubit>().state.serverId != 0
+            ? 1
+            : 0;
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
@@ -124,10 +125,20 @@ class _LocationSheet extends StatefulWidget {
 
 class _LocationSheetState extends State<_LocationSheet>
     with SingleTickerProviderStateMixin {
+  static const _sortBySpeedKey = 'locationSortBySpeed';
+
   late final TabController _tabController;
   List<String> _recentlyUsedCountries = [];
   SharedPreferences? _pref;
   bool _fetchOnce = false;
+  bool _testingAllUsable = false;
+  bool _testingAllSpeed = false;
+  bool _sortBySpeed = false;
+  final Set<String> _testingCountries = {};
+  final Set<int> _testingServers = {};
+  /// Speeds used for sort while a test is in progress (avoids list jumping).
+  final Map<String, int> _sortSpeedByCountry = {};
+  final Map<int, int> _sortSpeedByServer = {};
 
   @override
   void initState() {
@@ -137,7 +148,8 @@ class _LocationSheetState extends State<_LocationSheet>
       vsync: this,
       initialIndex: widget.initialTabIndex.clamp(0, 1),
     );
-    _getCountries(context.read<SharedPreferences>());
+    _loadPrefs(context.read<SharedPreferences>());
+    HandlerResultsStore.instance.reload();
   }
 
   @override
@@ -146,9 +158,15 @@ class _LocationSheetState extends State<_LocationSheet>
     super.dispose();
   }
 
-  void _getCountries(SharedPreferences pref) async {
+  void _loadPrefs(SharedPreferences pref) {
     _pref = pref;
     _recentlyUsedCountries = pref.getStringList('recentlyUsedCountries') ?? [];
+    _sortBySpeed = pref.getBool(_sortBySpeedKey) ?? false;
+  }
+
+  Future<void> _setSortBySpeed(bool value) async {
+    setState(() => _sortBySpeed = value);
+    await _pref?.setBool(_sortBySpeedKey, value);
   }
 
   Future<void> _saveRecentlyUsedCountries() async {
@@ -174,6 +192,167 @@ class _LocationSheetState extends State<_LocationSheet>
     _saveRecentlyUsedCountries();
   }
 
+  Future<String?> _readFetchResultJson() async {
+    return context.read<FetchResultProvider>().readFetchResultJson();
+  }
+
+  void _pinCountrySortSpeed(String country) {
+    _sortSpeedByCountry.putIfAbsent(
+      country,
+      () => HandlerResultsStore.instance.forCountry(country).speed,
+    );
+  }
+
+  void _pinServerSortSpeed(int serverId) {
+    _sortSpeedByServer.putIfAbsent(
+      serverId,
+      () => HandlerResultsStore.instance.forServer(serverId).speed,
+    );
+  }
+
+  void _pinAllSortSpeeds() {
+    final result = context.read<FetchResultProvider>().fetchResult;
+    if (result == null) return;
+    for (final c in {
+      ...result.mains.map((e) => e.country),
+      ...result.fallbacks.map((e) => e.country),
+    }) {
+      if (c.isNotEmpty) _pinCountrySortSpeed(c);
+    }
+    for (final s in result.uniqueServers()) {
+      _pinServerSortSpeed(s.serverId);
+    }
+  }
+
+  void _releaseUnusedSortPins() {
+    _sortSpeedByCountry.removeWhere(
+      (c, _) => !_testingCountries.contains(c) && !_testingAllUsable && !_testingAllSpeed,
+    );
+    _sortSpeedByServer.removeWhere(
+      (id, _) => !_testingServers.contains(id) && !_testingAllUsable && !_testingAllSpeed,
+    );
+  }
+
+  int _sortSpeedForCountry(String country) =>
+      _sortSpeedByCountry[country] ??
+      HandlerResultsStore.instance.forCountry(country).speed;
+
+  int _sortSpeedForServer(int serverId) =>
+      _sortSpeedByServer[serverId] ??
+      HandlerResultsStore.instance.forServer(serverId).speed;
+
+  Future<void> _runUsableTest() async {
+    if (_testingAllUsable) return;
+    final fetchResultJson = await _readFetchResultJson();
+    if (fetchResultJson == null || fetchResultJson.isEmpty) return;
+    setState(() {
+      _testingAllUsable = true;
+      _pinAllSortSpeeds();
+    });
+    try {
+      final runner = HandlerTestRunner(api: context.read<XApiClient>());
+      await runner.testUsableAll(fetchResultJson);
+    } on StateError catch (e) {
+      logger.w('usable test skipped', error: e);
+      if (mounted) snack(e.message);
+    } catch (e) {
+      logger.e('usable test failed', error: e);
+      if (mounted) snack(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() {
+          _testingAllUsable = false;
+          _releaseUnusedSortPins();
+        });
+      }
+    }
+  }
+
+  Future<void> _runSpeedTest() async {
+    if (_testingAllSpeed) return;
+    final fetchResultJson = await _readFetchResultJson();
+    if (fetchResultJson == null || fetchResultJson.isEmpty) return;
+    setState(() {
+      _testingAllSpeed = true;
+      _pinAllSortSpeeds();
+    });
+    try {
+      final runner = HandlerTestRunner(api: context.read<XApiClient>());
+      await runner.testSpeedAll(fetchResultJson);
+    } on StateError catch (e) {
+      logger.w('speed test skipped', error: e);
+      if (mounted) snack(e.message);
+    } catch (e) {
+      logger.e('speed test failed', error: e);
+      if (mounted) snack(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() {
+          _testingAllSpeed = false;
+          _releaseUnusedSortPins();
+        });
+      }
+    }
+  }
+
+  Future<void> _runCountryTest(String country) async {
+    if (country.isEmpty || _testingCountries.contains(country)) return;
+    final fetchResultJson = await _readFetchResultJson();
+    if (fetchResultJson == null || fetchResultJson.isEmpty) return;
+    setState(() {
+      _pinCountrySortSpeed(country);
+      _testingCountries.add(country);
+    });
+    try {
+      final runner = HandlerTestRunner(api: context.read<XApiClient>());
+      await runner.testUsableAll(fetchResultJson, country: country);
+      if (!mounted) return;
+      await runner.testSpeedAll(fetchResultJson, country: country);
+    } on StateError catch (e) {
+      logger.w('country test skipped', error: e);
+      if (mounted) snack(e.message);
+    } catch (e) {
+      logger.e('country test failed', error: e);
+      if (mounted) snack(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() {
+          _testingCountries.remove(country);
+          _releaseUnusedSortPins();
+        });
+      }
+    }
+  }
+
+  Future<void> _runServerTest(int serverId) async {
+    if (serverId == 0 || _testingServers.contains(serverId)) return;
+    final fetchResultJson = await _readFetchResultJson();
+    if (fetchResultJson == null || fetchResultJson.isEmpty) return;
+    setState(() {
+      _pinServerSortSpeed(serverId);
+      _testingServers.add(serverId);
+    });
+    try {
+      final runner = HandlerTestRunner(api: context.read<XApiClient>());
+      await runner.testUsableAll(fetchResultJson, serverId: serverId);
+      if (!mounted) return;
+      await runner.testSpeedAll(fetchResultJson, serverId: serverId);
+    } on StateError catch (e) {
+      logger.w('server test skipped', error: e);
+      if (mounted) snack(e.message);
+    } catch (e) {
+      logger.e('server test failed', error: e);
+      if (mounted) snack(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() {
+          _testingServers.remove(serverId);
+          _releaseUnusedSortPins();
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -189,14 +368,42 @@ class _LocationSheetState extends State<_LocationSheet>
         children: [
           Row(
             children: [
-              Text(
-                l10n.selectLocation,
-                style: textTheme.titleLarge?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  l10n.selectLocation,
+                  style: textTheme.titleLarge?.copyWith(
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              const Spacer(),
+              IconButton(
+                tooltip: l10n.statusTest,
+                onPressed: _testingAllUsable ? null : _runUsableTest,
+                icon: Icon(
+                  Icons.network_check_rounded,
+                  color: _testingAllUsable ? colorScheme.primary : null,
+                ),
+              ),
+              const SizedBox(width: 2),
+              IconButton(
+                tooltip: l10n.speedTest,
+                onPressed: _testingAllSpeed ? null : _runSpeedTest,
+                icon: Icon(
+                  Icons.speed_rounded,
+                  color: _testingAllSpeed ? colorScheme.primary : null,
+                ),
+              ),
+              const SizedBox(width: 2),
+              IconButton(
+                tooltip: l10n.sort,
+                onPressed: () => _setSortBySpeed(!_sortBySpeed),
+                icon: Icon(
+                  Icons.sort_rounded,
+                  color: _sortBySpeed ? colorScheme.primary : null,
+                ),
+              ),
+              const VerticalDivider(width: 1),
               StatefulBuilder(
                 builder: (ctx, setState) {
                   if (_fetchOnce) {
@@ -207,9 +414,9 @@ class _LocationSheetState extends State<_LocationSheet>
                       setState(() {
                         _fetchOnce = true;
                       });
-                      context
-                          .read<FetchResultProvider>()
-                          .fetch(reason: 'refresh');
+                      context.read<FetchResultProvider>().fetch(
+                        reason: 'refresh',
+                      );
                     },
                     icon: const Icon(Icons.refresh_rounded),
                   );
@@ -230,65 +437,78 @@ class _LocationSheetState extends State<_LocationSheet>
           ),
           const SizedBox(height: 8),
           Flexible(
-            child: Consumer<FetchResultProvider>(
-              builder: (ctx, p, child) {
-                if (p.fetching) {
-                  return const SizedBox(
-                    height: 100,
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                } else if (p.fetchResult != null) {
-                  return TabBarView(
-                    controller: _tabController,
-                    children: [
-                      _CountryTab(
-                        fetchResult: p.fetchResult!,
-                        currentCountry: choice.country,
-                        selectingByServer: choice.serverId != 0,
-                        recentlyUsedCountries: _recentlyUsedCountries,
-                        onRememberCountry: _rememberCountry,
-                      ),
-                      _ServerTab(
-                        fetchResult: p.fetchResult!,
-                        currentServerId: choice.serverId,
-                      ),
-                    ],
-                  );
-                } else if (p.fetchError != null) {
-                  return Center(
-                    child: Column(
-                      children: [
-                        Text(
-                          p.fetchError!,
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.error.withOpacity(0.70),
+            child: ListenableBuilder(
+              listenable: HandlerResultsStore.instance,
+              builder: (context, _) {
+                return Consumer<FetchResultProvider>(
+                  builder: (ctx, p, child) {
+                    if (p.fetching) {
+                      return const SizedBox(
+                        height: 100,
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    } else if (p.fetchResult != null) {
+                      return TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _CountryTab(
+                            fetchResult: p.fetchResult!,
+                            currentCountry: choice.country,
+                            selectingByServer: choice.serverId != 0,
+                            recentlyUsedCountries: _recentlyUsedCountries,
+                            onRememberCountry: _rememberCountry,
+                            sortBySpeed: _sortBySpeed,
+                            testingCountries: _testingCountries,
+                            sortSpeedFor: _sortSpeedForCountry,
+                            onTest: _runCountryTest,
                           ),
+                          _ServerTab(
+                            fetchResult: p.fetchResult!,
+                            currentServerId: choice.serverId,
+                            sortBySpeed: _sortBySpeed,
+                            testingServers: _testingServers,
+                            sortSpeedFor: _sortSpeedForServer,
+                            onTest: _runServerTest,
+                          ),
+                        ],
+                      );
+                    } else if (p.fetchError != null) {
+                      return Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              p.fetchError!,
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: colorScheme.error.withOpacity(0.70),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            ElevatedButton(
+                              onPressed: () async {
+                                p.makeSureFetchResult();
+                              },
+                              child: Text(l10n.retry),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 10),
-                        ElevatedButton(
-                          onPressed: () async {
-                            p.makeSureFetchResult();
-                          },
-                          child: Text(l10n.retry),
+                      );
+                    } else {
+                      logger.e('This should not happen');
+                      return Center(
+                        child: Column(
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                p.makeSureFetchResult();
+                              },
+                              child: const Text('Fetch'),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
-                } else {
-                  logger.e('This should not happen');
-                  return Center(
-                    child: Column(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            p.makeSureFetchResult();
-                          },
-                          child: const Text('Fetch'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
+                      );
+                    }
+                  },
+                );
               },
             ),
           ),
@@ -305,6 +525,10 @@ class _CountryTab extends StatelessWidget {
     required this.selectingByServer,
     required this.recentlyUsedCountries,
     required this.onRememberCountry,
+    required this.sortBySpeed,
+    required this.testingCountries,
+    required this.sortSpeedFor,
+    required this.onTest,
   });
 
   final FetchResult fetchResult;
@@ -312,6 +536,10 @@ class _CountryTab extends StatelessWidget {
   final bool selectingByServer;
   final List<String> recentlyUsedCountries;
   final void Function(String country) onRememberCountry;
+  final bool sortBySpeed;
+  final Set<String> testingCountries;
+  final int Function(String country) sortSpeedFor;
+  final void Function(String country) onTest;
 
   @override
   Widget build(BuildContext context) {
@@ -327,8 +555,19 @@ class _CountryTab extends StatelessWidget {
       allCountriesSet.add(currentCountry);
       currentCountryIsUnselectable = true;
     }
-    final sortedCountries = allCountriesSet.toList()
-      ..sort((a, b) {
+    final sortedCountries = allCountriesSet.toList();
+    if (sortBySpeed) {
+      sortedCountries.sort((a, b) {
+        final speedA = sortSpeedFor(a);
+        final speedB = sortSpeedFor(b);
+        if (speedA != speedB) return speedB.compareTo(speedA);
+        return getLocalizedCountryName(
+          context,
+          a,
+        ).compareTo(getLocalizedCountryName(context, b));
+      });
+    } else {
+      sortedCountries.sort((a, b) {
         if (recentlyUsedCountries.contains(a)) {
           return -1;
         }
@@ -337,6 +576,7 @@ class _CountryTab extends StatelessWidget {
         }
         return 0;
       });
+    }
 
     return ListView.builder(
       shrinkWrap: true,
@@ -353,11 +593,7 @@ class _CountryTab extends StatelessWidget {
 
         late Widget icon;
         if (index == 0) {
-          icon = Icon(
-            Icons.language,
-            size: 28,
-            color: colorScheme.onSurface,
-          );
+          icon = Icon(Icons.language, size: 28, color: colorScheme.onSurface);
         } else {
           icon = getCountryIcon(country, height: 28, width: 28);
         }
@@ -370,6 +606,11 @@ class _CountryTab extends StatelessWidget {
           currentUnavailable: currentUnavailable,
           icon: icon,
           title: title,
+          metrics: index == 0
+              ? null
+              : HandlerResultsStore.instance.forCountry(country),
+          testing: index > 0 && testingCountries.contains(country),
+          onTest: index == 0 ? null : () => onTest(country),
           onTap: currentUnavailable
               ? null
               : () async {
@@ -391,32 +632,53 @@ class _ServerTab extends StatelessWidget {
   const _ServerTab({
     required this.fetchResult,
     required this.currentServerId,
+    required this.sortBySpeed,
+    required this.testingServers,
+    required this.sortSpeedFor,
+    required this.onTest,
   });
 
   final FetchResult fetchResult;
   final int currentServerId;
+  final bool sortBySpeed;
+  final Set<int> testingServers;
+  final int Function(int serverId) sortSpeedFor;
+  final void Function(int serverId) onTest;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context)!;
     final servers = fetchResult.uniqueServers();
-    final currentUnavailable = currentServerId != 0 &&
+    final currentUnavailable =
+        currentServerId != 0 &&
         !servers.any((s) => s.serverId == currentServerId);
 
-    final items = <({int serverId, String country})>[
+    var items = <({int serverId, String country})>[
       if (currentUnavailable) (serverId: currentServerId, country: ''),
       ...servers,
     ];
+
+    if (sortBySpeed) {
+      final pinned = currentUnavailable
+          ? items.take(1).toList()
+          : <({int serverId, String country})>[];
+      final rest = currentUnavailable ? items.skip(1).toList() : items;
+      rest.sort((a, b) {
+        final speedA = sortSpeedFor(a.serverId);
+        final speedB = sortSpeedFor(b.serverId);
+        if (speedA != speedB) return speedB.compareTo(speedA);
+        return a.serverId.compareTo(b.serverId);
+      });
+      items = [...pinned, ...rest];
+    }
 
     if (items.isEmpty) {
       return Center(
         child: Text(
           l10n.noServersMessage,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: colorScheme.onSurface.withOpacity(0.70),
-          ),
+          style: TextStyle(color: colorScheme.onSurface.withOpacity(0.70)),
         ),
       );
     }
@@ -439,20 +701,19 @@ class _ServerTab extends StatelessWidget {
           isCurrent: isCurrent,
           currentUnavailable: unavailable,
           icon: server.country.isEmpty
-              ? Icon(
-                  Icons.dns_outlined,
-                  size: 28,
-                  color: colorScheme.onSurface,
-                )
+              ? Icon(Icons.dns_outlined, size: 28, color: colorScheme.onSurface)
               : getCountryIcon(server.country, height: 28, width: 28),
           title: title,
+          metrics: HandlerResultsStore.instance.forServer(server.serverId),
+          testing: testingServers.contains(server.serverId),
+          onTest: unavailable ? null : () => onTest(server.serverId),
           onTap: unavailable
               ? null
               : () async {
                   if (!isCurrent) {
-                    await context
-                        .read<ChoiceCubit>()
-                        .changeServerId(server.serverId);
+                    await context.read<ChoiceCubit>().changeServerId(
+                      server.serverId,
+                    );
                   }
                   if (context.mounted) {
                     Navigator.pop(context);
@@ -471,6 +732,9 @@ class _SelectionTile extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.onTap,
+    this.metrics,
+    this.onTest,
+    this.testing = false,
   });
 
   final bool isCurrent;
@@ -478,10 +742,14 @@ class _SelectionTile extends StatelessWidget {
   final Widget icon;
   final String title;
   final VoidCallback? onTap;
+  final AggregatedHandlerMetrics? metrics;
+  final VoidCallback? onTest;
+  final bool testing;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       decoration: BoxDecoration(
@@ -493,6 +761,7 @@ class _SelectionTile extends StatelessWidget {
       child: Opacity(
         opacity: currentUnavailable ? 0.5 : 1.0,
         child: ListTile(
+          contentPadding: const EdgeInsets.only(left: 16, right: 4),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -524,9 +793,86 @@ class _SelectionTile extends StatelessWidget {
               fontWeight: isCurrent ? FontWeight.w700 : FontWeight.normal,
             ),
           ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (metrics != null) Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: _HandlerMetricsTrailing(metrics: metrics!),
+              ),
+              if (onTest != null)
+                IconButton(
+                  tooltip: '${l10n.statusTest} · ${l10n.speedTest}',
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(
+                    minWidth: 36,
+                    minHeight: 36,
+                  ),
+                  visualDensity: VisualDensity.compact,
+                  onPressed: testing ? null : onTest,
+                  icon: testing
+                      ? SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: colorScheme.primary,
+                          ),
+                        )
+                      : Icon(
+                          Icons.speed_outlined,
+                          color: colorScheme.onSurface.withOpacity(0.55),
+                        ),
+                ),
+            ],
+          ),
           onTap: onTap,
         ),
       ),
+    );
+  }
+}
+
+class _HandlerMetricsTrailing extends StatelessWidget {
+  const _HandlerMetricsTrailing({required this.metrics});
+
+  final AggregatedHandlerMetrics metrics;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final speedText = formatSpeedBytesPerSec(metrics.speed);
+    final IconData usableIcon;
+    final Color usableColor;
+    switch (metrics.usable) {
+      case UsableStatus.ok:
+        usableIcon = Icons.check_circle_outline;
+        usableColor = Colors.green;
+      case UsableStatus.down:
+        usableIcon = Icons.cancel_outlined;
+        usableColor = colorScheme.error;
+      case UsableStatus.unknown:
+        usableIcon = Icons.remove_circle_outline;
+        usableColor = colorScheme.onSurface.withOpacity(0.35);
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (metrics.usable != UsableStatus.unknown)
+          Icon(usableIcon, size: 18, color: usableColor),
+        if (speedText.isNotEmpty) ...[
+          const SizedBox(width: 8),
+          Text(
+            speedText,
+            style: TextStyle(
+              fontSize: 12,
+              color: colorScheme.onSurface.withOpacity(0.70),
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
