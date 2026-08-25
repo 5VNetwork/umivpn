@@ -380,19 +380,31 @@ class _LocationSheetState extends State<_LocationSheet>
               IconButton(
                 tooltip: l10n.statusTest,
                 onPressed: _testingAllUsable ? null : _runUsableTest,
-                icon: Icon(
-                  Icons.network_check_rounded,
-                  color: _testingAllUsable ? colorScheme.primary : null,
-                ),
+                icon: _testingAllUsable
+                    ? SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: colorScheme.primary,
+                        ),
+                      )
+                    : const Icon(Icons.network_check_rounded),
               ),
               const SizedBox(width: 2),
               IconButton(
                 tooltip: l10n.speedTest,
                 onPressed: _testingAllSpeed ? null : _runSpeedTest,
-                icon: Icon(
-                  Icons.speed_rounded,
-                  color: _testingAllSpeed ? colorScheme.primary : null,
-                ),
+                icon: _testingAllSpeed
+                    ? SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: colorScheme.primary,
+                        ),
+                      )
+                    : const Icon(Icons.speed_rounded),
               ),
               const SizedBox(width: 2),
               IconButton(
