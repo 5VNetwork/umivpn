@@ -2325,6 +2325,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get showRealtimeUsage => 'Show Realtime Usage';
 
   @override
+  String get hideDuplicateSessions => 'Hide Duplicate Sessions';
+
+  @override
+  String get showDuplicateSessions => 'Show Duplicate Sessions';
+
+  @override
   String get announcements => 'Notifications';
 
   @override

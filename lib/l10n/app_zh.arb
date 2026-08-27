@@ -970,6 +970,8 @@
   "showSessionOngoingIndicator": "显示会话进行中指示器",
   "hideRealtimeUsage": "隐藏实时用量",
   "showRealtimeUsage": "显示实时用量",
+  "hideDuplicateSessions": "隐藏重复会话",
+  "showDuplicateSessions": "显示重复会话",
   "announcements": "通知",
   "noAnnouncements": "暂无通知",
   "failedToLoadAnnouncements": "加载通知失败",

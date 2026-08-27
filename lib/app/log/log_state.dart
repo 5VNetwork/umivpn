@@ -8,6 +8,7 @@ class LogState {
     this.showApp = true,
     this.showSessionOngoing = true,
     this.showRealtimeUsage = false,
+    this.dismissDuplicateSessions = true,
   });
   final bool enableLog;
   final LogFilter filter;
@@ -15,6 +16,7 @@ class LogState {
   final bool showApp;
   final bool showSessionOngoing;
   final bool showRealtimeUsage;
+  final bool dismissDuplicateSessions;
 
   LogState copyWith({
     bool? enableLog,
@@ -24,6 +26,7 @@ class LogState {
     bool? showHandler,
     bool? showSessionOngoing,
     bool? showRealtimeUsage,
+    bool? dismissDuplicateSessions,
   }) {
     return LogState(
       enableLog: enableLog ?? this.enableLog,
@@ -32,6 +35,8 @@ class LogState {
       showApp: showApp ?? this.showApp,
       showSessionOngoing: showSessionOngoing ?? this.showSessionOngoing,
       showRealtimeUsage: showRealtimeUsage ?? this.showRealtimeUsage,
+      dismissDuplicateSessions:
+          dismissDuplicateSessions ?? this.dismissDuplicateSessions,
     );
   }
 }

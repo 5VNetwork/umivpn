@@ -34,6 +34,7 @@ class LogBloc extends Bloc<LogEvent, LogState> {
           showApp: pref.showApp,
           showSessionOngoing: pref.showSessionOngoing,
           showRealtimeUsage: pref.showRealtimeUsage,
+          dismissDuplicateSessions: pref.dismissDuplicateSessions,
           logs: CircularBuffer<XLog>(maxSize: maxLogSize),
           filter: const LogFilter(
             showDirect: true,
@@ -61,6 +62,9 @@ class LogBloc extends Bloc<LogEvent, LogState> {
     on<HandlerPressedEvent>(_onHandlerPressedEvent);
     on<SessionOngoingPressedEvent>(_onSessionOngoingPressedEvent);
     on<RealtimeUsagePressedEvent>(_onRealtimeUsagePressedEvent);
+    on<DismissDuplicateSessionsPressedEvent>(
+      _onDismissDuplicateSessionsPressedEvent,
+    );
     _logs = state.logs;
 
     add(const LogBlocInitialEvent());
@@ -155,6 +159,16 @@ class LogBloc extends Bloc<LogEvent, LogState> {
     );
   }
 
+  void _onDismissDuplicateSessionsPressedEvent(
+    DismissDuplicateSessionsPressedEvent event,
+    Emitter<LogState> emit,
+  ) {
+    _pref.setDismissDuplicateSessions(event.dismissDuplicateSessions);
+    emit(
+      state.copyWith(dismissDuplicateSessions: event.dismissDuplicateSessions),
+    );
+  }
+
   void _onHandlerPressedEvent(
     HandlerPressedEvent event,
     Emitter<LogState> emit,
@@ -240,7 +254,7 @@ class LogBloc extends Bloc<LogEvent, LogState> {
               : await _getAppIcon(l.routeMessage.appId),
         );
         // dismiss same RouteInfo
-        if (state.logs.isNotEmpty) {
+        if (state.dismissDuplicateSessions && state.logs.isNotEmpty) {
           final last = state.logs.last;
           if (last is SessionInfo) {
             if (last.dst == routeInfo.dst && last.tag == routeInfo.tag) {

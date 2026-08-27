@@ -73,6 +73,11 @@ class RealtimeUsagePressedEvent extends LogEvent {
   final bool showRealtimeUsage;
 }
 
+class DismissDuplicateSessionsPressedEvent extends LogEvent {
+  const DismissDuplicateSessionsPressedEvent(this.dismissDuplicateSessions);
+  final bool dismissDuplicateSessions;
+}
+
 class SubstringChangedEvent extends LogEvent {
   const SubstringChangedEvent(this.substring);
   final String substring;

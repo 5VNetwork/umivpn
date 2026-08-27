@@ -4393,6 +4393,18 @@ abstract class AppLocalizations {
   /// **'Show Realtime Usage'**
   String get showRealtimeUsage;
 
+  /// No description provided for @hideDuplicateSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Duplicate Sessions'**
+  String get hideDuplicateSessions;
+
+  /// No description provided for @showDuplicateSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Duplicate Sessions'**
+  String get showDuplicateSessions;
+
   /// No description provided for @announcements.
   ///
   /// In en, this message translates to:

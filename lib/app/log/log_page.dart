@@ -141,6 +141,18 @@ class _LogPageState extends State<LogPage> {
                     : AppLocalizations.of(context)!.showRealtimeUsage,
               ),
             ),
+            MenuItemButton(
+              onPressed: () => context.read<LogBloc>().add(
+                DismissDuplicateSessionsPressedEvent(
+                  !state.dismissDuplicateSessions,
+                ),
+              ),
+              child: Text(
+                state.dismissDuplicateSessions
+                    ? AppLocalizations.of(context)!.showDuplicateSessions
+                    : AppLocalizations.of(context)!.hideDuplicateSessions,
+              ),
+            ),
           ],
           builder: (context, controller, child) {
             return IconButton(

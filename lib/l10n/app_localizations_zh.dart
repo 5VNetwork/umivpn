@@ -2275,6 +2275,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get showRealtimeUsage => '显示实时用量';
 
   @override
+  String get hideDuplicateSessions => '隐藏重复会话';
+
+  @override
+  String get showDuplicateSessions => '显示重复会话';
+
+  @override
   String get announcements => '通知';
 
   @override

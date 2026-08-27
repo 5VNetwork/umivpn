@@ -963,6 +963,8 @@
   "showSessionOngoingIndicator": "Show Session Ongoing Indicator",
   "hideRealtimeUsage": "Hide Realtime Usage",
   "showRealtimeUsage": "Show Realtime Usage",
+  "hideDuplicateSessions": "Hide Duplicate Sessions",
+  "showDuplicateSessions": "Show Duplicate Sessions",
   "announcements": "Notifications",
   "noAnnouncements": "No announcements yet",
   "failedToLoadAnnouncements": "Failed to load announcements",

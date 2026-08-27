@@ -103,6 +103,14 @@ extension PrefHelperExtension on SharedPreferences {
     setBool('showRealtimeUsage', show);
   }
 
+  bool get dismissDuplicateSessions {
+    return getBool('dismissDuplicateSessions') ?? true;
+  }
+
+  void setDismissDuplicateSessions(bool dismiss) {
+    setBool('dismissDuplicateSessions', dismiss);
+  }
+
   DateTime? get lastGeoUpdate {
     final time = getInt('lastGeoUpdate');
     if (time == null) return null;
