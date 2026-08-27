@@ -139,6 +139,14 @@ jobs:
         run: |
           dart run msix:create --store --windows-build-args "--obfuscate --split-debug-info=symbols --dart-define=STORE=true --dart-define=LOG_KEY=$env:LOG_KEY --dart-define=URL=$env:URL" -n store
 
+      - name: Upload MSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: store-msix-${{ steps.get_version.outputs.version }}
+          path: build/windows/msix/store.msix
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Upload debug symbols (Windows Store)
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
