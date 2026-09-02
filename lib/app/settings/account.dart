@@ -99,21 +99,22 @@ class _AccountPageState extends State<AccountPage> {
                 Center(
                   child: Row(
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          context.go('/sign-in');
-                          context.read<AuthProvider>().logOut();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.primary,
-                          foregroundColor: Theme.of(
-                            context,
-                          ).colorScheme.onPrimary,
+                      if (authRepo.user!.plan != SubscriptionPlan.free)
+                        ElevatedButton(
+                          onPressed: () {
+                            context.go('/sign-in');
+                            context.read<AuthProvider>().logOut();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
+                            foregroundColor: Theme.of(
+                              context,
+                            ).colorScheme.onPrimary,
+                          ),
+                          child: Text(AppLocalizations.of(context)!.logout),
                         ),
-                        child: Text(AppLocalizations.of(context)!.logout),
-                      ),
                       ElevatedButton(
                         onPressed: () {
                           showDialog(

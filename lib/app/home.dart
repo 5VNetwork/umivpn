@@ -233,8 +233,8 @@ class _VpnHomePageState extends State<VpnHomePage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading:  settingButton,
-        automaticallyImplyLeading:  true,
+        leading: settingButton,
+        automaticallyImplyLeading: true,
         leadingWidth: desktopPlatform ? 148 : 168,
         title: desktopPlatform
             ? ConstrainedBox(
@@ -247,6 +247,16 @@ class _VpnHomePageState extends State<VpnHomePage> {
             ? MoveWindow(child: Container(color: Colors.transparent))
             : null,
         actions: [
+          if (context.read<AuthRepo>().user?.plan == SubscriptionPlan.free)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              
+              child: IconButton(
+                tooltip: AppLocalizations.of(context)!.upgrade,
+                onPressed: () => context.go('/manage-plan'),
+                icon: Icon(Icons.rocket_launch_rounded),
+              ),
+            ),
           _HomeOverflowMenu(colorScheme: colorScheme),
           if (Platform.isWindows || Platform.isLinux)
             Padding(
@@ -261,7 +271,6 @@ class _VpnHomePageState extends State<VpnHomePage> {
                 ),
               ),
             ),
-          
         ],
       ),
       body: SafeArea(
@@ -526,7 +535,13 @@ class _HomeBody extends StatelessWidget {
                           //   ],
                           // ),
                           const SizedBox(height: 10),
-                          const _TrafficCard(),
+                          Row(
+                            children: [
+                              Expanded(child: _TrafficCard()),
+                              const SizedBox(width: 10),
+                              Expanded(child: Selector()),
+                            ],
+                          ),
                           const SizedBox(height: 10),
                         ],
                       );

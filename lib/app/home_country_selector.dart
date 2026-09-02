@@ -9,7 +9,10 @@ class Selector extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        final initialTab = context.read<ChoiceCubit>().state.serverId != 0
+        final byServerEnabled =
+            context.read<AuthRepo>().user?.plan != SubscriptionPlan.free;
+        final initialTab =
+            byServerEnabled && context.read<ChoiceCubit>().state.serverId != 0
             ? 1
             : 0;
         showModalBottomSheet(
@@ -23,7 +26,10 @@ class Selector extends StatelessWidget {
             constraints: BoxConstraints(
               maxHeight: MediaQuery.of(ctx).size.height * 0.9,
             ),
-            child: _LocationSheet(initialTabIndex: initialTab),
+            child: _LocationSheet(
+              initialTabIndex: initialTab,
+              byServerEnabled: byServerEnabled,
+            ),
           ),
         );
       },
@@ -115,9 +121,13 @@ class Selector extends StatelessWidget {
 }
 
 class _LocationSheet extends StatefulWidget {
-  const _LocationSheet({required this.initialTabIndex});
+  const _LocationSheet({
+    required this.initialTabIndex,
+    required this.byServerEnabled,
+  });
 
   final int initialTabIndex;
+  final bool byServerEnabled;
 
   @override
   State<_LocationSheet> createState() => _LocationSheetState();
@@ -136,6 +146,7 @@ class _LocationSheetState extends State<_LocationSheet>
   bool _sortBySpeed = false;
   final Set<String> _testingCountries = {};
   final Set<int> _testingServers = {};
+
   /// Speeds used for sort while a test is in progress (avoids list jumping).
   final Map<String, int> _sortSpeedByCountry = {};
   final Map<int, int> _sortSpeedByServer = {};
@@ -144,9 +155,11 @@ class _LocationSheetState extends State<_LocationSheet>
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: 2,
+      length: widget.byServerEnabled ? 2 : 1,
       vsync: this,
-      initialIndex: widget.initialTabIndex.clamp(0, 1),
+      initialIndex: widget.byServerEnabled
+          ? widget.initialTabIndex.clamp(0, 1)
+          : 0,
     );
     _loadPrefs(context.read<SharedPreferences>());
     HandlerResultsStore.instance.reload();
@@ -226,10 +239,16 @@ class _LocationSheetState extends State<_LocationSheet>
 
   void _releaseUnusedSortPins() {
     _sortSpeedByCountry.removeWhere(
-      (c, _) => !_testingCountries.contains(c) && !_testingAllUsable && !_testingAllSpeed,
+      (c, _) =>
+          !_testingCountries.contains(c) &&
+          !_testingAllUsable &&
+          !_testingAllSpeed,
     );
     _sortSpeedByServer.removeWhere(
-      (id, _) => !_testingServers.contains(id) && !_testingAllUsable && !_testingAllSpeed,
+      (id, _) =>
+          !_testingServers.contains(id) &&
+          !_testingAllUsable &&
+          !_testingAllSpeed,
     );
   }
 
@@ -436,17 +455,19 @@ class _LocationSheetState extends State<_LocationSheet>
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          TabBar(
-            controller: _tabController,
-            labelColor: colorScheme.primary,
-            unselectedLabelColor: colorScheme.onSurface.withOpacity(0.60),
-            indicatorColor: colorScheme.primary,
-            tabs: [
-              Tab(text: l10n.byArea),
-              Tab(text: l10n.byServer),
-            ],
-          ),
+          if (widget.byServerEnabled) ...[
+            const SizedBox(height: 8),
+            TabBar(
+              controller: _tabController,
+              labelColor: colorScheme.primary,
+              unselectedLabelColor: colorScheme.onSurface.withOpacity(0.60),
+              indicatorColor: colorScheme.primary,
+              tabs: [
+                Tab(text: l10n.byArea),
+                Tab(text: l10n.byServer),
+              ],
+            ),
+          ],
           const SizedBox(height: 8),
           Flexible(
             child: ListenableBuilder(
@@ -460,20 +481,28 @@ class _LocationSheetState extends State<_LocationSheet>
                         child: Center(child: CircularProgressIndicator()),
                       );
                     } else if (p.fetchResult != null) {
+                      final countryTab = _CountryTab(
+                        fetchResult: p.fetchResult!,
+                        currentCountry: choice.country,
+                        selectingByServer:
+                            widget.byServerEnabled && choice.serverId != 0,
+                        recentlyUsedCountries: _recentlyUsedCountries,
+                        onRememberCountry: _rememberCountry,
+                        sortBySpeed: _sortBySpeed,
+                        testingCountries: _testingCountries,
+                        sortSpeedFor: _sortSpeedForCountry,
+                        onTest: _runCountryTest,
+                      );
+                      if (!widget.byServerEnabled) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: countryTab,
+                        );
+                      }
                       return TabBarView(
                         controller: _tabController,
                         children: [
-                          _CountryTab(
-                            fetchResult: p.fetchResult!,
-                            currentCountry: choice.country,
-                            selectingByServer: choice.serverId != 0,
-                            recentlyUsedCountries: _recentlyUsedCountries,
-                            onRememberCountry: _rememberCountry,
-                            sortBySpeed: _sortBySpeed,
-                            testingCountries: _testingCountries,
-                            sortSpeedFor: _sortSpeedForCountry,
-                            onTest: _runCountryTest,
-                          ),
+                          countryTab,
                           _ServerTab(
                             fetchResult: p.fetchResult!,
                             currentServerId: choice.serverId,
@@ -808,10 +837,11 @@ class _SelectionTile extends StatelessWidget {
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (metrics != null) Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: _HandlerMetricsTrailing(metrics: metrics!),
-              ),
+              if (metrics != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: _HandlerMetricsTrailing(metrics: metrics!),
+                ),
               if (onTest != null)
                 IconButton(
                   tooltip: '${l10n.statusTest} · ${l10n.speedTest}',

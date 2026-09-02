@@ -43,10 +43,6 @@ class TrafficCardViewModel extends ChangeNotifier {
 class _TrafficCard extends StatelessWidget {
   const _TrafficCard();
 
-  DateTime get refreshDate {
-    return DateTime(DateTime.now().year, DateTime.now().month + 1, 1);
-  }
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -58,10 +54,10 @@ class _TrafficCard extends StatelessWidget {
         builder: (context) {
           return GestureDetector(
             onTap: () {
-              context.go('/manage-plan');
+              // context.go('/manage-plan');
             },
             child: Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               decoration: BoxDecoration(
                 color: colorScheme.brightness == Brightness.dark
                     ? colorScheme.surfaceOverlayLight
@@ -72,141 +68,76 @@ class _TrafficCard extends StatelessWidget {
               child: Consumer<TrafficCardViewModel>(
                 builder: (context, viewModel, child) {
                   if (viewModel.userProfile == null) {
-                    return const SizedBox(height: 85, width: double.infinity);
+                    return const SizedBox(height: 28, width: double.infinity);
                   }
-                  final userProfile = viewModel.userProfile;
-                  String? remainingData = userProfile != null
-                      ? bytesToReadable(userProfile.remainingData)
-                      : null;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  final userProfile = viewModel.userProfile!;
+                  final remainingData = bytesToReadable(
+                    userProfile.remainingData,
+                  );
+                  final remainingParts = remainingData.split(' ');
+                  return Row(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // if (userProfile.subscriptionPlan != SubscriptionPlan.free)
-                          //   Row(
-                          //     children: [
-                          //       Icon(Icons.data_usage,
-                          //           size: 20,
-                          //           color: colorScheme.onSurface.withOpacity(0.87)),
-                          //       const SizedBox(width: 8),
-                          //       Text(AppLocalizations.of(context)!.monthlyTraffic,
-                          //           style: TextStyle(
-                          //               color:
-                          //                   colorScheme.onSurface.withOpacity(0.87))),
-                          //     ],
-                          //   ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: colorScheme.shadowLight,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              AppLocalizations.of(context)!.free,
-                              style: TextStyle(
-                                color: Colors.amber,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                      Container(
+                        width: 28,
+                        height: 28,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: colorScheme.primary.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: colorScheme.primary.withOpacity(0.3),
+                            width: 1.5,
                           ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  colorScheme.primary,
-                                  colorScheme.secondary,
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: colorScheme.primary.withOpacity(0.3),
-                                  blurRadius: 8,
-                                  spreadRadius: 0,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.rocket_launch_rounded,
-                                  size: 16,
-                                  color: colorScheme.onPrimary,
-                                ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  AppLocalizations.of(context)!.upgrade,
-                                  style: TextStyle(
-                                    color: colorScheme.onPrimary,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 0.5,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Icon(
-                                  Icons.arrow_forward_rounded,
-                                  size: 14,
-                                  color: colorScheme.onPrimary,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                        ),
+                        child: Icon(
+                          Icons.data_usage_rounded,
+                          size: 16,
+                          color: colorScheme.primary,
+                        ),
                       ),
-                      const SizedBox(height: 10),
-                      // if (userProfile.subscriptionPlan == SubscriptionPlan.pro)
-                      //   Text(AppLocalizations.of(context)!.unlimitedData,
-                      //       style: TextStyle(
-                      //           fontWeight: FontWeight.bold,
-                      //           color: colorScheme.onSurface))
-                      // else
-                      if (remainingData != null)
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                      const SizedBox(width: 15),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${remainingData.split(' ')[0]}",
+                              AppLocalizations.of(context)!.remainingData,
                               style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: colorScheme.onSurface,
-                              ),
-                            ),
-                            Text(
-                              ' ${remainingData.split(' ')[1]}',
-                              style: TextStyle(
-                                fontSize: 14,
                                 color: colorScheme.onSurface.withOpacity(0.70),
-                                height: 1.8,
+                                fontSize: 12,
                               ),
                             ),
-                            const SizedBox(width: 4),
-                            viewModel.canManualRefresh
-                                ? IconButton(
-                                    onPressed:
-                                        viewModel.canManualRefresh &&
-                                            !viewModel.isRefreshing
-                                        ? viewModel.manualRefresh
-                                        : null,
-                                    icon: viewModel.isRefreshing
+                            const SizedBox(height: 2),
+                            Row(
+                              children: [
+                                Text(
+                                  remainingParts[0],
+                                  style: TextStyle(
+                                    color: colorScheme.onSurface,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                if (remainingParts.length > 1)
+                                  Text(
+                                    ' ${remainingParts[1]}',
+                                    style: TextStyle(
+                                      color: colorScheme.onSurface.withOpacity(
+                                        0.70,
+                                      ),
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                if (viewModel.canManualRefresh) ...[
+                                  const SizedBox(width: 6),
+                                  GestureDetector(
+                                    onTap: viewModel.isRefreshing
+                                        ? null
+                                        : viewModel.manualRefresh,
+                                    child: viewModel.isRefreshing
                                         ? SizedBox(
-                                            width: 18,
-                                            height: 18,
+                                            width: 12,
+                                            height: 12,
                                             child: CircularProgressIndicator(
                                               strokeWidth: 2,
                                               color: colorScheme.onSurface
@@ -215,49 +146,54 @@ class _TrafficCard extends StatelessWidget {
                                           )
                                         : Icon(
                                             Icons.refresh_rounded,
-                                            size: 20,
-                                            color: viewModel.canManualRefresh
-                                                ? colorScheme.onSurface
-                                                      .withOpacity(0.70)
-                                                : colorScheme.onSurface
-                                                      .withOpacity(0.30),
+                                            size: 18,
+                                            color: colorScheme.onSurface
+                                                .withOpacity(0.70),
                                           ),
-                                    padding: EdgeInsets.zero,
-                                    constraints: const BoxConstraints(
-                                      minWidth: 32,
-                                      minHeight: 32,
-                                    ),
-                                    visualDensity: VisualDensity.compact,
-                                  )
-                                : const SizedBox.shrink(),
-                            const Spacer(),
-                            Text(
-                              "${AppLocalizations.of(context)!.dataRefresh}: ${AppLocalizations.of(context)!.days(refreshDate.difference(DateTime.now()).inDays)}",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: colorScheme.onSurface.withOpacity(0.70),
-                              ),
+                                  ),
+                                ],
+                              ],
                             ),
                           ],
                         ),
-
-                      const SizedBox(height: 10),
-                      if (userProfile != null)
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: /* userProfile.subscriptionPlan == SubscriptionPlan.pro
-                          ? 1
-                          : */
-                                (userProfile.remainingData /
-                                SubscriptionPlan.free.data),
-                            backgroundColor: colorScheme.borderLight,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              colorScheme.primary,
-                            ),
-                            minHeight: 6,
-                          ),
-                        ),
+                      ),
+                      // const SizedBox(width: 10),
+                      // Container(
+                      //   padding: const EdgeInsets.symmetric(
+                      //     horizontal: 10,
+                      //     vertical: 4,
+                      //   ),
+                      //   decoration: BoxDecoration(
+                      //     gradient: LinearGradient(
+                      //       begin: Alignment.topLeft,
+                      //       end: Alignment.bottomRight,
+                      //       colors: [
+                      //         colorScheme.primary,
+                      //         colorScheme.secondary,
+                      //       ],
+                      //     ),
+                      //     borderRadius: BorderRadius.circular(10),
+                      //   ),
+                      //   child: Row(
+                      //     mainAxisSize: MainAxisSize.min,
+                      //     children: [
+                      //       Icon(
+                      //         Icons.rocket_launch_rounded,
+                      //         size: 12,
+                      //         color: colorScheme.onPrimary,
+                      //       ),
+                      //       const SizedBox(width: 4),
+                      //       Text(
+                      //         AppLocalizations.of(context)!.upgrade,
+                      //         style: TextStyle(
+                      //           color: colorScheme.onPrimary,
+                      //           fontSize: 10,
+                      //           fontWeight: FontWeight.w700,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   );
                 },
