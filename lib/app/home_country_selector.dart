@@ -34,6 +34,7 @@ class Selector extends StatelessWidget {
         );
       },
       child: Container(
+        alignment: Alignment.centerLeft,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
           color: colorScheme.brightness == Brightness.dark
@@ -68,7 +69,7 @@ class Selector extends StatelessWidget {
                       style: TextStyle(
                         color: colorScheme.onSurface,
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 14,
                       ),
                     ),
                   ],

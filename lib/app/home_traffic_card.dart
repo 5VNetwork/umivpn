@@ -57,6 +57,7 @@ class _TrafficCard extends StatelessWidget {
               // context.go('/manage-plan');
             },
             child: Container(
+              alignment: Alignment.centerLeft,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               decoration: BoxDecoration(
                 color: colorScheme.brightness == Brightness.dark

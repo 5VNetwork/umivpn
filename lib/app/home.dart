@@ -535,12 +535,15 @@ class _HomeBody extends StatelessWidget {
                           //   ],
                           // ),
                           const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Expanded(child: _TrafficCard()),
-                              const SizedBox(width: 10),
-                              Expanded(child: Selector()),
-                            ],
+                          IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(child: _TrafficCard()),
+                                const SizedBox(width: 10),
+                                Expanded(child: Selector()),
+                              ],
+                            ),
                           ),
                           const SizedBox(height: 10),
                         ],
