@@ -2308,6 +2308,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get oneYear => 'One Year';
 
   @override
+  String get supportReplied => 'Support replied';
+
+  @override
+  String get openSupportChat => 'Open';
+
+  @override
   String supportWelcomeMessage(String faqUrl) {
     return 'Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback! (Normally, we respond within 24 hours.). You can also visit our website to see FAQ: $faqUrl';
   }

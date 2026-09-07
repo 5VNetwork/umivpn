@@ -951,6 +951,8 @@
   "oneQuarter": "One Quarter",
   "oneHalfYear": "One Half Year",
   "oneYear": "One Year",
+  "supportReplied": "Support replied",
+  "openSupportChat": "Open",
   "supportWelcomeMessage": "Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback! (Normally, we respond within 24 hours.). You can also visit our website to see FAQ: {faqUrl}",
   "@supportWelcomeMessage": {
     "placeholders": {

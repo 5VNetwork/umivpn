@@ -436,5 +436,5 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     await preferences.setBool(supportUnreadNeedsRefreshPreferenceKey, true);
   }
 
-  print("Handling a background message: ${message.messageId}");
+  print("Handling a background message: ${message.messageId}, ${message.data}");
 }

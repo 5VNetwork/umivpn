@@ -44,6 +44,15 @@ class _SupportChatPageState extends State<SupportChatPage> {
 
   StreamSubscription<SupportMessage>? _subscription;
 
+  SupportUnreadBadgeController? _unreadBadge;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _unreadBadge = context.read<SupportUnreadBadgeController>();
+    _unreadBadge!.pausePolling();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -75,12 +84,15 @@ class _SupportChatPageState extends State<SupportChatPage> {
 
       setState(() {});
 
-      // Only sync from network if the user already has a conversation.
-      // Do NOT create a conversation just by opening the page.
+      // Drain any replies the watermark hasn't seen yet — including those from
+      // a conversation the agent already closed — before looking at the active
+      // conversation. Do NOT create a conversation just by opening the page.
+      await _syncMissedMessages(userId);
+      if (!mounted) return;
+
       final conversationId = await _repository.getExistingConversationId();
 
       if (conversationId == null) {
-        if (!mounted) return;
         setState(() {
           _syncing = false;
         });
@@ -100,7 +112,10 @@ class _SupportChatPageState extends State<SupportChatPage> {
 
       if (!mounted) return;
 
-      context.read<SupportUnreadBadgeController>().clear();
+      final unread = context.read<SupportUnreadBadgeController>();
+      unread.markConversationActive();
+      unread.pausePolling();
+      unread.clear();
 
       setState(() {
         _conversationId = conversationId;
@@ -109,7 +124,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
 
       _subscription ??= _repository
           .watchMessages(conversationId)
-          .listen(_onIncomingMessage);
+          .listen(_onIncomingMessage, onError: _onWatchError);
     } catch (error) {
       logger.e(error);
       if (!mounted) return;
@@ -139,41 +154,43 @@ class _SupportChatPageState extends State<SupportChatPage> {
       return inflight;
     }
 
-    final future = () async {
-      if (mounted) {
-        setState(() {
-          _syncing = true;
-          _error = null;
-        });
-      }
+    final future =
+        () async {
+              if (mounted) {
+                setState(() {
+                  _syncing = true;
+                  _error = null;
+                });
+              }
 
-      final conversationId = await _repository.ensureConversation();
+              final conversationId = await _repository.ensureConversation();
 
-      if (!mounted) return conversationId;
+              if (!mounted) return conversationId;
 
-      setState(() {
-        _conversationId = conversationId;
-        _syncing = false;
-      });
+              setState(() {
+                _conversationId = conversationId;
+                _syncing = false;
+              });
 
-      _subscription ??= _repository
-          .watchMessages(conversationId)
-          .listen(_onIncomingMessage);
+              _subscription ??= _repository
+                  .watchMessages(conversationId)
+                  .listen(_onIncomingMessage, onError: _onWatchError);
 
-      return conversationId;
-    }()
-        .catchError((error) {
-      logger.e(error);
-      if (mounted) {
-        setState(() {
-          _syncing = false;
-          _error ??= error.toString();
-        });
-      }
-      throw error;
-    }).whenComplete(() {
-      _ensureConversationFuture = null;
-    });
+              return conversationId;
+            }()
+            .catchError((error) {
+              logger.e(error);
+              if (mounted) {
+                setState(() {
+                  _syncing = false;
+                  _error ??= error.toString();
+                });
+              }
+              throw error;
+            })
+            .whenComplete(() {
+              _ensureConversationFuture = null;
+            });
 
     _ensureConversationFuture = future;
     return future;
@@ -191,6 +208,57 @@ class _SupportChatPageState extends State<SupportChatPage> {
     } catch (error) {
       logger.e(error);
     }
+  }
+
+  void _markConversationActive() {
+    if (!mounted) return;
+    context.read<SupportUnreadBadgeController>().markConversationActive();
+  }
+
+  void _onWatchError(Object error, [StackTrace? stack]) {
+    if (error is SupportConversationDeleted) {
+      unawaited(_handleConversationDeleted());
+      return;
+    }
+    logger.e(error, stackTrace: stack);
+  }
+
+  /// There is no visible conversation, either because an agent closed it or
+  /// because the user never opened one. Replies from just before the close are
+  /// still readable by user id, so pull them in rather than losing them.
+  Future<void> _syncMissedMessages(String userId) async {
+    try {
+      final missed = await _repository.fetchMissedMessages();
+      for (final message in missed) {
+        await supportChatInsertOrReconcileIncoming(
+          controller: _chatController,
+          incoming: _toChatMessage(message, userId),
+        );
+      }
+      if (missed.any((message) => message.isFromSupport)) {
+        await _repository.markUserRead();
+      }
+    } catch (error) {
+      logger.e(error);
+    }
+    if (!mounted) return;
+    context.read<SupportUnreadBadgeController>().clear();
+  }
+
+  Future<void> _handleConversationDeleted() async {
+    await _subscription?.cancel();
+    _subscription = null;
+    final userId = _currentUserId;
+    if (userId != null) {
+      await _syncMissedMessages(userId);
+    }
+    _repository.forgetConversation();
+    if (!mounted) return;
+    context.read<SupportUnreadBadgeController>().stopWaitingForReply();
+    setState(() {
+      _conversationId = null;
+      _syncing = false;
+    });
   }
 
   Future<void> _onIncomingMessage(SupportMessage message) async {
@@ -275,6 +343,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
           content: trimmed,
           userId: userId,
         );
+        _markConversationActive();
         return _toChatMessage(message, userId);
       },
     );
@@ -307,6 +376,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
           content: failed.text,
           userId: userId,
         );
+        _markConversationActive();
         return _toChatMessage(message, userId);
       },
     );
@@ -383,6 +453,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
         pending: pendingMessage,
         delivered: chatMessage,
       );
+      _markConversationActive();
     } catch (error) {
       await _chatController.updateMessage(
         pendingMessage,
@@ -419,9 +490,8 @@ class _SupportChatPageState extends State<SupportChatPage> {
   @override
   void dispose() {
     _subscription?.cancel();
-
+    _unreadBadge?.startPollingIfNeeded();
     _chatController.dispose();
-
     super.dispose();
   }
 
@@ -455,8 +525,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
 
     return Column(
       children: [
-        if (_syncing)
-          const LinearProgressIndicator(minHeight: 2),
+        if (_syncing) const LinearProgressIndicator(minHeight: 2),
         Expanded(
           child: Chat(
             currentUserId: currentUserId,

@@ -326,9 +326,9 @@ class _HomeOverflowMenu extends StatelessWidget {
     final announcementUnread = context.select<AnnouncementsProvider, int>(
       (p) => p.unreadCount,
     );
-    final supportUnread = fcmEnabled
-        ? context.select<SupportUnreadBadgeController, bool>((c) => c.hasUnread)
-        : false;
+    final supportUnread = context.select<SupportUnreadBadgeController, bool>(
+      (c) => c.hasUnread,
+    );
     final showMenuBadge = announcementUnread > 0 || supportUnread;
     final menuBadgeLabel = announcementUnread > 0
         ? (announcementUnread > 99 ? '99+' : '$announcementUnread')
@@ -378,9 +378,7 @@ class _HomeOverflowMenu extends StatelessWidget {
             child: const Icon(Icons.support_agent_rounded),
           ),
           onPressed: () {
-            if (fcmEnabled) {
-              context.read<SupportUnreadBadgeController>().clear();
-            }
+            context.read<SupportUnreadBadgeController>().clear();
             context.go('/supportChat');
           },
           child: Text(l10n.contactUs),

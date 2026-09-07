@@ -69,6 +69,22 @@ String supportMessageIdFromJson(dynamic raw) {
   return raw.toString();
 }
 
+class SupportConversationDeleted implements Exception {
+  const SupportConversationDeleted();
+}
+
+class SupportConversationStatus {
+  const SupportConversationStatus({
+    required this.id,
+    required this.fromSupport,
+    this.lastMessage,
+  });
+
+  final String id;
+  final bool fromSupport;
+  final String? lastMessage;
+}
+
 class SupportChatRepository {
   SupportChatRepository({
     SupabaseClient? client,
@@ -105,6 +121,7 @@ class SupportChatRepository {
         .from('support_conversations')
         .select('id')
         .eq('user_id', userId)
+        .isFilter('deleted_at', null)
         .maybeSingle();
 
     if (row == null) return null;
@@ -114,6 +131,43 @@ class SupportChatRepository {
 
     _conversationId = id;
     return id;
+  }
+
+  /// Current conversation wait state. Null if the user has no conversation.
+  Future<SupportConversationStatus?> fetchConversationStatus() async {
+    final userId = currentUserId;
+    if (userId == null) {
+      throw StateError('Not signed in');
+    }
+
+    final row = await _client
+        .from('support_conversations')
+        .select('id, from_support, last_message')
+        .eq('user_id', userId)
+        .isFilter('deleted_at', null)
+        .maybeSingle();
+
+    if (row == null) {
+      _conversationId = null;
+      return null;
+    }
+
+    final id = row['id'] as String?;
+    if (id == null || id.isEmpty) {
+      _conversationId = null;
+      return null;
+    }
+
+    _conversationId = id;
+    return SupportConversationStatus(
+      id: id,
+      fromSupport: row['from_support'] as bool? ?? false,
+      lastMessage: row['last_message'] as String?,
+    );
+  }
+
+  void forgetConversation() {
+    _conversationId = null;
   }
 
   Future<String> ensureConversation() async {
@@ -243,7 +297,8 @@ class SupportChatRepository {
     );
   }
 
-  Future<void> markUserRead(String conversationId) async {
+  /// Marks every conversation read when [conversationId] is omitted.
+  Future<void> markUserRead([String? conversationId]) async {
     await _client.rpc(
       'mark_support_messages_user_read',
 
@@ -251,16 +306,30 @@ class SupportChatRepository {
     );
   }
 
+  /// Syncs by user rather than by conversation. Used once an agent has closed
+  /// the conversation: the client has no conversation id left, but replies that
+  /// arrived before the close are still readable and must not be stranded.
+  Future<List<SupportMessage>> fetchMissedMessages() async {
+    final userId = currentUserId;
+    if (userId == null) {
+      throw StateError('Not signed in');
+    }
+
+    return _fetchNewMessages(null, userId);
+  }
+
   Future<List<SupportMessage>> _fetchNewMessages(
-    String conversationId,
+    String? conversationId,
     String userId,
   ) async {
+    logger.d('fetchNewMessages $conversationId $userId');
+
     final afterId = await _localStore.lastFetchMaxMessageId(userId);
 
-    var query = _client
-        .from('support_messages')
-        .select()
-        .eq('conversation_id', conversationId);
+    final selected = _client.from('support_messages').select();
+    var query = conversationId == null
+        ? selected.eq('user_id', userId)
+        : selected.eq('conversation_id', conversationId);
     if (afterId > 0) {
       query = query.gt('id', afterId);
     }
@@ -300,6 +369,16 @@ class SupportChatRepository {
             userId,
             DateTime.now().toUtc(),
           );
+        } else {
+          final status = await fetchConversationStatus();
+          if (status == null || status.id != conversationId) {
+            if (!controller.isClosed) {
+              controller.addError(const SupportConversationDeleted());
+            }
+            cancelled = true;
+            pollTimer?.cancel();
+            return;
+          }
         }
 
         for (final message in remote) {

@@ -43,10 +43,7 @@ class SupportMessageLocalStore {
     }
   }
 
-  Future<void> _writeMeta(
-    String userId,
-    Map<String, dynamic> updates,
-  ) async {
+  Future<void> _writeMeta(String userId, Map<String, dynamic> updates) async {
     final file = await _metaFileForUser(userId);
     final merged = {...await _readMeta(userId), ...updates};
     await file.writeAsString(_jsonEncoder.convert(merged));
@@ -107,10 +104,8 @@ class SupportMessageLocalStore {
       final decoded = jsonDecode(raw) as List<dynamic>;
       return decoded
           .map(
-            (item) => _messageFromLocalJson(
-              userId,
-              item as Map<String, dynamic>,
-            ),
+            (item) =>
+                _messageFromLocalJson(userId, item as Map<String, dynamic>),
           )
           .toList()
         ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
@@ -163,10 +158,7 @@ class SupportMessageLocalStore {
         byId[message.id] = message;
       }
     }
-    final merged = [
-      buildLocalWelcomeMessage(userId),
-      ...byId.values,
-    ];
+    final merged = [buildLocalWelcomeMessage(userId), ...byId.values];
     await saveMessages(userId, merged);
   }
 

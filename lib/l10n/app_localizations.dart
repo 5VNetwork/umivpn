@@ -4363,6 +4363,18 @@ abstract class AppLocalizations {
   /// **'One Year'**
   String get oneYear;
 
+  /// No description provided for @supportReplied.
+  ///
+  /// In en, this message translates to:
+  /// **'Support replied'**
+  String get supportReplied;
+
+  /// No description provided for @openSupportChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get openSupportChat;
+
   /// No description provided for @supportWelcomeMessage.
   ///
   /// In en, this message translates to:

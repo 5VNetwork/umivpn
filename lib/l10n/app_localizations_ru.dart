@@ -2308,6 +2308,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get oneYear => 'One Year';
 
   @override
+  String get supportReplied => 'Поддержка ответила';
+
+  @override
+  String get openSupportChat => 'Открыть';
+
+  @override
   String supportWelcomeMessage(String faqUrl) {
     return 'Добро пожаловать! Вы можете задать любой вопрос или сообщить о проблеме, например о невозможности открыть некоторые сайты. Спасибо за обратную связь!';
   }
