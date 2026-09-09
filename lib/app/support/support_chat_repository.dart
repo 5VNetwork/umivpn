@@ -322,7 +322,7 @@ class SupportChatRepository {
     String? conversationId,
     String userId,
   ) async {
-    logger.d('fetchNewMessages $conversationId $userId');
+    logger.d('fetchNewMessages conversationId: $conversationId userId: $userId');
 
     final afterId = await _localStore.lastFetchMaxMessageId(userId);
 

@@ -74,6 +74,8 @@ Future<void> showSupportReplyNotification({String? preview}) async {
   if (fcmEnabled) return;
   if (!await _ensureInitialized()) return;
 
+  logger.d('showSupportReplyNotification preview: $preview');
+  
   final context = rootNavigationKey.currentContext;
   final l10n = context != null && context.mounted
       ? AppLocalizations.of(context)
@@ -82,11 +84,11 @@ Future<void> showSupportReplyNotification({String? preview}) async {
   try {
     await flutterLocalNotificationsPlugin.show(
       id: _notificationId,
-      title: l10n?.supportReplied ?? 'Support replied',
+      title: l10n?.supportReplied ?? '客服回复',
       body: _shorten(preview),
       payload: _payload,
-      notificationDetails: const NotificationDetails(
-        android: AndroidNotificationDetails(
+      notificationDetails: NotificationDetails(
+        android: const AndroidNotificationDetails(
           _channelId,
           _channelName,
           channelDescription: _channelDescription,
@@ -95,6 +97,7 @@ Future<void> showSupportReplyNotification({String? preview}) async {
         ),
         windows: WindowsNotificationDetails(
           duration: WindowsNotificationDuration.long,
+          audio: WindowsNotificationAudio.silent(),
         ),
       ),
     );

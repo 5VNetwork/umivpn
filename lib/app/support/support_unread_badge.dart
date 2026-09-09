@@ -322,6 +322,7 @@ class SupportUnreadBadgeController extends ChangeNotifier
   /// A dialog is useless when the app sits in the tray or the background, so
   /// fall back to a system notification unless focused.
   Future<void> _informUser(String? preview) async {
+    logger.d('informUser: $preview');
     if (!await _appIsInForeground()) {
       await showSupportReplyNotification(preview: preview);
       return;
