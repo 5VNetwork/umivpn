@@ -85,6 +85,7 @@ import 'firebase_options.dart';
 import 'firebase_options_staging.dart' as staging;
 import 'firebase_options_dev.dart' as dev;
 import 'firebase_options_cn.dart' as cn;
+import 'firebase_options_pkg.dart' as pkg;
 import 'package:umivpn/utils/logger.dart';
 import 'package:umivpn/pref_helper.dart';
 import 'package:umivpn/utils/path.dart';
@@ -644,8 +645,9 @@ Future<String> assetName() async {
 
 FirebaseOptions _firebaseOptionsForCurrentFlavor() {
   return switch (appFlavor) {
-    'produdction' || 'pkg' || 'apk' => DefaultFirebaseOptions.currentPlatform,
+    'produdction' || 'apk' => DefaultFirebaseOptions.currentPlatform,
     'cn' => cn.DefaultFirebaseOptions.currentPlatform,
+    'pkg' => pkg.DefaultFirebaseOptions.currentPlatform,
     'staging' => staging.DefaultFirebaseOptions.currentPlatform,
     _ => dev.DefaultFirebaseOptions.currentPlatform,
   };

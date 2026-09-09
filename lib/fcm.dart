@@ -2,6 +2,29 @@ part of 'main.dart';
 
 bool fcmEnabled = false;
 
+/// Whether the OS currently allows FCM push delivery for this user.
+Future<bool> canReceiveFcmNotifications() async {
+  if (!fcmEnabled) return false;
+  try {
+    final settings = await FirebaseMessaging.instance.getNotificationSettings();
+    return switch (settings.authorizationStatus) {
+      AuthorizationStatus.authorized || AuthorizationStatus.provisional => true,
+      AuthorizationStatus.denied || AuthorizationStatus.notDetermined => false,
+    };
+  } catch (e, st) {
+    logger.e('getNotificationSettings failed', error: e, stackTrace: st);
+    return false;
+  }
+}
+
+/// Whether support unread can rely on FCM reaching Dart (onMessage /
+/// onBackgroundMessage). On macOS, minimized/background alert pushes are
+/// shown by the system and never delivered to Flutter — always poll instead.
+Future<bool> canRelyOnFcmForSupportUnread() async {
+  if (Platform.isMacOS) return false;
+  return canReceiveFcmNotifications();
+}
+
 Future<void> _initFcm() async {
   print('Initializing FCM');
   // set fcm enabled
@@ -363,12 +386,14 @@ Future<void> _setupFcm() async {
       if (message.data['type'] == 'support_reply') {
         final ctx = rootNavigationKey.currentContext;
         if (ctx != null && ctx.mounted) {
-          final unreadController = ctx.read<SupportUnreadBadgeController>();
-          if (_isSupportChatRoute()) {
-            unreadController.clear();
-          } else {
-            unreadController.showUnreadDot();
-          }
+          final preview =
+              message.notification?.body ??
+              (message.data['body'] is String
+                  ? message.data['body'] as String
+                  : null);
+          ctx.read<SupportUnreadBadgeController>().notifySupportReply(
+            preview: preview,
+          );
         }
         return;
       }
@@ -420,12 +445,6 @@ void _handleMessage(RemoteMessage message) {
   _schedulePresentFcmMessageUi(message, preloadImage: false);
 }
 
-bool _isSupportChatRoute() {
-  return router.routeInformationProvider.value.uri.path.endsWith(
-    '/supportChat',
-  );
-}
-
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -434,6 +453,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (message.data['type'] == 'support_reply') {
     final preferences = await SharedPreferences.getInstance();
     await preferences.setBool(supportUnreadNeedsRefreshPreferenceKey, true);
+    await preferences.setBool(supportUnreadHasUnreadPreferenceKey, true);
   }
 
   print("Handling a background message: ${message.messageId}, ${message.data}");

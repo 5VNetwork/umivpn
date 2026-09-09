@@ -17,6 +17,9 @@ import 'package:window_manager/window_manager.dart';
 const supportUnreadNeedsRefreshPreferenceKey =
     'support.unreadBadge.needsRefresh';
 
+/// Persists across restarts. Cleared only when the user opens/reads support.
+const supportUnreadHasUnreadPreferenceKey = 'support.unreadBadge.hasUnread';
+
 class SupportUnreadBadgeController extends ChangeNotifier
     with WidgetsBindingObserver {
   SupportUnreadBadgeController({
@@ -54,6 +57,8 @@ class SupportUnreadBadgeController extends ChangeNotifier
     WidgetsBinding.instance.addObserver(this);
     _authSubscription = _client.auth.onAuthStateChange.listen((data) {
       if (data.session != null) {
+        unawaited(_restorePersistedUnread());
+        unawaited(refreshIfNeeded());
         unawaited(_syncWaitingPoll());
       } else {
         _stopPoll();
@@ -61,14 +66,25 @@ class SupportUnreadBadgeController extends ChangeNotifier
       }
     });
     if (_client.auth.currentSession != null) {
+      unawaited(_restorePersistedUnread());
       unawaited(refreshIfNeeded());
       unawaited(_syncWaitingPoll());
     }
   }
 
+  Future<void> _restorePersistedUnread() async {
+    final preferences = await _preferencesFuture;
+    await preferences.reload();
+    if (preferences.getBool(supportUnreadHasUnreadPreferenceKey) == true) {
+      _setHasUnread(true, persist: false);
+    }
+  }
+
   /// Remember that a conversation exists so we can poll after leaving chat.
+  /// [needPoll] is kept even when FCM works, so polling can start later if the
+  /// user turns notifications off.
   void markConversationActive() {
-    if (fcmEnabled || _client.auth.currentSession == null) return;
+    if (_client.auth.currentSession == null) return;
     unawaited(() async {
       final budget = await _budgetForCurrentUser();
       if (budget == null) return;
@@ -80,7 +96,7 @@ class SupportUnreadBadgeController extends ChangeNotifier
 
   /// Start backoff polling when the user leaves chat (or on app start).
   void startPollingIfNeeded() {
-    if (fcmEnabled || _client.auth.currentSession == null) return;
+    if (_client.auth.currentSession == null) return;
     if (_isOnSupportChat()) return;
     unawaited(_syncWaitingPoll());
   }
@@ -129,11 +145,14 @@ class SupportUnreadBadgeController extends ChangeNotifier
         }
       }
       if (preview != null) {
+        // Fetch advances the local watermark; persist so a restart still shows
+        // the dot until the user opens/reads support.
         _setHasUnread(true);
         // Agent activity: drop back to the fast end of the backoff schedule.
         final budget = await _budgetForCurrentUser();
         await budget?.reset();
       }
+      // Do not clear on empty: watermark may already be past unread messages.
       return preview;
     } catch (error, stack) {
       logger.e(
@@ -149,21 +168,45 @@ class SupportUnreadBadgeController extends ChangeNotifier
     _setHasUnread(true);
   }
 
-  void clear() {
-    unawaited(_clearNeedsRefresh());
-    unawaited(cancelSupportReplyNotification());
-    _setHasUnread(false);
+  /// Unread badge plus an in-app banner (or system notification if not focused).
+  void notifySupportReply({String? preview}) {
+    if (_isOnSupportChat()) {
+      clear();
+      return;
+    }
+    showUnreadDot();
+    unawaited(_informUser(preview));
   }
 
-  Future<void> _clearNeedsRefresh() async {
+  void clear() {
+    unawaited(_clearPersistedUnreadFlags());
+    unawaited(cancelSupportReplyNotification());
+    _setHasUnread(false, persist: false);
+  }
+
+  Future<void> _clearPersistedUnreadFlags() async {
     final preferences = await _preferencesFuture;
     await preferences.setBool(supportUnreadNeedsRefreshPreferenceKey, false);
+    await preferences.setBool(supportUnreadHasUnreadPreferenceKey, false);
   }
 
-  void _setHasUnread(bool value) {
-    if (_hasUnread == value) return;
+  void _setHasUnread(bool value, {bool persist = true}) {
+    if (_hasUnread == value) {
+      if (persist) {
+        unawaited(_persistHasUnread(value));
+      }
+      return;
+    }
     _hasUnread = value;
     notifyListeners();
+    if (persist) {
+      unawaited(_persistHasUnread(value));
+    }
+  }
+
+  Future<void> _persistHasUnread(bool value) async {
+    final preferences = await _preferencesFuture;
+    await preferences.setBool(supportUnreadHasUnreadPreferenceKey, value);
   }
 
   Future<SupportPollBudget?> _budgetForCurrentUser() async {
@@ -179,7 +222,11 @@ class SupportUnreadBadgeController extends ChangeNotifier
   }
 
   Future<void> _syncWaitingPoll() async {
-    if (fcmEnabled || _client.auth.currentSession == null) return;
+    if (_client.auth.currentSession == null) return;
+    if (await canRelyOnFcmForSupportUnread()) {
+      _stopPoll();
+      return;
+    }
     if (_isOnSupportChat()) return;
     final budget = await _budgetForCurrentUser();
     if (budget == null || !budget.needPoll) {
@@ -191,7 +238,10 @@ class SupportUnreadBadgeController extends ChangeNotifier
   }
 
   Future<void> _startPoll(SupportPollBudget budget) async {
-    if (fcmEnabled) return;
+    if (await canRelyOnFcmForSupportUnread()) {
+      _stopPoll();
+      return;
+    }
     if (_pollTimer != null) return;
 
     budget.load();
@@ -267,8 +317,10 @@ class SupportUnreadBadgeController extends ChangeNotifier
     }
   }
 
-  /// A snackbar is useless when the app sits in the tray or the background, so
-  /// fall back to a system notification unless the window is actually in front.
+  bool _supportReplyDialogShowing = false;
+
+  /// A dialog is useless when the app sits in the tray or the background, so
+  /// fall back to a system notification unless focused.
   Future<void> _informUser(String? preview) async {
     if (!await _appIsInForeground()) {
       await showSupportReplyNotification(preview: preview);
@@ -276,18 +328,42 @@ class SupportUnreadBadgeController extends ChangeNotifier
     }
     final ctx = rootNavigationKey.currentContext;
     if (ctx == null || !ctx.mounted) return;
+    if (_supportReplyDialogShowing) return;
+
     final l10n = AppLocalizations.of(ctx);
-    final messenger =
-        rootScaffoldMessengerKey.currentState ?? ScaffoldMessenger.maybeOf(ctx);
-    messenger?.showSnackBar(
-      SnackBar(
-        content: Text(l10n?.supportReplied ?? 'Support replied'),
-        action: SnackBarAction(
-          label: l10n?.openSupportChat ?? 'Open',
-          onPressed: () => router.go('/supportChat'),
-        ),
-      ),
-    );
+    final title = l10n?.supportReplied ?? 'Support replied';
+    final body = preview?.replaceAll(RegExp(r'\s+'), ' ').trim();
+    final bodyText = (body == null || body.isEmpty)
+        ? null
+        : (body.length <= 120 ? body : '${body.substring(0, 117)}...');
+
+    _supportReplyDialogShowing = true;
+    await showDialog<void>(
+      context: ctx,
+      builder: (dialogContext) {
+        return AlertDialog(
+          icon: const Icon(Icons.support_agent),
+          title: Text(title),
+          content: bodyText == null ? null : Text(bodyText),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(l10n?.close ?? 'Close'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                clear();
+                router.go('/supportChat');
+              },
+              child: Text(l10n?.openSupportChat ?? 'Open'),
+            ),
+          ],
+        );
+      },
+    ).whenComplete(() {
+      _supportReplyDialogShowing = false;
+    });
   }
 
   Future<bool> _appIsInForeground() async {
@@ -310,9 +386,8 @@ class SupportUnreadBadgeController extends ChangeNotifier
     logger.d('!!!didChangeAppLifecycleState: $state');
     if (state == AppLifecycleState.resumed) {
       unawaited(refreshIfNeeded());
-      if (!_waitingForReply && !fcmEnabled) {
-        unawaited(_syncWaitingPoll());
-      }
+      // Permission may have changed in Settings; start or stop polling.
+      unawaited(_syncWaitingPoll());
     }
   }
 

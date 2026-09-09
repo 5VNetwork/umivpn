@@ -48,6 +48,13 @@ case $1 in
       --macos-bundle-id=com.umivpn.cn \
       --macos-out=macos/flavors/cn/GoogleService-Info.plist 
     ;;
+  pkg)
+    flutterfire config \
+      --project=umivpn \
+      --out=lib/firebase_options_pkg.dart \
+      --macos-bundle-id=com.umivpn.pkg \
+      --macos-out=macos/flavors/pkg/GoogleService-Info.plist 
+    ;;
   *)
     echo "Error: Invalid environment specified. Use 'staging' or 'production'."
     exit 1
