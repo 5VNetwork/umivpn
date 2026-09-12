@@ -23,12 +23,13 @@ class SupportPollBudget {
   static const defaultMaxPollCount = 15;
 
   static const defaultDelays = [
-    Duration(seconds: 2),
     Duration(seconds: 5),
     Duration(seconds: 10),
-    Duration(minutes: 30),
+    Duration(seconds: 30),
     Duration(minutes: 1),
     Duration(minutes: 5),
+    Duration(minutes: 10),
+    Duration(minutes: 30),
     Duration(hours: 1),
     Duration(hours: 3),
     Duration(hours: 6),
