@@ -2,7 +2,7 @@
 
 **UmiVPN** 是一款免费VPN、梯子。一键启动，永不失联，适合日常 **科学上网** 与 **翻墙**。
 
-> 官网：[www.umivpn.com](https://www.umivpn.com)
+> 唯一官网：[www.umivpn.com](https://www.umivpn.com) 其余均为仿冒网站
 
 UmiVPN is a free VPN for Windows, macOS, iOS, and Android. 
 
