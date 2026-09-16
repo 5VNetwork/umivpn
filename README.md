@@ -31,7 +31,7 @@ UmiVPN is a free VPN for Windows, macOS, iOS, and Android.
 2. 注册 / 登录账号（第一个账号可使用免费套餐）
 3. 点击主界面启动按钮，一键直连
 
-新手教程：[UmiVPN 新手教程](https://www.umivpn.com/zh/guides/free-vpn)
+新手教程：[UmiVPN 新手教程](https://www.umivpn.com/zh/guides/introduction)
 
 更多指导见 [教程](https://www.umivpn.com/zh/guides) 与 [常见问题](https://www.umivpn.com/zh/faq)。
 
