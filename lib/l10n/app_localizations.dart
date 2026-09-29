@@ -1852,7 +1852,7 @@ abstract class AppLocalizations {
   /// No description provided for @failedToRemoveSystemProxy.
   ///
   /// In en, this message translates to:
-  /// **'Failed to remove system proxy, please remove it mannually at Settings > System Proxy.'**
+  /// **'Failed to remove system proxy, please remove it mannually at Settings > Internet Settings > Proxy. If you do not know how, please contact us.'**
   String get failedToRemoveSystemProxy;
 
   /// No description provided for @installingWindowsService.
@@ -4378,7 +4378,7 @@ abstract class AppLocalizations {
   /// No description provided for @supportWelcomeMessage.
   ///
   /// In en, this message translates to:
-  /// **'Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback! (Normally, we respond within 24 hours.). You can also visit our website to see FAQ: {faqUrl}'**
+  /// **'Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback! (Normally, we respond within 24 hours.). You can also visit our website to see FAQ: {faqUrl}.'**
   String supportWelcomeMessage(String faqUrl);
 
   /// No description provided for @hideSessionOngoingIndicator.

@@ -955,7 +955,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get failedToUndoBlockDns => '移除WFP设置失败，请关闭此应用，WFP设置将在应用关闭后自动移除';
 
   @override
-  String get failedToRemoveSystemProxy => '移除系统代理失败，请手动在设置中移除';
+  String get failedToRemoveSystemProxy => '移除系统代理失败，请手动在电脑的设置-网络和Internet-代理中移除。如不知道如何操作，请联系我们。';
 
   @override
   String get installingWindowsService => '正在安装服务…';
@@ -2265,7 +2265,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String supportWelcomeMessage(String faqUrl) {
-    return '欢迎！您可以随时提问、反馈问题（例如无法访问某些网站）。感谢您的反馈！（通常会在24小时内回复）。您也可以访问我们的网站查看常见问题的解答：$faqUrl';
+    return '欢迎！您可以随时提问、反馈情况（例如无法访问某些网站）。感谢您的反馈！（通常会在24小时内回复）。您也可以访问我们的网站查看常见问题的解答：$faqUrl。';
   }
 
   @override

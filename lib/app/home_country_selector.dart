@@ -481,6 +481,26 @@ class _LocationSheetState extends State<_LocationSheet>
                         height: 100,
                         child: Center(child: CircularProgressIndicator()),
                       );
+                    } else if (p.fetchError != null) {
+                      return Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              p.fetchError!,
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: colorScheme.error.withOpacity(0.70),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            ElevatedButton(
+                              onPressed: () async {
+                                p.makeSureFetchResult();
+                              },
+                              child: Text(l10n.retry),
+                            ),
+                          ],
+                        ),
+                      );
                     } else if (p.fetchResult != null) {
                       final countryTab = _CountryTab(
                         fetchResult: p.fetchResult!,
@@ -513,26 +533,6 @@ class _LocationSheetState extends State<_LocationSheet>
                             onTest: _runServerTest,
                           ),
                         ],
-                      );
-                    } else if (p.fetchError != null) {
-                      return Center(
-                        child: Column(
-                          children: [
-                            Text(
-                              p.fetchError!,
-                              style: textTheme.bodyMedium?.copyWith(
-                                color: colorScheme.error.withOpacity(0.70),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            ElevatedButton(
-                              onPressed: () async {
-                                p.makeSureFetchResult();
-                              },
-                              child: Text(l10n.retry),
-                            ),
-                          ],
-                        ),
                       );
                     } else {
                       logger.e('This should not happen');

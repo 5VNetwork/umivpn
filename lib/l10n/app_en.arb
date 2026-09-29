@@ -405,7 +405,7 @@
   "errorOnly": "Error Only",
   "all": "All",
   "failedToUndoBlockDns": "Failed to remove the WFP filter for blocking dns traffic of primary NIC, please close this app which can remove the filter",
-  "failedToRemoveSystemProxy": "Failed to remove system proxy, please remove it mannually at Settings > System Proxy.",
+  "failedToRemoveSystemProxy": "Failed to remove system proxy, please remove it mannually at Settings > Internet Settings > Proxy. If you do not know how, please contact us.",
   "installingWindowsService": "Installing service...",
   "windowsServiceInstalled": "Service installed!",
   "removeWindowsService": "Remove Windows service",
@@ -953,7 +953,7 @@
   "oneYear": "One Year",
   "supportReplied": "Support replied",
   "openSupportChat": "Open",
-  "supportWelcomeMessage": "Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback! (Normally, we respond within 24 hours.). You can also visit our website to see FAQ: {faqUrl}",
+  "supportWelcomeMessage": "Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback! (Normally, we respond within 24 hours.). You can also visit our website to see FAQ: {faqUrl}.",
   "@supportWelcomeMessage": {
     "placeholders": {
       "faqUrl": {

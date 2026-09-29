@@ -1005,7 +1005,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get failedToUndoBlockDns => 'Failed to remove the WFP filter for blocking dns traffic of primary NIC, please close this app which can remove the filter';
 
   @override
-  String get failedToRemoveSystemProxy => 'Failed to remove system proxy, please remove it mannually at Settings > System Proxy.';
+  String get failedToRemoveSystemProxy => 'Failed to remove system proxy, please remove it mannually at Settings > Internet Settings > Proxy. If you do not know how, please contact us.';
 
   @override
   String get installingWindowsService => 'Installing service...';
@@ -2315,7 +2315,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String supportWelcomeMessage(String faqUrl) {
-    return 'Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback! (Normally, we respond within 24 hours.). You can also visit our website to see FAQ: $faqUrl';
+    return 'Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback! (Normally, we respond within 24 hours.). You can also visit our website to see FAQ: $faqUrl.';
   }
 
   @override

@@ -253,6 +253,7 @@ void main() async {
             supabase: supabase,
             authRepo: ctx.read<AuthRepo>(),
             xController: ctx.read<XController>(),
+            httpClient: httpClient,
           );
           httpClient.setHandlerConfigGetter(f);
           return f;
