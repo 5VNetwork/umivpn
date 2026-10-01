@@ -14,6 +14,7 @@ import 'package:go_router/go_router.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tm/common.dart';
 import 'package:tm/private.dart';
 import 'package:tm/x_controller.dart';
@@ -35,12 +36,10 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:umivpn/utils/debug.dart';
 import 'package:umivpn/utils/logger.dart';
 import 'package:umivpn/utils/path.dart';
+import 'package:umivpn/utils/review_prompt.dart';
 import 'package:umivpn/widgets/pro_icon.dart';
-import 'package:in_app_review/in_app_review.dart';
 import 'package:flutter_common/widgets/app_bar.dart';
 import 'package:tm_windows/tm_windows_bindings_generated.dart';
-
-final InAppReview inAppReview = InAppReview.instance;
 
 enum SettingItem {
   account(icon: Icon(Icons.person_rounded), pathSegment: 'account'),
@@ -149,15 +148,10 @@ List<Widget> _getBottomButtons(BuildContext context, User? user) {
     Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: OutlinedButton.icon(
-        onPressed: () async {
-          if (await inAppReview.isAvailable()) {
-            inAppReview.requestReview();
-          } else {
-            inAppReview.openStoreListing(
-              appStoreId: '6744701950',
-              microsoftStoreId: '9PHBCBZ9R1FX',
-            );
-          }
+        onPressed: () {
+          ReviewPrompt(
+            context.read<SharedPreferences>(),
+          ).openReviewOrStoreListing();
         },
         label: Text(AppLocalizations.of(context)!.rateApp),
         icon: const Icon(Icons.rate_review_outlined),

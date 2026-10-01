@@ -1278,6 +1278,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get rateApp => '评价UmiVPN';
 
   @override
+  String get rateAppPromptDesc => '喜欢使用 UmiVPN 吗？在 Microsoft Store 留下评价！谢谢';
+
+  @override
+  String get notNow => '不了';
+
+  @override
   String get userConsend => '一旦登录成功，您的邮箱将存储在我们的服务器，直到您删除账户为止。这是为了提供账户登录功能所必需的个人信息。我们不会与任何第三方分享您的邮箱。您是否允许我们存储您的邮箱？';
 
   @override
@@ -1413,6 +1419,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get proxyAllDesc => '除私有地址外所有域名/IP均使用代理';
+
+  @override
+  String get whitelist => '白名单';
+
+  @override
+  String get whitelistDesc => '仅所选应用经过 UmiVPN，其他应用不走 VPN';
+
+  @override
+  String get whitelistAppsHint => '选择需要经过 UmiVPN 的应用';
+
+  @override
+  String get whitelistEmptyMessage => '请先选择需要经过 UmiVPN 的应用';
+
+  @override
+  String get whitelistRequiresTun => '白名单模式需要使用 TUN';
 
   @override
   String get dnsRule => 'DNS规则';

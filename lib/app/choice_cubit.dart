@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ import 'package:equatable/equatable.dart';
 
 class Choice extends Equatable {
   final String country;
+
   /// 0 means select by area; non-zero pins a specific server.
   final int serverId;
   final DefaultRouteMode routeMode;
@@ -118,9 +120,20 @@ class ChoiceCubit extends Cubit<Choice> {
   }
 
   Future<void> changeRouteMode(DefaultRouteMode routeMode) async {
+    final previous = state.routeMode;
     _pref.setRoutingMode(routeMode);
     emit(state.copyWith(routeMode: routeMode));
-    await _xController.routingModeChange(routeMode);
+
+    // Switching to/from whitelist changes TUN app filters; restart to apply.
+    final whitelistTunChanged =
+        Platform.isAndroid &&
+        (previous == DefaultRouteMode.whitelist ||
+            routeMode == DefaultRouteMode.whitelist);
+    if (whitelistTunChanged) {
+      await _xController.restart();
+    } else {
+      await _xController.routingModeChange(routeMode);
+    }
   }
 }
 
@@ -136,6 +149,7 @@ DefaultRouteMode _getMode(AuthRepo authRepo, SharedPreferences pref) {
     }
     return DefaultRouteMode.proxyAll;
   }
+  
   return pref.routingMode;
 }
 

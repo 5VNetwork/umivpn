@@ -2491,6 +2491,18 @@ abstract class AppLocalizations {
   /// **'Rate UmiVPN'**
   String get rateApp;
 
+  /// No description provided for @rateAppPromptDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoying UmiVPN? Review UmiVPN on the Microsoft Store! Thanks'**
+  String get rateAppPromptDesc;
+
+  /// No description provided for @notNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get notNow;
+
   /// No description provided for @userConsend.
   ///
   /// In en, this message translates to:
@@ -2736,6 +2748,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All non-private domains/IPs go proxy'**
   String get proxyAllDesc;
+
+  /// No description provided for @whitelist.
+  ///
+  /// In en, this message translates to:
+  /// **'Whitelist'**
+  String get whitelist;
+
+  /// No description provided for @whitelistDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Only selected apps go through UmiVPN; other apps bypass the VPN'**
+  String get whitelistDesc;
+
+  /// No description provided for @whitelistAppsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the apps that should go through UmiVPN'**
+  String get whitelistAppsHint;
+
+  /// No description provided for @whitelistEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select the apps that should go through UmiVPN'**
+  String get whitelistEmptyMessage;
+
+  /// No description provided for @whitelistRequiresTun.
+  ///
+  /// In en, this message translates to:
+  /// **'Whitelist mode requires TUN'**
+  String get whitelistRequiresTun;
 
   /// No description provided for @dnsRule.
   ///

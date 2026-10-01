@@ -1328,6 +1328,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get rateApp => 'Оценить UmiVPN';
 
   @override
+  String get rateAppPromptDesc => 'Нравится UmiVPN? Короткий отзыв в Microsoft Store поможет другим найти нас. Спасибо!';
+
+  @override
+  String get notNow => 'Не сейчас';
+
+  @override
   String get userConsend => 'После входа в систему ваш адрес электронной почты будет храниться на нашем сервере до тех пор, пока вы не удалите свою учётную запись. Это необходимо для обеспечения возможности входа в учётную запись. Мы не передаем ваш адрес электронной почты третьим лицам. Разрешаете ли вы нам хранить ваш адрес электронной почты?';
 
   @override
@@ -1463,6 +1469,21 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get proxyAllDesc => 'Все нечастные домены/IP-адреса переходят на прокси-сервер';
+
+  @override
+  String get whitelist => 'Whitelist';
+
+  @override
+  String get whitelistDesc => 'Только выбранные приложения проходят через UmiVPN; остальные обходят VPN';
+
+  @override
+  String get whitelistAppsHint => 'Выберите приложения, которые должны проходить через UmiVPN';
+
+  @override
+  String get whitelistEmptyMessage => 'Пожалуйста, выберите приложения, которые должны проходить через UmiVPN';
+
+  @override
+  String get whitelistRequiresTun => 'Режим Whitelist требует TUN';
 
   @override
   String get dnsRule => 'Правила DNS';

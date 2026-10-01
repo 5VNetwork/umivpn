@@ -33,6 +33,7 @@ import 'package:umivpn/main.dart';
 import 'package:umivpn/pref_helper.dart';
 import 'package:umivpn/utils/default_network.dart';
 import 'package:umivpn/utils/logger.dart';
+import 'package:umivpn/utils/review_prompt.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:flutter_common/common.dart';
 import 'package:flutter_common/util/country.dart';
@@ -64,6 +65,10 @@ class _VpnHomePageState extends State<VpnHomePage> {
   void initState() {
     super.initState();
     final pref = context.read<SharedPreferences>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ReviewPrompt(pref).onAppOpen(context);
+    });
     if (Platform.isAndroid) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _showAndroidFirstLaunchTips();
@@ -250,7 +255,6 @@ class _VpnHomePageState extends State<VpnHomePage> {
           if (context.read<AuthRepo>().user?.plan == SubscriptionPlan.free)
             Padding(
               padding: const EdgeInsets.all(8.0),
-              
               child: IconButton(
                 tooltip: AppLocalizations.of(context)!.upgrade,
                 onPressed: () => context.go('/manage-plan'),

@@ -87,14 +87,17 @@ class _RoutingRulesView extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                   child: SegmentedButton<DefaultRouteMode>(
-                    segments: DefaultRouteMode.values
-                        .map(
-                          (m) => ButtonSegment(
-                            value: m,
-                            label: Text(m.toLocalString(l10n)),
-                          ),
-                        )
-                        .toList(),
+                    segments:
+                        DefaultRouteMode.availableModes(
+                              isAndroid: Platform.isAndroid,
+                            )
+                            .map(
+                              (m) => ButtonSegment(
+                                value: m,
+                                label: Text(m.toLocalString(l10n)),
+                              ),
+                            )
+                            .toList(),
                     selected: {vm.selectedMode},
                     onSelectionChanged: (value) => vm.changeMode(value.first),
                   ),
@@ -112,17 +115,31 @@ class _RoutingRulesView extends StatelessWidget {
                   child: ListView(
                     padding: const EdgeInsets.all(16),
                     children: [
-                      const _DomainSection(direct: true),
-                      const SizedBox(height: 10),
-                      const _DomainSection(direct: false),
-                      const SizedBox(height: 10),
-                      const _IpSection(direct: true),
-                      const SizedBox(height: 10),
-                      const _IpSection(direct: false),
-                      const SizedBox(height: 10),
-                      if (!Platform.isIOS) const _AppSection(direct: true),
-                      if (!Platform.isIOS) const SizedBox(height: 10),
-                      if (!Platform.isIOS) const _AppSection(direct: false),
+                      if (vm.selectedMode == DefaultRouteMode.whitelist) ...[
+                        Text(
+                          l10n.whitelistAppsHint,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withOpacity(0.7),
+                              ),
+                        ),
+                        const SizedBox(height: 10),
+                        if (!Platform.isIOS) const _AppSection(direct: false),
+                      ] else ...[
+                        const _DomainSection(direct: true),
+                        const SizedBox(height: 10),
+                        const _DomainSection(direct: false),
+                        const SizedBox(height: 10),
+                        const _IpSection(direct: true),
+                        const SizedBox(height: 10),
+                        const _IpSection(direct: false),
+                        const SizedBox(height: 10),
+                        if (!Platform.isIOS) const _AppSection(direct: true),
+                        if (!Platform.isIOS) const SizedBox(height: 10),
+                        if (!Platform.isIOS) const _AppSection(direct: false),
+                      ],
                     ],
                   ),
                 ),
@@ -341,12 +358,20 @@ class _AppSection extends StatelessWidget {
             ? vm.currentRules.directApps
             : vm.currentRules.proxyApps;
         return _RulesCard(
-          title:
-              '${direct ? l10n.direct : l10n.proxy} ${l10n.app} (${list.length})',
+          title: vm.selectedMode == DefaultRouteMode.whitelist
+              ? '${l10n.whitelist} ${l10n.app} (${list.length})'
+              : '${direct ? l10n.direct : l10n.proxy} ${l10n.app} (${list.length})',
           subtitle: Platform.isAndroid && direct
               ? l10n.androidDirectAppDescription
+              : vm.selectedMode == DefaultRouteMode.whitelist
+              ? l10n.whitelistAppsHint
               : null,
-          addMenu: _buildAddMenu(context),
+          addMenu: vm.selectedMode == DefaultRouteMode.whitelist
+              ? null
+              : _buildAddMenu(context),
+          onAdd: vm.selectedMode == DefaultRouteMode.whitelist
+              ? () => _onMenuSelected(context, 'installed')
+              : null,
           onMenuSelected: (value) => _onMenuSelected(context, value),
           child: list.isEmpty
               ? Text(l10n.empty)

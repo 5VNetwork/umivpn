@@ -53,10 +53,16 @@ extension PrefHelperExtension on SharedPreferences {
   // return either a string or a RouteMode
   DefaultRouteMode get routingMode {
     final mode = getInt('routingMode');
-    if (mode == null) {
+    if (mode == null ||
+        mode < 0 ||
+        mode >= DefaultRouteMode.values.length) {
       return DefaultRouteMode.proxyAll;
     }
-    return DefaultRouteMode.values[mode];
+    final value = DefaultRouteMode.values[mode];
+    if (!Platform.isAndroid && value == DefaultRouteMode.whitelist) {
+      return DefaultRouteMode.proxyAll;
+    }
+    return value;
   }
 
   void setRoutingMode(DefaultRouteMode mode) {
@@ -377,6 +383,26 @@ extension PrefHelperExtension on SharedPreferences {
 
   void setNeedReInstallWindowsService(bool need) {
     setBool('needReInstallWindowsService', need);
+  }
+
+  DateTime? get firstOpenAt {
+    final time = getInt('firstOpenAt');
+    if (time == null) return null;
+    return DateTime.fromMillisecondsSinceEpoch(time);
+  }
+
+  void setFirstOpenAt(DateTime time) {
+    setInt('firstOpenAt', time.millisecondsSinceEpoch);
+  }
+
+  DateTime? get lastReviewPromptAt {
+    final time = getInt('lastReviewPromptAt');
+    if (time == null) return null;
+    return DateTime.fromMillisecondsSinceEpoch(time);
+  }
+
+  void setLastReviewPromptAt(DateTime time) {
+    setInt('lastReviewPromptAt', time.millisecondsSinceEpoch);
   }
 }
 

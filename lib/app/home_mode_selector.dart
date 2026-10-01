@@ -11,12 +11,16 @@ class ModeSelector extends StatelessWidget {
       onTap: () {
         showModalBottomSheet(
           context: context,
-
+          isScrollControlled: true,
           backgroundColor: colorScheme.surface,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
-          builder: (ctx) => SafeArea(child: const _ModeList()),
+          builder: (ctx) {
+            return SafeArea(
+              child: SizedBox(height: 524, child: const _ModeList()),
+            );
+          },
         );
       },
       child: Container(
@@ -98,11 +102,13 @@ class _ModeList extends StatelessWidget {
     final authUser = context.read<AuthRepo>().user;
     final isFreeUser = authUser?.plan == SubscriptionPlan.free;
     final isInChina = userInChina(context.read<SharedPreferences>());
+    final modes = DefaultRouteMode.availableModes(
+      isAndroid: Platform.isAndroid,
+    );
 
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -113,18 +119,18 @@ class _ModeList extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Flexible(
+          Expanded(
             child: ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: DefaultRouteMode.values.length,
+              itemCount: modes.length,
               itemBuilder: (ctx, index) {
-                final mode = DefaultRouteMode.values[index];
+                final mode = modes[index];
                 final isSelected = mode == currentMode;
-                final isSelectable = !isFreeUser ||
+                final isSelectable =
+                    !isFreeUser ||
                     (isInChina
                         ? mode == DefaultRouteMode.gfw ||
-                            mode == DefaultRouteMode.cn
+                              mode == DefaultRouteMode.cn
                         : mode == DefaultRouteMode.proxyAll);
                 final titleColor = !isSelectable
                     ? colorScheme.onSurface.withOpacity(0.38)
