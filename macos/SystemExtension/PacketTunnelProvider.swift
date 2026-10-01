@@ -494,5 +494,8 @@ class Interface: NSObject, X_darwinInterfaceProtocol {
         return nil
     }
 
+    public func shutdown() {
+        packetTunnelProvider.cancelTunnelWithError(nil)
+    }
 }
 
