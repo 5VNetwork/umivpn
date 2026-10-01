@@ -299,6 +299,9 @@ class _LocationSheetState extends State<_LocationSheet>
     try {
       final runner = HandlerTestRunner(api: context.read<XApiClient>());
       await runner.testSpeedAll(fetchResultJson);
+      if (!mounted) return;
+      // Push fresh speeds into the live core so selector re-picks the best.
+      await context.read<XController>().applyHandlerResults();
     } on StateError catch (e) {
       logger.w('speed test skipped', error: e);
       if (mounted) snack(e.message);

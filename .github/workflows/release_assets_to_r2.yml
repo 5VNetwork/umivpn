@@ -58,6 +58,18 @@ jobs:
             --profile r2 \
             --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
 
+      - name: Upload UmiVPNInstaller.exe to versioned path
+        run: |
+          INSTALLER="release-assets/UmiVPNInstaller.exe"
+          if [ ! -f "$INSTALLER" ]; then
+            echo "UmiVPNInstaller.exe not found in release assets."
+            exit 1
+          fi
+          VERSION="${{ steps.latest_prerelease.outputs.tag }}"
+          aws s3 cp "$INSTALLER" "s3://umivpn/${VERSION}/UmiVPNInstaller.exe" \
+            --profile r2 \
+            --endpoint-url https://37c1d94ef4ab81c55c6e7d0158613800.r2.cloudflarestorage.com
+
       - name: Purge CDN cache
         env:
           CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
