@@ -17,8 +17,8 @@ class ModeSelector extends StatelessWidget {
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           builder: (ctx) {
-            return SafeArea(
-              child: SizedBox(height: 524, child: const _ModeList()),
+            return const SafeArea(
+              child: SingleChildScrollView(child: _ModeList()),
             );
           },
         );
@@ -98,7 +98,7 @@ class _ModeList extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    DefaultRouteMode currentMode = context.read<ChoiceCubit>().state.routeMode;
+    final currentMode = context.read<ChoiceCubit>().state.routeMode;
     final authUser = context.read<AuthRepo>().user;
     final isFreeUser = authUser?.plan == SubscriptionPlan.free;
     final isInChina = userInChina(context.read<SharedPreferences>());
@@ -106,9 +106,10 @@ class _ModeList extends StatelessWidget {
       isAndroid: Platform.isAndroid,
     );
 
-    return Container(
+    return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -119,86 +120,17 @@ class _ModeList extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Expanded(
-            child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: modes.length,
-              itemBuilder: (ctx, index) {
-                final mode = modes[index];
-                final isSelected = mode == currentMode;
-                final isSelectable =
-                    !isFreeUser ||
-                    (isInChina
-                        ? mode == DefaultRouteMode.gfw ||
-                              mode == DefaultRouteMode.cn
-                        : mode == DefaultRouteMode.proxyAll);
-                final titleColor = !isSelectable
-                    ? colorScheme.onSurface.withOpacity(0.38)
-                    : isSelected
-                    ? colorScheme.primary
-                    : colorScheme.onSurface;
-                final subtitleColor = !isSelectable
-                    ? colorScheme.onSurface.withOpacity(0.28)
-                    : colorScheme.onSurface.withOpacity(0.70);
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? colorScheme.primary.withOpacity(0.1)
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(12),
-                    border: isSelected
-                        ? Border.all(
-                            color: colorScheme.primary.withOpacity(0.3),
-                            width: 1.5,
-                          )
-                        : null,
-                  ),
-                  child: ListTile(
-                    enabled: isSelectable,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    title: Text(
-                      mode.toLocalString(AppLocalizations.of(context)!),
-                      style: TextStyle(
-                        color: titleColor,
-                        fontWeight: isSelected
-                            ? FontWeight.w700
-                            : FontWeight.w500,
-                        fontSize: 15,
-                      ),
-                    ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Text(
-                        mode.description(context),
-                        style: TextStyle(color: subtitleColor, fontSize: 12),
-                      ),
-                    ),
-                    trailing: isSelected
-                        ? Icon(
-                            Icons.check_circle_rounded,
-                            color: isSelectable
-                                ? colorScheme.primary
-                                : colorScheme.primary.withOpacity(0.45),
-                            size: 24,
-                          )
-                        : null,
-                    onTap: isSelectable
-                        ? () {
-                            if (mode != currentMode) {
-                              context.read<ChoiceCubit>().changeRouteMode(mode);
-                            }
-                            Navigator.pop(context);
-                          }
-                        : null,
-                  ),
-                );
-              },
+          for (final mode in modes)
+            _ModeTile(
+              mode: mode,
+              isSelected: mode == currentMode,
+              isSelectable:
+                  !isFreeUser ||
+                  (isInChina
+                      ? mode == DefaultRouteMode.gfw ||
+                            mode == DefaultRouteMode.cn
+                      : mode == DefaultRouteMode.proxyAll),
             ),
-          ),
           const SizedBox(height: 8),
           Align(
             alignment: Alignment.centerRight,
@@ -212,6 +144,88 @@ class _ModeList extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ModeTile extends StatelessWidget {
+  const _ModeTile({
+    required this.mode,
+    required this.isSelected,
+    required this.isSelectable,
+  });
+
+  final DefaultRouteMode mode;
+  final bool isSelected;
+  final bool isSelectable;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final titleColor = !isSelectable
+        ? colorScheme.onSurface.withOpacity(0.38)
+        : isSelected
+        ? colorScheme.primary
+        : colorScheme.onSurface;
+    final subtitleColor = !isSelectable
+        ? colorScheme.onSurface.withOpacity(0.28)
+        : colorScheme.onSurface.withOpacity(0.70);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: isSelected
+            ? colorScheme.primary.withOpacity(0.1)
+            : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        border: isSelected
+            ? Border.all(
+                color: colorScheme.primary.withOpacity(0.3),
+                width: 1.5,
+              )
+            : null,
+      ),
+      child: ListTile(
+        enabled: isSelectable,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 8,
+        ),
+        title: Text(
+          mode.toLocalString(AppLocalizations.of(context)!),
+          style: TextStyle(
+            color: titleColor,
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+            fontSize: 15,
+          ),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Text(
+            mode.description(context),
+            style: TextStyle(color: subtitleColor, fontSize: 12),
+          ),
+        ),
+        trailing: isSelected
+            ? Icon(
+                Icons.check_circle_rounded,
+                color: isSelectable
+                    ? colorScheme.primary
+                    : colorScheme.primary.withOpacity(0.45),
+                size: 24,
+              )
+            : null,
+        onTap: isSelectable
+            ? () {
+                final currentMode =
+                    context.read<ChoiceCubit>().state.routeMode;
+                if (mode != currentMode) {
+                  context.read<ChoiceCubit>().changeRouteMode(mode);
+                }
+                Navigator.pop(context);
+              }
+            : null,
       ),
     );
   }
