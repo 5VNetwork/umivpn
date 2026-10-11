@@ -3925,6 +3925,18 @@ abstract class AppLocalizations {
   /// **'By server'**
   String get byServer;
 
+  /// No description provided for @byHandler.
+  ///
+  /// In en, this message translates to:
+  /// **'By handler'**
+  String get byHandler;
+
+  /// No description provided for @noHandlersMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Sorry, no handler matching your choice is available now. Please change location or try again later.'**
+  String get noHandlersMessage;
+
   /// No description provided for @expired.
   ///
   /// In en, this message translates to:

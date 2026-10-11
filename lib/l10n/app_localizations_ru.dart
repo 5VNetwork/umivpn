@@ -2077,6 +2077,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get byServer => 'По серверу';
 
   @override
+  String get byHandler => 'По обработчику';
+
+  @override
+  String get noHandlersMessage =>
+      'К сожалению, подходящий обработчик сейчас недоступен. Измените локацию или попробуйте позже.';
+
+  @override
   String get expired => 'Expired';
 
   @override

@@ -852,6 +852,8 @@
   "selectLocation": "Select location",
   "byArea": "By area",
   "byServer": "By server",
+  "byHandler": "By handler",
+  "noHandlersMessage": "Sorry, no handler matching your choice is available now. Please change location or try again later.",
   "expired": "Expired",
   "today": "Today",
   "tomorrow": "Tomorrow",

@@ -23,6 +23,9 @@ class Choice extends Equatable {
 
   /// 0 means select by area; non-zero pins a specific server.
   final int serverId;
+
+  /// Empty means not pinned; non-empty pins a specific main handler tag.
+  final String handlerTag;
   final DefaultRouteMode routeMode;
   // when country is auto, this is the actual country that the user is connected to
   final String? realtimeCountry;
@@ -30,23 +33,27 @@ class Choice extends Equatable {
   Choice({
     required this.country,
     this.serverId = 0,
+    this.handlerTag = '',
     required this.routeMode,
     this.realtimeCountry,
   });
 
   @override
-  List<Object?> get props => [country, serverId, routeMode, realtimeCountry];
+  List<Object?> get props =>
+      [country, serverId, handlerTag, routeMode, realtimeCountry];
 
   Choice copyWith({
     XStatus? status,
     String? country,
     int? serverId,
+    String? handlerTag,
     DefaultRouteMode? routeMode,
     ValueGetter<String?>? realtimeCountry,
   }) {
     return Choice(
       country: country ?? this.country,
       serverId: serverId ?? this.serverId,
+      handlerTag: handlerTag ?? this.handlerTag,
       routeMode: routeMode ?? this.routeMode,
       realtimeCountry: realtimeCountry != null
           ? realtimeCountry()
@@ -71,6 +78,7 @@ class ChoiceCubit extends Cubit<Choice> {
          Choice(
            country: _getCountry(pref),
            serverId: pref.selectedServerId,
+           handlerTag: pref.selectedHandlerTag,
            routeMode: _getMode(authRepo, pref),
          ),
        ) {
@@ -100,23 +108,40 @@ class ChoiceCubit extends Cubit<Choice> {
   Completer<void>? _completer;
 
   Future<void> changeCountry(String country) async {
-    if (country == state.country && state.serverId == 0) {
+    if (country == state.country &&
+        state.serverId == 0 &&
+        state.handlerTag.isEmpty) {
       return;
     }
     _pref.setSelectedCountry(country);
     _pref.setSelectedServerId(0);
-    emit(state.copyWith(country: country, serverId: 0));
+    _pref.setSelectedHandlerTag('');
+    emit(state.copyWith(country: country, serverId: 0, handlerTag: ''));
     await _xController.countryChange(country);
   }
 
   Future<void> changeServerId(int serverId) async {
-    if (serverId == state.serverId && serverId != 0) {
+    if (serverId == state.serverId &&
+        serverId != 0 &&
+        state.handlerTag.isEmpty) {
       return;
     }
     _pref.setSelectedServerId(serverId);
     _pref.setSelectedCountry('');
-    emit(state.copyWith(country: '', serverId: serverId));
+    _pref.setSelectedHandlerTag('');
+    emit(state.copyWith(country: '', serverId: serverId, handlerTag: ''));
     await _xController.serverIdChange(serverId);
+  }
+
+  Future<void> changeHandlerTag(String handlerTag) async {
+    if (handlerTag == state.handlerTag && handlerTag.isNotEmpty) {
+      return;
+    }
+    _pref.setSelectedHandlerTag(handlerTag);
+    _pref.setSelectedCountry('');
+    _pref.setSelectedServerId(0);
+    emit(state.copyWith(country: '', serverId: 0, handlerTag: handlerTag));
+    await _xController.handlerTagChange(handlerTag);
   }
 
   Future<void> changeRouteMode(DefaultRouteMode routeMode) async {

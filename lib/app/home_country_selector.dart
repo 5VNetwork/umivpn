@@ -9,10 +9,14 @@ class Selector extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        final byServerEnabled =
+        final byServerAndHandlerEnabled =
             context.read<AuthRepo>().user?.plan != SubscriptionPlan.free;
-        final initialTab =
-            byServerEnabled && context.read<ChoiceCubit>().state.serverId != 0
+        final choice = context.read<ChoiceCubit>().state;
+        final initialTab = !byServerAndHandlerEnabled
+            ? 0
+            : choice.handlerTag.isNotEmpty
+            ? 2
+            : choice.serverId != 0
             ? 1
             : 0;
         showModalBottomSheet(
@@ -28,7 +32,7 @@ class Selector extends StatelessWidget {
             ),
             child: _LocationSheet(
               initialTabIndex: initialTab,
-              byServerEnabled: byServerEnabled,
+              byServerAndHandlerEnabled: byServerAndHandlerEnabled,
             ),
           ),
         );
@@ -46,7 +50,8 @@ class Selector extends StatelessWidget {
         child: BlocBuilder<ChoiceCubit, Choice>(
           buildWhen: (previous, current) =>
               previous.country != current.country ||
-              previous.serverId != current.serverId,
+              previous.serverId != current.serverId ||
+              previous.handlerTag != current.handlerTag,
           builder: (ctx, state) {
             final country = _displayCountry(ctx, state);
             return Row(
@@ -88,6 +93,17 @@ class Selector extends StatelessWidget {
   }
 
   String _displayCountry(BuildContext context, Choice state) {
+    if (state.handlerTag.isNotEmpty) {
+      final result = context.read<FetchResultProvider>().fetchResult;
+      if (result != null) {
+        for (final h in result.uniqueMainHandlers()) {
+          if (h.tag == state.handlerTag) {
+            return h.country;
+          }
+        }
+      }
+      return '';
+    }
     if (state.serverId != 0) {
       final result = context.read<FetchResultProvider>().fetchResult;
       if (result != null) {
@@ -104,6 +120,25 @@ class Selector extends StatelessWidget {
 
   String _getSelectionLabel(BuildContext context, Choice state) {
     final l10n = AppLocalizations.of(context)!;
+    if (state.handlerTag.isNotEmpty) {
+      final result = context.read<FetchResultProvider>().fetchResult;
+      if (result != null) {
+        final labels = result.mainHandlerShortLabels();
+        for (final h in result.uniqueMainHandlers()) {
+          if (h.tag == state.handlerTag) {
+            final countryName = h.country.isEmpty
+                ? ''
+                : getLocalizedCountryName(context, h.country);
+            final letter = labels[h.tag] ?? '?';
+            final prefix = countryName.isEmpty
+                ? '${h.serverId}'
+                : '$countryName · ${h.serverId}';
+            return '$prefix · $letter';
+          }
+        }
+      }
+      return l10n.byHandler;
+    }
     if (state.serverId != 0) {
       final country = _displayCountry(context, state);
       final countryName = country.isEmpty
@@ -124,11 +159,11 @@ class Selector extends StatelessWidget {
 class _LocationSheet extends StatefulWidget {
   const _LocationSheet({
     required this.initialTabIndex,
-    required this.byServerEnabled,
+    required this.byServerAndHandlerEnabled,
   });
 
   final int initialTabIndex;
-  final bool byServerEnabled;
+  final bool byServerAndHandlerEnabled;
 
   @override
   State<_LocationSheet> createState() => _LocationSheetState();
@@ -147,19 +182,21 @@ class _LocationSheetState extends State<_LocationSheet>
   bool _sortBySpeed = false;
   final Set<String> _testingCountries = {};
   final Set<int> _testingServers = {};
+  final Set<String> _testingHandlers = {};
 
   /// Speeds used for sort while a test is in progress (avoids list jumping).
   final Map<String, int> _sortSpeedByCountry = {};
   final Map<int, int> _sortSpeedByServer = {};
+  final Map<String, int> _sortSpeedByHandler = {};
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: widget.byServerEnabled ? 2 : 1,
+      length: widget.byServerAndHandlerEnabled ? 3 : 1,
       vsync: this,
-      initialIndex: widget.byServerEnabled
-          ? widget.initialTabIndex.clamp(0, 1)
+      initialIndex: widget.byServerAndHandlerEnabled
+          ? widget.initialTabIndex.clamp(0, 2)
           : 0,
     );
     _loadPrefs(context.read<SharedPreferences>());
@@ -224,6 +261,13 @@ class _LocationSheetState extends State<_LocationSheet>
     );
   }
 
+  void _pinHandlerSortSpeed(String tag) {
+    _sortSpeedByHandler.putIfAbsent(
+      tag,
+      () => HandlerResultsStore.instance.forTag(tag).speed,
+    );
+  }
+
   void _pinAllSortSpeeds() {
     final result = context.read<FetchResultProvider>().fetchResult;
     if (result == null) return;
@@ -235,6 +279,9 @@ class _LocationSheetState extends State<_LocationSheet>
     }
     for (final s in result.uniqueServers()) {
       _pinServerSortSpeed(s.serverId);
+    }
+    for (final h in result.uniqueMainHandlers()) {
+      _pinHandlerSortSpeed(h.tag);
     }
   }
 
@@ -251,6 +298,12 @@ class _LocationSheetState extends State<_LocationSheet>
           !_testingAllUsable &&
           !_testingAllSpeed,
     );
+    _sortSpeedByHandler.removeWhere(
+      (tag, _) =>
+          !_testingHandlers.contains(tag) &&
+          !_testingAllUsable &&
+          !_testingAllSpeed,
+    );
   }
 
   int _sortSpeedForCountry(String country) =>
@@ -260,6 +313,10 @@ class _LocationSheetState extends State<_LocationSheet>
   int _sortSpeedForServer(int serverId) =>
       _sortSpeedByServer[serverId] ??
       HandlerResultsStore.instance.forServer(serverId).speed;
+
+  int _sortSpeedForHandler(String tag) =>
+      _sortSpeedByHandler[tag] ??
+      HandlerResultsStore.instance.forTag(tag).speed;
 
   Future<void> _runUsableTest() async {
     if (_testingAllUsable) return;
@@ -376,6 +433,40 @@ class _LocationSheetState extends State<_LocationSheet>
     }
   }
 
+  Future<void> _runHandlerTest(String tag, int serverId) async {
+    if (tag.isEmpty || _testingHandlers.contains(tag)) return;
+    // Reuse server-scoped tests; metrics for [tag] update from the stream.
+    if (serverId == 0 || _testingServers.contains(serverId)) return;
+    final fetchResultJson = await _readFetchResultJson();
+    if (fetchResultJson == null || fetchResultJson.isEmpty) return;
+    setState(() {
+      _pinHandlerSortSpeed(tag);
+      _pinServerSortSpeed(serverId);
+      _testingHandlers.add(tag);
+      _testingServers.add(serverId);
+    });
+    try {
+      final runner = HandlerTestRunner(api: context.read<XApiClient>());
+      await runner.testUsableAll(fetchResultJson, serverId: serverId);
+      if (!mounted) return;
+      await runner.testSpeedAll(fetchResultJson, serverId: serverId);
+    } on StateError catch (e) {
+      logger.w('handler test skipped', error: e);
+      if (mounted) snack(e.message);
+    } catch (e) {
+      logger.e('handler test failed', error: e);
+      if (mounted) snack(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() {
+          _testingHandlers.remove(tag);
+          _testingServers.remove(serverId);
+          _releaseUnusedSortPins();
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -459,7 +550,7 @@ class _LocationSheetState extends State<_LocationSheet>
               ),
             ],
           ),
-          if (widget.byServerEnabled) ...[
+          if (widget.byServerAndHandlerEnabled) ...[
             const SizedBox(height: 8),
             TabBar(
               controller: _tabController,
@@ -469,6 +560,7 @@ class _LocationSheetState extends State<_LocationSheet>
               tabs: [
                 Tab(text: l10n.byArea),
                 Tab(text: l10n.byServer),
+                Tab(text: l10n.byHandler),
               ],
             ),
           ],
@@ -505,11 +597,13 @@ class _LocationSheetState extends State<_LocationSheet>
                         ),
                       );
                     } else if (p.fetchResult != null) {
+                      final selectingByPin = widget.byServerAndHandlerEnabled &&
+                          (choice.serverId != 0 ||
+                              choice.handlerTag.isNotEmpty);
                       final countryTab = _CountryTab(
                         fetchResult: p.fetchResult!,
                         currentCountry: choice.country,
-                        selectingByServer:
-                            widget.byServerEnabled && choice.serverId != 0,
+                        selectingByServer: selectingByPin,
                         recentlyUsedCountries: _recentlyUsedCountries,
                         onRememberCountry: _rememberCountry,
                         sortBySpeed: _sortBySpeed,
@@ -517,7 +611,7 @@ class _LocationSheetState extends State<_LocationSheet>
                         sortSpeedFor: _sortSpeedForCountry,
                         onTest: _runCountryTest,
                       );
-                      if (!widget.byServerEnabled) {
+                      if (!widget.byServerAndHandlerEnabled) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: countryTab,
@@ -529,11 +623,21 @@ class _LocationSheetState extends State<_LocationSheet>
                           countryTab,
                           _ServerTab(
                             fetchResult: p.fetchResult!,
-                            currentServerId: choice.serverId,
+                            currentServerId: choice.handlerTag.isNotEmpty
+                                ? 0
+                                : choice.serverId,
                             sortBySpeed: _sortBySpeed,
                             testingServers: _testingServers,
                             sortSpeedFor: _sortSpeedForServer,
                             onTest: _runServerTest,
+                          ),
+                          _HandlerTab(
+                            fetchResult: p.fetchResult!,
+                            currentHandlerTag: choice.handlerTag,
+                            sortBySpeed: _sortBySpeed,
+                            testingHandlers: _testingHandlers,
+                            sortSpeedFor: _sortSpeedForHandler,
+                            onTest: _runHandlerTest,
                           ),
                         ],
                       );
@@ -770,6 +874,144 @@ class _ServerTab extends StatelessWidget {
   }
 }
 
+class _HandlerTab extends StatelessWidget {
+  const _HandlerTab({
+    required this.fetchResult,
+    required this.currentHandlerTag,
+    required this.sortBySpeed,
+    required this.testingHandlers,
+    required this.sortSpeedFor,
+    required this.onTest,
+  });
+
+  final FetchResult fetchResult;
+  final String currentHandlerTag;
+  final bool sortBySpeed;
+  final Set<String> testingHandlers;
+  final int Function(String tag) sortSpeedFor;
+  final void Function(String tag, int serverId) onTest;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+    final handlers = fetchResult.uniqueMainHandlers();
+    final shortLabels = fetchResult.mainHandlerShortLabels();
+    final currentUnavailable = currentHandlerTag.isNotEmpty &&
+        !handlers.any((h) => h.tag == currentHandlerTag);
+
+    var items = <
+        ({
+          String tag,
+          int serverId,
+          String country,
+          String shortLabel,
+          List<String> kindLabels,
+        })>[
+      if (currentUnavailable)
+        (
+          tag: currentHandlerTag,
+          serverId: 0,
+          country: '',
+          shortLabel: '?',
+          kindLabels: const <String>[],
+        ),
+      ...handlers.map(
+        (h) => (
+          tag: h.tag,
+          serverId: h.serverId,
+          country: h.country,
+          shortLabel: shortLabels[h.tag] ?? '?',
+          kindLabels: mainHandlerKindLabels(
+            baseTag: h.baseTag,
+            address: h.address,
+          ),
+        ),
+      ),
+    ];
+
+    if (sortBySpeed) {
+      final pinned = currentUnavailable
+          ? items.take(1).toList()
+          : <
+              ({
+                String tag,
+                int serverId,
+                String country,
+                String shortLabel,
+                List<String> kindLabels,
+              })>[];
+      final rest = currentUnavailable ? items.skip(1).toList() : items;
+      rest.sort((a, b) {
+        final speedA = sortSpeedFor(a.tag);
+        final speedB = sortSpeedFor(b.tag);
+        if (speedA != speedB) return speedB.compareTo(speedA);
+        return a.shortLabel.compareTo(b.shortLabel);
+      });
+      items = [...pinned, ...rest];
+    }
+
+    if (items.isEmpty) {
+      return Center(
+        child: Text(
+          l10n.noHandlersMessage,
+          textAlign: TextAlign.center,
+          style: TextStyle(color: colorScheme.onSurface.withOpacity(0.70)),
+        ),
+      );
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: items.length,
+      itemBuilder: (ctx, index) {
+        final handler = items[index];
+        final isCurrent = handler.tag == currentHandlerTag;
+        final unavailable = isCurrent && currentUnavailable;
+        final countryName = handler.country.isEmpty
+            ? ''
+            : getLocalizedCountryName(context, handler.country);
+        final prefix = countryName.isEmpty
+            ? (handler.serverId == 0 ? '' : '${handler.serverId}')
+            : '$countryName ${handler.serverId}';
+        final title = prefix.isEmpty
+            ? handler.shortLabel
+            : '$prefix${handler.shortLabel}';
+        final subtitle = handler.kindLabels.isEmpty
+            ? null
+            : handler.kindLabels.join(' · ');
+
+        return _SelectionTile(
+          isCurrent: isCurrent,
+          currentUnavailable: unavailable,
+          icon: handler.country.isEmpty
+              ? Icon(Icons.hub_outlined, size: 28, color: colorScheme.onSurface)
+              : getCountryIcon(handler.country, height: 28, width: 28),
+          title: title,
+          subtitle: subtitle,
+          metrics: HandlerResultsStore.instance.forTag(handler.tag),
+          testing: testingHandlers.contains(handler.tag),
+          onTest: unavailable
+              ? null
+              : () => onTest(handler.tag, handler.serverId),
+          onTap: unavailable
+              ? null
+              : () async {
+                  if (!isCurrent) {
+                    await context.read<ChoiceCubit>().changeHandlerTag(
+                          handler.tag,
+                        );
+                  }
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                  }
+                },
+        );
+      },
+    );
+  }
+}
+
 class _SelectionTile extends StatelessWidget {
   const _SelectionTile({
     required this.isCurrent,
@@ -777,6 +1019,7 @@ class _SelectionTile extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.onTap,
+    this.subtitle,
     this.metrics,
     this.onTest,
     this.testing = false,
@@ -786,6 +1029,7 @@ class _SelectionTile extends StatelessWidget {
   final bool currentUnavailable;
   final Widget icon;
   final String title;
+  final String? subtitle;
   final VoidCallback? onTap;
   final AggregatedHandlerMetrics? metrics;
   final VoidCallback? onTest;
@@ -830,7 +1074,15 @@ class _SelectionTile extends StatelessWidget {
                     fontSize: 12,
                   ),
                 )
-              : null,
+              : subtitle == null
+              ? null
+              : Text(
+                  subtitle!,
+                  style: TextStyle(
+                    color: colorScheme.onSurface.withOpacity(0.60),
+                    fontSize: 12,
+                  ),
+                ),
           title: Text(
             title,
             style: TextStyle(

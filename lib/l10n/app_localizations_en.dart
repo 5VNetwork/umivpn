@@ -2077,6 +2077,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get byServer => 'By server';
 
   @override
+  String get byHandler => 'By handler';
+
+  @override
+  String get noHandlersMessage =>
+      'Sorry, no handler matching your choice is available now. Please change location or try again later.';
+
+  @override
   String get expired => 'Expired';
 
   @override

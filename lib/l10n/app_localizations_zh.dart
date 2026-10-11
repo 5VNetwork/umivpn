@@ -2027,6 +2027,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get byServer => '按服务器';
 
   @override
+  String get byHandler => '按节点';
+
+  @override
+  String get noHandlersMessage => '抱歉，当前没有符合条件的节点。请更换位置或稍后再试。';
+
+  @override
   String get expired => '已过期';
 
   @override

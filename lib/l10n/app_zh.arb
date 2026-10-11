@@ -860,6 +860,8 @@
   "selectLocation": "选择地区",
   "byArea": "按地区",
   "byServer": "按服务器",
+  "byHandler": "按节点",
+  "noHandlersMessage": "抱歉，当前没有符合条件的节点。请更换位置或稍后再试。",
   "expired": "已过期",
   "today": "今天",
   "tomorrow": "明天",

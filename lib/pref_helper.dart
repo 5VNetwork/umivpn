@@ -353,6 +353,15 @@ extension PrefHelperExtension on SharedPreferences {
     setInt('selectedServerId', serverId);
   }
 
+  /// Empty means not pinned to a specific handler tag.
+  String get selectedHandlerTag {
+    return getString('selectedHandlerTag') ?? '';
+  }
+
+  void setSelectedHandlerTag(String tag) {
+    setString('selectedHandlerTag', tag);
+  }
+
   String? get userCountry {
     return getString('userCountry');
   }
