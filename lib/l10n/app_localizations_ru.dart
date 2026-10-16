@@ -563,6 +563,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noSelectedNode => 'Узел не выбран';
 
   @override
+  String get currentlyUsingNodes => 'Используемые узлы';
+
+  @override
   String get pleaseSelectNode => 'Пожалуйста, выберите узел';
 
   @override
@@ -2080,8 +2083,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get byHandler => 'По обработчику';
 
   @override
-  String get noHandlersMessage =>
-      'К сожалению, подходящий обработчик сейчас недоступен. Измените локацию или попробуйте позже.';
+  String get noHandlersMessage => 'К сожалению, подходящий обработчик сейчас недоступен. Измените локацию или попробуйте позже.';
 
   @override
   String get expired => 'Expired';

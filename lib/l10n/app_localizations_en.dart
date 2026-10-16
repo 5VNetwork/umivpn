@@ -563,6 +563,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noSelectedNode => 'No selected node';
 
   @override
+  String get currentlyUsingNodes => 'Currently Using Nodes';
+
+  @override
   String get pleaseSelectNode => 'Please select a node';
 
   @override
@@ -2080,8 +2083,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get byHandler => 'By handler';
 
   @override
-  String get noHandlersMessage =>
-      'Sorry, no handler matching your choice is available now. Please change location or try again later.';
+  String get noHandlersMessage => 'Sorry, no handler matching your choice is available now. Please change location or try again later.';
 
   @override
   String get expired => 'Expired';

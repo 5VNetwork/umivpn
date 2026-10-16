@@ -196,6 +196,7 @@
   "addToGroup": "Добавить в группу",
   "addApp": "Добавить приложение",
   "noSelectedNode": "Узел не выбран",
+  "currentlyUsingNodes": "Используемые узлы",
   "pleaseSelectNode": "Пожалуйста, выберите узел",
   "pleaseSelectSelector": "Пожалуйста, выберите селектор",
   "pleaseEnterRuleName": "Пожалуйста, введите название правила",

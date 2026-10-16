@@ -187,6 +187,7 @@ void initRouter(AuthProvider authProvider) {
                     termOfServiceUrl: termOfServiceUrl,
                     privacyPolicyUrl: privacyPolicyUrl,
                     showAppleNotification: false,
+                    useEmailWhitelist: true,
                   ),
                 ),
               ),

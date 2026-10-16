@@ -196,6 +196,7 @@
   "addToGroup": "Add to Group",
   "addApp": "Add App",
   "noSelectedNode": "No selected node",
+  "currentlyUsingNodes": "Currently Using Nodes",
   "pleaseSelectNode": "Please select a node",
   "pleaseSelectSelector": "Please select a selector",
   "pleaseEnterRuleName": "Please enter rule name",

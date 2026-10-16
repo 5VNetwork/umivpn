@@ -803,15 +803,16 @@ class _ServerTab extends StatelessWidget {
         currentServerId != 0 &&
         !servers.any((s) => s.serverId == currentServerId);
 
-    var items = <({int serverId, String country})>[
-      if (currentUnavailable) (serverId: currentServerId, country: ''),
+    var items = <({int serverId, String country, String remark})>[
+      if (currentUnavailable)
+        (serverId: currentServerId, country: '', remark: ''),
       ...servers,
     ];
 
     if (sortBySpeed) {
       final pinned = currentUnavailable
           ? items.take(1).toList()
-          : <({int serverId, String country})>[];
+          : <({int serverId, String country, String remark})>[];
       final rest = currentUnavailable ? items.skip(1).toList() : items;
       rest.sort((a, b) {
         final speedA = sortSpeedFor(a.serverId);
@@ -853,6 +854,7 @@ class _ServerTab extends StatelessWidget {
               ? Icon(Icons.dns_outlined, size: 28, color: colorScheme.onSurface)
               : getCountryIcon(server.country, height: 28, width: 28),
           title: title,
+          subtitle: server.remark.isEmpty ? null : server.remark,
           metrics: HandlerResultsStore.instance.forServer(server.serverId),
           testing: testingServers.contains(server.serverId),
           onTest: unavailable ? null : () => onTest(server.serverId),
@@ -907,6 +909,7 @@ class _HandlerTab extends StatelessWidget {
           String country,
           String shortLabel,
           List<String> kindLabels,
+          String remark,
         })>[
       if (currentUnavailable)
         (
@@ -915,6 +918,7 @@ class _HandlerTab extends StatelessWidget {
           country: '',
           shortLabel: '?',
           kindLabels: const <String>[],
+          remark: '',
         ),
       ...handlers.map(
         (h) => (
@@ -926,6 +930,7 @@ class _HandlerTab extends StatelessWidget {
             baseTag: h.baseTag,
             address: h.address,
           ),
+          remark: h.remark,
         ),
       ),
     ];
@@ -940,6 +945,7 @@ class _HandlerTab extends StatelessWidget {
                 String country,
                 String shortLabel,
                 List<String> kindLabels,
+                String remark,
               })>[];
       final rest = currentUnavailable ? items.skip(1).toList() : items;
       rest.sort((a, b) {
@@ -977,9 +983,12 @@ class _HandlerTab extends StatelessWidget {
         final title = prefix.isEmpty
             ? handler.shortLabel
             : '$prefix${handler.shortLabel}';
-        final subtitle = handler.kindLabels.isEmpty
-            ? null
-            : handler.kindLabels.join(' · ');
+        final subtitleParts = <String>[
+          if (handler.remark.isNotEmpty) handler.remark,
+          if (handler.kindLabels.isNotEmpty) handler.kindLabels.join(' · '),
+        ];
+        final subtitle =
+            subtitleParts.isEmpty ? null : subtitleParts.join(' · ');
 
         return _SelectionTile(
           isCurrent: isCurrent,

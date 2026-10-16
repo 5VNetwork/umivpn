@@ -196,6 +196,7 @@
   "addToGroup": "添加至分组",
   "addApp": "添加应用",
   "noSelectedNode": "无选中节点",
+  "currentlyUsingNodes": "当前使用节点",
   "pleaseSelectNode": "请选择一个节点",
   "pleaseSelectSelector": "请选择一个选择器",
   "pleaseEnterRuleName": "请输入规则名称",

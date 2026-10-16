@@ -73,7 +73,9 @@ class _TrafficCard extends StatelessWidget {
                   }
                   final userProfile = viewModel.userProfile!;
                   final remainingData = bytesToReadable(
-                    userProfile.remainingData,
+                    userProfile.remainingData < 0
+                        ? 0
+                        : userProfile.remainingData,
                   );
                   final remainingParts = remainingData.split(' ');
                   return Row(

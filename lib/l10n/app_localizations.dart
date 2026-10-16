@@ -1141,6 +1141,12 @@ abstract class AppLocalizations {
   /// **'No selected node'**
   String get noSelectedNode;
 
+  /// No description provided for @currentlyUsingNodes.
+  ///
+  /// In en, this message translates to:
+  /// **'Currently Using Nodes'**
+  String get currentlyUsingNodes;
+
   /// No description provided for @pleaseSelectNode.
   ///
   /// In en, this message translates to:

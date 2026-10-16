@@ -549,6 +549,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noSelectedNode => '无选中节点';
 
   @override
+  String get currentlyUsingNodes => '当前使用节点';
+
+  @override
   String get pleaseSelectNode => '请选择一个节点';
 
   @override

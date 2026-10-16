@@ -205,6 +205,25 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
     };
   }
 
+  void _onStatusRowTap(BuildContext context) {
+    final status = context.read<StatusCubit>().state;
+    if (status.status != XStatus.connected) return;
+
+    // When a specific handler is pinned, the location selector already shows it.
+    final choice = context.read<ChoiceCubit>().state;
+    if (choice.handlerTag.isNotEmpty) return;
+
+    final colorScheme = Theme.of(context).colorScheme;
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => const _CurrentlyUsingNodesSheet(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -241,12 +260,25 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: _buildStatusRowChildren(
-                              context,
-                              colorScheme,
-                              status,
+                          GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: status.status == XStatus.connected
+                                ? () => _onStatusRowTap(context)
+                                : null,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 4,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: _buildStatusRowChildren(
+                                  context,
+                                  colorScheme,
+                                  status,
+                                ),
+                              ),
                             ),
                           ),
                           if (isConnected) ...[
@@ -354,6 +386,162 @@ class _HomeButtonState extends State<HomeButton> with TickerProviderStateMixin {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _CurrentlyUsingNodesSheet extends StatelessWidget {
+  const _CurrentlyUsingNodesSheet();
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+    final xController = context.read<XController>();
+    final fetchResult = context.read<FetchResultProvider>().fetchResult;
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.sizeOf(context).height * 0.55,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: colorScheme.onSurface.withOpacity(0.20),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                l10n.currentlyUsingNodes,
+                style: TextStyle(
+                  color: colorScheme.onSurface,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Flexible(
+                child: ListenableBuilder(
+                  listenable: xController,
+                  builder: (context, _) {
+                    final tags = xController.handlers;
+                    if (tags.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24),
+                        child: Text(
+                          l10n.noSelectedNode,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: colorScheme.onSurface.withOpacity(0.70),
+                          ),
+                        ),
+                      );
+                    }
+
+                    final shortLabels =
+                        fetchResult?.mainHandlerShortLabels() ?? const {};
+                    final byTag = <String,
+                        ({
+                          String tag,
+                          int serverId,
+                          String country,
+                          String baseTag,
+                          String address,
+                          String remark,
+                        })>{
+                      for (final h
+                          in fetchResult?.uniqueMainHandlers() ?? const [])
+                        h.tag: h,
+                    };
+
+                    return ListView.separated(
+                      itemCount: tags.length,
+                      separatorBuilder: (_, __) => Divider(
+                        height: 1,
+                        color: colorScheme.borderLight,
+                      ),
+                      itemBuilder: (context, index) {
+                        final tag = tags[index];
+                        final h = byTag[tag];
+                        final country = h?.country ??
+                            (tag.contains('-') ? tag.split('-').last : '');
+                        final serverId = h?.serverId;
+                        final letter = shortLabels[tag];
+                        final countryName = country.isEmpty
+                            ? ''
+                            : getLocalizedCountryName(context, country);
+                        final prefix = countryName.isEmpty
+                            ? (serverId == null || serverId == 0
+                                ? ''
+                                : '$serverId')
+                            : (serverId == null || serverId == 0
+                                ? countryName
+                                : '$countryName · $serverId');
+                        final title = letter == null
+                            ? (prefix.isEmpty ? tag : prefix)
+                            : (prefix.isEmpty ? letter : '$prefix · $letter');
+                        final kindLabels = h == null
+                            ? const <String>[]
+                            : mainHandlerKindLabels(
+                                baseTag: h.baseTag,
+                                address: h.address,
+                              );
+
+                        return ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: country.isEmpty
+                              ? Icon(
+                                  Icons.hub_outlined,
+                                  size: 28,
+                                  color: colorScheme.onSurface,
+                                )
+                              : getCountryIcon(
+                                  country,
+                                  height: 28,
+                                  width: 28,
+                                ),
+                          title: Text(
+                            title,
+                            style: TextStyle(
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          subtitle: kindLabels.isEmpty
+                              ? null
+                              : Text(
+                                  kindLabels.join(' · '),
+                                  style: TextStyle(
+                                    color: colorScheme.onSurface
+                                        .withOpacity(0.70),
+                                  ),
+                                ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(l10n.close),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
