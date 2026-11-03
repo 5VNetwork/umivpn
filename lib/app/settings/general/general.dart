@@ -11,6 +11,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:umivpn/app/settings/general/language.dart';
 import 'package:umivpn/app/settings/general/country.dart';
+import 'package:umivpn/auth/auth_bloc.dart';
+import 'package:umivpn/auth/user.dart';
 import 'package:umivpn/common/common.dart';
 import 'package:tm/ads/start_ad.dart';
 import 'package:umivpn/l10n/app_localizations.dart';
@@ -93,6 +95,21 @@ class GeneralSettingPage extends StatelessWidget {
             //     );
             //   },
             // ),
+            if (context.watch<AuthRepo>().user?.plan == SubscriptionPlan.air)
+              const Column(
+                children: [
+                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 10,
+                      bottom: 10,
+                      left: 16,
+                      right: 16,
+                    ),
+                    child: ShowHomeAdsSetting(),
+                  ),
+                ],
+              ),
             // if (isAdPlatforms)
             //   const Column(children: [
             //     Divider(),
@@ -130,6 +147,42 @@ String _countryLabel(BuildContext context, SharedPreferences pref) {
     return AppLocalizations.of(context)!.auto;
   }
   return getLocalizedCountryName(context, selectedCountry);
+}
+
+class ShowHomeAdsSetting extends StatelessWidget {
+  const ShowHomeAdsSetting({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final showHomeAds = context.watch<ShowHomeAdsNotifier>().show;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              AppLocalizations.of(context)!.showHomeAds,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const Expanded(child: SizedBox()),
+            Switch(
+              value: showHomeAds,
+              onChanged: (value) {
+                context.read<ShowHomeAdsNotifier>().setShow(value);
+              },
+            ),
+          ],
+        ),
+        const Gap(10),
+        Text(
+          AppLocalizations.of(context)!.showHomeAdsDesc,
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class ThemeModeSetting extends StatefulWidget {

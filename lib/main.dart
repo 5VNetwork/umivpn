@@ -425,6 +425,10 @@ void main() async {
           xController: context.read<XController>(),
         ),
       ),
+      ChangeNotifierProvider(
+        create: (context) =>
+            ShowHomeAdsNotifier(context.read<SharedPreferences>()),
+      ),
     ],
     child: const App(),
   );

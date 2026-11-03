@@ -2083,6 +2083,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get byHandler => 'По обработчику';
 
   @override
+  String handlerCount(int count) {
+    return '$count обработчиков';
+  }
+
+  @override
   String get noHandlersMessage => 'К сожалению, подходящий обработчик сейчас недоступен. Измените локацию или попробуйте позже.';
 
   @override
@@ -2231,6 +2236,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get enableAppOpenAdsDesc => 'Включите рекламу при открытии приложения, чтобы получить 20 минут времени подключения вместо 15 минут. Реклама будет появляться при открытии приложения.';
 
   @override
+  String get showHomeAds => 'Реклама на главной';
+
+  @override
+  String get showHomeAdsDesc =>
+      'Показывать рекламу на главной странице. Отключите, если не хотите её видеть.';
+
+  @override
   String get noTorrect => 'No Torrenting';
 
   @override
@@ -2342,6 +2354,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get openSupportChat => 'Открыть';
+
+  @override
+  String get deleteLocalChat => 'Удалить чат';
+
+  @override
+  String get deleteLocalChatConfirmTitle => 'Удалить локальный чат?';
+
+  @override
+  String get deleteLocalChatConfirmMessage => 'Кэшированные сообщения будут удалены с этого устройства. История на сервере сохранится. Новые ответы по-прежнему будут появляться.';
 
   @override
   String supportWelcomeMessage(String faqUrl) {

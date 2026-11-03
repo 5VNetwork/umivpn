@@ -217,6 +217,16 @@ class SupportChatRepository {
     return _localStore.loadMessages(userId);
   }
 
+  /// Clears on-device message + image cache. Does not delete server history.
+  Future<void> clearLocalCache() async {
+    final userId = currentUserId;
+    if (userId == null) {
+      throw StateError('Not signed in');
+    }
+    await _localStore.clearCachedMessages(userId);
+    await SupportChatImageCache.instance.emptyCache();
+  }
+
   Future<List<SupportMessage>> loadMessages(String conversationId) async {
     final userId = currentUserId;
 

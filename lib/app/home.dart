@@ -507,6 +507,8 @@ class _HomeBody extends StatelessWidget {
                 alignment: Alignment.bottomCenter,
                 child: Consumer<AuthRepo>(
                   builder: (context, authRepo, child) {
+                    final showHomeAds =
+                        context.watch<ShowHomeAdsNotifier>().show;
                     if (authRepo.user == null) {
                       return const SizedBox.shrink();
                     }
@@ -554,7 +556,8 @@ class _HomeBody extends StatelessWidget {
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (authRepo.user!.plan == SubscriptionPlan.air)
+                        if (authRepo.user!.plan == SubscriptionPlan.air &&
+                            showHomeAds)
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 15.0),

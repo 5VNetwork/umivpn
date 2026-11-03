@@ -3937,6 +3937,12 @@ abstract class AppLocalizations {
   /// **'By handler'**
   String get byHandler;
 
+  /// No description provided for @handlerCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} handlers'**
+  String handlerCount(int count);
+
   /// No description provided for @noHandlersMessage.
   ///
   /// In en, this message translates to:
@@ -4213,6 +4219,18 @@ abstract class AppLocalizations {
   /// **'Once enabled, the connection duration will be 30 minutes instead of 15 minutes. An ad will appear when you open UmiVPN.'**
   String get enableAppOpenAdsDesc;
 
+  /// No description provided for @showHomeAds.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Page Ads'**
+  String get showHomeAds;
+
+  /// No description provided for @showHomeAdsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Show promotional ads on the home page. Turn this off if you prefer not to see them.'**
+  String get showHomeAdsDesc;
+
   /// No description provided for @noTorrect.
   ///
   /// In en, this message translates to:
@@ -4434,6 +4452,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open'**
   String get openSupportChat;
+
+  /// No description provided for @deleteLocalChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete chat'**
+  String get deleteLocalChat;
+
+  /// No description provided for @deleteLocalChatConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete local chat?'**
+  String get deleteLocalChatConfirmTitle;
+
+  /// No description provided for @deleteLocalChatConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This removes cached messages from this device. Server history is not deleted(server history is usually deleted within 7 days automatically). New replies will still appear.'**
+  String get deleteLocalChatConfirmMessage;
 
   /// No description provided for @supportWelcomeMessage.
   ///

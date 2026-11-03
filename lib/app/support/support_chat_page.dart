@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_core/flutter_chat_core.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_common/support/support_chat.dart';
+import 'package:flutter_common/support/support_chat_image_prepare.dart';
 import 'package:flutter_common/support/support_chat_send.dart';
 import 'package:provider/provider.dart';
 import 'package:umivpn/app/settings/setting.dart';
@@ -421,18 +422,31 @@ class _SupportChatPageState extends State<SupportChatPage> {
 
     final conversationId = await _ensureConversationReady();
 
-    final dimensions = await decodeSupportImageDimensions(bytes);
+    late final SupportChatPreparedImage prepared;
+    try {
+      prepared = await prepareSupportChatImageForUpload(
+        bytes: bytes,
+        fileName: fileName,
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to prepare image: $error')));
+      return;
+    }
+
     final pendingId = 'local-image-${DateTime.now().microsecondsSinceEpoch}';
     final pendingMessage = Message.image(
       id: pendingId,
       authorId: userId,
       createdAt: DateTime.now(),
-      source: fileName,
+      source: prepared.fileName,
       metadata: {
-        supportChatLocalImageBytesMetadataKey: bytes,
+        supportChatLocalImageBytesMetadataKey: prepared.bytes,
         supportChatImageUploadingMetadataKey: true,
-        supportChatImagePixelWidthMetadataKey: dimensions.width,
-        supportChatImagePixelHeightMetadataKey: dimensions.height,
+        supportChatImagePixelWidthMetadataKey: prepared.dimensions.width,
+        supportChatImagePixelHeightMetadataKey: prepared.dimensions.height,
       },
     );
     await _chatController.insertMessage(pendingMessage);
@@ -441,10 +455,11 @@ class _SupportChatPageState extends State<SupportChatPage> {
       final message = await _repository.sendImage(
         conversationId: conversationId,
         userId: userId,
-        fileName: fileName,
-        bytes: bytes,
-        pixelWidth: dimensions.width,
-        pixelHeight: dimensions.height,
+        fileName: prepared.fileName,
+        bytes: prepared.bytes,
+        contentType: prepared.contentType,
+        pixelWidth: prepared.dimensions.width,
+        pixelHeight: prepared.dimensions.height,
       );
 
       final chatMessage = _toChatMessage(message, userId);
@@ -462,13 +477,13 @@ class _SupportChatPageState extends State<SupportChatPage> {
           authorId: userId,
           createdAt: pendingMessage.createdAt,
           failedAt: DateTime.now(),
-          source: fileName,
+          source: prepared.fileName,
           status: MessageStatus.error,
           metadata: {
-            supportChatLocalImageBytesMetadataKey: bytes,
+            supportChatLocalImageBytesMetadataKey: prepared.bytes,
             supportChatImageUploadErrorMetadataKey: true,
-            supportChatImagePixelWidthMetadataKey: dimensions.width,
-            supportChatImagePixelHeightMetadataKey: dimensions.height,
+            supportChatImagePixelWidthMetadataKey: prepared.dimensions.width,
+            supportChatImagePixelHeightMetadataKey: prepared.dimensions.height,
           },
         ),
       );
@@ -487,6 +502,45 @@ class _SupportChatPageState extends State<SupportChatPage> {
     return User(id: id, name: 'You');
   }
 
+  Future<void> _confirmClearLocalChat() async {
+    final userId = _currentUserId;
+    if (userId == null) return;
+
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.deleteLocalChatConfirmTitle),
+        content: Text(l10n.deleteLocalChatConfirmMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(l10n.delete),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    try {
+      await _repository.clearLocalCache();
+      if (!mounted) return;
+      await _chatController.setMessages([
+        _toChatMessage(buildLocalWelcomeMessage(userId), userId),
+      ]);
+    } catch (error) {
+      logger.e(error);
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error.toString())));
+    }
+  }
+
   @override
   void dispose() {
     _subscription?.cancel();
@@ -498,10 +552,22 @@ class _SupportChatPageState extends State<SupportChatPage> {
   @override
   Widget build(BuildContext context) {
     final isLightTheme = Theme.of(context).brightness == Brightness.light;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: widget.showAppBar
-          ? getAdaptiveAppBar(context, const Text('Support chat'))
+          ? getAdaptiveAppBar(
+              context,
+              const Text('Support chat'),
+              actions: [
+                if (_currentUserId != null)
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline),
+                    tooltip: l10n.deleteLocalChat,
+                    onPressed: _confirmClearLocalChat,
+                  ),
+              ],
+            )
           : null,
       body: _buildBody(isLightTheme),
     );

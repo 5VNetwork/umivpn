@@ -269,11 +269,16 @@ class Version extends StatelessWidget {
   }
 }
 
-AppBar getAdaptiveAppBar(BuildContext context, Widget? title) {
+AppBar getAdaptiveAppBar(
+  BuildContext context,
+  Widget? title, {
+  List<Widget>? actions,
+}) {
   return AppBar(
     automaticallyImplyLeading: Platform.isMacOS ? false : true,
     title: title,
     actions: [
+      ...?actions,
       if (Platform.isMacOS)
         Padding(
           padding: const EdgeInsets.all(8.0),

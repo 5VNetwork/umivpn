@@ -2,7 +2,7 @@
 
 **UmiVPN** 是一款免费VPN、梯子。一键启动，永不失联，适合日常 **科学上网** 与 **翻墙**。
 
-> 官网：[www.umivpn.com](https://www.umivpn.com) / [www.umivpn.net](https://www.umivpn.net) 其余均为仿冒网站
+> 官网：[www.umivpn.com](https://www.umivpn.com) 其余均为仿冒网站
 
 UmiVPN is a free VPN for Windows, macOS, iOS, and Android. 
 
@@ -10,7 +10,7 @@ UmiVPN is a free VPN for Windows, macOS, iOS, and Android.
 
 ## 为什么选择 UmiVPN
 
-- **免费 VPN**：注册即可使用免费套餐（每月 3 GB，最多 3 台设备同时连接）
+- **免费 VPN**：注册即可使用免费套餐（每月 1 GB，最多 3 台设备同时连接）
 - **访问AI**：UmiVPN绝大多数服务器可访问ChatGPT、Gemini、Claude等AI站点
 - **科学上网、翻墙**：一键启动，无需再配订阅链接或规则
 - **永不失联**：多模式、多地区节点，连接稳定
@@ -37,7 +37,7 @@ UmiVPN is a free VPN for Windows, macOS, iOS, and Android.
 
 ## 套餐
 
-- **免费**：每月 3 GB，最多 3 台设备同时连接，部分模式与地区
+- **免费**：每月 1 GB，最多 3 台设备同时连接，部分模式与地区
 - **Air**：更多流量与地区，体验更好。订阅满 3 个月赠送 [VX 代理客户端](https://vx.5vnetwork.com) Pro
 
 价格与对比：[www.umivpn.com/zh/pricing](https://www.umivpn.com/zh/pricing)
@@ -46,12 +46,12 @@ UmiVPN is a free VPN for Windows, macOS, iOS, and Android.
 
 - **禁止种子下载**：种子流量会直接发出，不经过 VPN 隧道
 - 仅第一个账号可以使用免费套餐
-- 官方网站只有 [www.umivpn.com](https://www.umivpn.com) 和 [www.umivpn.net](https://www.umivpn.net)，请警惕仿冒站
+- 官方网站只有 [www.umivpn.com](https://www.umivpn.com) 请警惕仿冒站
 
 ## 常见问题
 
 **UmiVPN 是免费 VPN 吗？**  
-是。注册即可用免费套餐：每月 3 GB、最多 3 台设备，支持 Windows / macOS / iOS / Android。
+是。注册即可用免费套餐：每月 1 GB、最多 3 台设备，支持 Windows / macOS / iOS / Android。
 
 **UmiVPN 能用来科学上网、翻墙吗？能当梯子用吗？**  
 能。UmiVPN 在中国可用。

@@ -862,6 +862,14 @@
   "byArea": "按地区",
   "byServer": "按服务器",
   "byHandler": "按节点",
+  "handlerCount": "{count} 个节点",
+  "@handlerCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "noHandlersMessage": "抱歉，当前没有符合条件的节点。请更换位置或稍后再试。",
   "expired": "已过期",
   "today": "今天",
@@ -927,6 +935,8 @@
   "umivpnSlogan": "你的自由，悠咪来守护",
   "enableAppOpenAds": "返回应用广告",
   "enableAppOpenAdsDesc": "开启后连接最大时长为 30 分钟，（而非 15 分钟）。打开UmiVPN时会显示广告。",
+  "showHomeAds": "首页广告",
+  "showHomeAdsDesc": "在首页显示推广广告。如果不想看到，可以关闭。",
   "noTorrect": "无法种子下载",
   "noTorrectDesc": "UmiVPN无法用于下载种子，种子下载流量不会通过UmiVPN隧道传输。它们的流量会直接进入到公共互联网",
   "privacy0": "电子邮件地址",
@@ -947,8 +957,8 @@
   "privacyAssurance1": "我们不会向第三方出售、交易或出租您的个人信息。",
   "personalDataWeCollect": "我们收集的个人数据：",
   "vpnServiceDesc": "UmiVPN利用VPNService使您的上网体验更加安全，私密与稳定。在使用VPNService的过程中，我们会根据您的IP地址来为您提供最优服务器，我们不会分享或储存您的IP地址。",
-  "directAppTipTitle": "直联应用集",
-  "directAppTipDesc": "建议将不需要走 VPN 的应用添加到直联应用集，以获得更好的性能和续航。",
+  "directAppTipTitle": "直连应用集",
+  "directAppTipDesc": "建议将不需要走 VPN 的应用添加到直连应用集，以获得更好的性能和续航。",
   "viewDirectAppTutorial": "查看教程",
   "tutorial": "教程",
   "failedToFetchProfile": "Failed to fetch profile {error}",
@@ -970,6 +980,9 @@
   "oneYear": "一年",
   "supportReplied": "客服已回复",
   "openSupportChat": "打开",
+  "deleteLocalChat": "删除聊天",
+  "deleteLocalChatConfirmTitle": "删除本地聊天？",
+  "deleteLocalChatConfirmMessage": "将清除本设备上缓存的消息，不会删除服务器上的记录(服务端的记录通常会在7天内自动删除)。之后的新回复仍会显示。",
   "supportWelcomeMessage": "欢迎！您可以随时提问、反馈情况（例如无法访问某些网站）。感谢您的反馈！（通常会在24小时内回复）。您也可以访问我们的网站查看常见问题的解答：{faqUrl}",
   "@supportWelcomeMessage": {
     "placeholders": {

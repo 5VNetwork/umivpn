@@ -2083,6 +2083,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get byHandler => 'By handler';
 
   @override
+  String handlerCount(int count) {
+    return '$count handlers';
+  }
+
+  @override
   String get noHandlersMessage => 'Sorry, no handler matching your choice is available now. Please change location or try again later.';
 
   @override
@@ -2231,6 +2236,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enableAppOpenAdsDesc => 'Once enabled, the connection duration will be 30 minutes instead of 15 minutes. An ad will appear when you open UmiVPN.';
 
   @override
+  String get showHomeAds => 'Home Page Ads';
+
+  @override
+  String get showHomeAdsDesc =>
+      'Show promotional ads on the home page. Turn this off if you prefer not to see them.';
+
+  @override
   String get noTorrect => 'No Torrenting';
 
   @override
@@ -2342,6 +2354,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openSupportChat => 'Open';
+
+  @override
+  String get deleteLocalChat => 'Delete chat';
+
+  @override
+  String get deleteLocalChatConfirmTitle => 'Delete local chat?';
+
+  @override
+  String get deleteLocalChatConfirmMessage => 'This removes cached messages from this device. Server history is not deleted(server history is usually deleted within 7 days automatically). New replies will still appear.';
 
   @override
   String supportWelcomeMessage(String faqUrl) {

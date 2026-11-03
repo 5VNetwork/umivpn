@@ -9,12 +9,10 @@ class Selector extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        final byServerAndHandlerEnabled =
+        final byHandlerEnabled =
             context.read<AuthRepo>().user?.plan != SubscriptionPlan.free;
         final choice = context.read<ChoiceCubit>().state;
-        final initialTab = !byServerAndHandlerEnabled
-            ? 0
-            : choice.handlerTag.isNotEmpty
+        final initialTab = byHandlerEnabled && choice.handlerTag.isNotEmpty
             ? 2
             : choice.serverId != 0
             ? 1
@@ -32,7 +30,7 @@ class Selector extends StatelessWidget {
             ),
             child: _LocationSheet(
               initialTabIndex: initialTab,
-              byServerAndHandlerEnabled: byServerAndHandlerEnabled,
+              byHandlerEnabled: byHandlerEnabled,
             ),
           ),
         );
@@ -58,31 +56,33 @@ class Selector extends StatelessWidget {
               children: [
                 getCountryIcon(country, height: 28, width: 28),
                 const SizedBox(width: 15),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.currentLocation,
-                      style: TextStyle(
-                        color: colorScheme.onSurface.withOpacity(0.70),
-                        fontSize: 12,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.currentLocation,
+                        style: TextStyle(
+                          color: colorScheme.onSurface.withOpacity(0.70),
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      _getSelectionLabel(context, state),
-                      style: TextStyle(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                      const SizedBox(height: 2),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          _getSelectionLabel(context, state),
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: colorScheme.onSurface,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                Icon(
-                  Icons.keyboard_arrow_up_rounded,
-                  color: colorScheme.onSurface.withOpacity(0.70),
+                    ],
+                  ),
                 ),
               ],
             );
@@ -120,6 +120,8 @@ class Selector extends StatelessWidget {
 
   String _getSelectionLabel(BuildContext context, Choice state) {
     final l10n = AppLocalizations.of(context)!;
+    final isFree =
+        context.read<AuthRepo>().user?.plan == SubscriptionPlan.free;
     if (state.handlerTag.isNotEmpty) {
       final result = context.read<FetchResultProvider>().fetchResult;
       if (result != null) {
@@ -132,7 +134,9 @@ class Selector extends StatelessWidget {
             final letter = labels[h.tag] ?? '?';
             final prefix = countryName.isEmpty
                 ? '${h.serverId}'
-                : '$countryName · ${h.serverId}';
+                : isFree
+                    ? '$countryName ${h.serverId}'
+                    : '$countryName · ${h.serverId}';
             return '$prefix · $letter';
           }
         }
@@ -147,7 +151,9 @@ class Selector extends StatelessWidget {
       if (countryName.isEmpty) {
         return '${l10n.server} ${state.serverId}';
       }
-      return '$countryName · ${state.serverId}';
+      return isFree
+          ? '$countryName ${state.serverId}'
+          : '$countryName · ${state.serverId}';
     }
     if (state.country.isEmpty) {
       return l10n.auto;
@@ -159,11 +165,11 @@ class Selector extends StatelessWidget {
 class _LocationSheet extends StatefulWidget {
   const _LocationSheet({
     required this.initialTabIndex,
-    required this.byServerAndHandlerEnabled,
+    required this.byHandlerEnabled,
   });
 
   final int initialTabIndex;
-  final bool byServerAndHandlerEnabled;
+  final bool byHandlerEnabled;
 
   @override
   State<_LocationSheet> createState() => _LocationSheetState();
@@ -189,15 +195,15 @@ class _LocationSheetState extends State<_LocationSheet>
   final Map<int, int> _sortSpeedByServer = {};
   final Map<String, int> _sortSpeedByHandler = {};
 
+  int get _tabCount => widget.byHandlerEnabled ? 3 : 2;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: widget.byServerAndHandlerEnabled ? 3 : 1,
+      length: _tabCount,
       vsync: this,
-      initialIndex: widget.byServerAndHandlerEnabled
-          ? widget.initialTabIndex.clamp(0, 2)
-          : 0,
+      initialIndex: widget.initialTabIndex.clamp(0, _tabCount - 1),
     );
     _loadPrefs(context.read<SharedPreferences>());
     HandlerResultsStore.instance.reload();
@@ -550,20 +556,18 @@ class _LocationSheetState extends State<_LocationSheet>
               ),
             ],
           ),
-          if (widget.byServerAndHandlerEnabled) ...[
-            const SizedBox(height: 8),
-            TabBar(
-              controller: _tabController,
-              labelColor: colorScheme.primary,
-              unselectedLabelColor: colorScheme.onSurface.withOpacity(0.60),
-              indicatorColor: colorScheme.primary,
-              tabs: [
-                Tab(text: l10n.byArea),
-                Tab(text: l10n.byServer),
-                Tab(text: l10n.byHandler),
-              ],
-            ),
-          ],
+          const SizedBox(height: 8),
+          TabBar(
+            controller: _tabController,
+            labelColor: colorScheme.primary,
+            unselectedLabelColor: colorScheme.onSurface.withOpacity(0.60),
+            indicatorColor: colorScheme.primary,
+            tabs: [
+              Tab(text: l10n.byArea),
+              Tab(text: l10n.byServer),
+              if (widget.byHandlerEnabled) Tab(text: l10n.byHandler),
+            ],
+          ),
           const SizedBox(height: 8),
           Flexible(
             child: ListenableBuilder(
@@ -597,8 +601,8 @@ class _LocationSheetState extends State<_LocationSheet>
                         ),
                       );
                     } else if (p.fetchResult != null) {
-                      final selectingByPin = widget.byServerAndHandlerEnabled &&
-                          (choice.serverId != 0 ||
+                      final selectingByPin = choice.serverId != 0 ||
+                          (widget.byHandlerEnabled &&
                               choice.handlerTag.isNotEmpty);
                       final countryTab = _CountryTab(
                         fetchResult: p.fetchResult!,
@@ -611,34 +615,30 @@ class _LocationSheetState extends State<_LocationSheet>
                         sortSpeedFor: _sortSpeedForCountry,
                         onTest: _runCountryTest,
                       );
-                      if (!widget.byServerAndHandlerEnabled) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: countryTab,
-                        );
-                      }
+                      final serverTab = _ServerTab(
+                        fetchResult: p.fetchResult!,
+                        currentServerId: choice.handlerTag.isNotEmpty
+                            ? 0
+                            : choice.serverId,
+                        sortBySpeed: _sortBySpeed,
+                        testingServers: _testingServers,
+                        sortSpeedFor: _sortSpeedForServer,
+                        onTest: _runServerTest,
+                      );
                       return TabBarView(
                         controller: _tabController,
                         children: [
                           countryTab,
-                          _ServerTab(
-                            fetchResult: p.fetchResult!,
-                            currentServerId: choice.handlerTag.isNotEmpty
-                                ? 0
-                                : choice.serverId,
-                            sortBySpeed: _sortBySpeed,
-                            testingServers: _testingServers,
-                            sortSpeedFor: _sortSpeedForServer,
-                            onTest: _runServerTest,
-                          ),
-                          _HandlerTab(
-                            fetchResult: p.fetchResult!,
-                            currentHandlerTag: choice.handlerTag,
-                            sortBySpeed: _sortBySpeed,
-                            testingHandlers: _testingHandlers,
-                            sortSpeedFor: _sortSpeedForHandler,
-                            onTest: _runHandlerTest,
-                          ),
+                          serverTab,
+                          if (widget.byHandlerEnabled)
+                            _HandlerTab(
+                              fetchResult: p.fetchResult!,
+                              currentHandlerTag: choice.handlerTag,
+                              sortBySpeed: _sortBySpeed,
+                              testingHandlers: _testingHandlers,
+                              sortSpeedFor: _sortSpeedForHandler,
+                              onTest: _runHandlerTest,
+                            ),
                         ],
                       );
                     } else {
@@ -977,12 +977,11 @@ class _HandlerTab extends StatelessWidget {
         final countryName = handler.country.isEmpty
             ? ''
             : getLocalizedCountryName(context, handler.country);
-        final prefix = countryName.isEmpty
-            ? (handler.serverId == 0 ? '' : '${handler.serverId}')
-            : '$countryName ${handler.serverId}';
-        final title = prefix.isEmpty
-            ? handler.shortLabel
-            : '$prefix${handler.shortLabel}';
+        final title = formatMainHandlerTitle(
+          countryName: countryName,
+          serverId: handler.serverId,
+          shortLabel: handler.shortLabel,
+        );
         final subtitleParts = <String>[
           if (handler.remark.isNotEmpty) handler.remark,
           if (handler.kindLabels.isNotEmpty) handler.kindLabels.join(' · '),

@@ -50,12 +50,13 @@ class _TrafficCard extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) =>
           TrafficCardViewModel(authRepo: context.read<AuthRepo>()),
-      child: Builder(
-        builder: (context) {
+      child: Consumer<TrafficCardViewModel>(
+        builder: (context, viewModel, child) {
           return GestureDetector(
-            onTap: () {
-              // context.go('/manage-plan');
-            },
+            behavior: HitTestBehavior.opaque,
+            onTap: viewModel.canManualRefresh && !viewModel.isRefreshing
+                ? viewModel.manualRefresh
+                : null,
             child: Container(
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -66,145 +67,114 @@ class _TrafficCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: colorScheme.borderLight),
               ),
-              child: Consumer<TrafficCardViewModel>(
-                builder: (context, viewModel, child) {
-                  if (viewModel.userProfile == null) {
-                    return const SizedBox(height: 28, width: double.infinity);
-                  }
-                  final userProfile = viewModel.userProfile!;
-                  final remainingData = bytesToReadable(
-                    userProfile.remainingData < 0
-                        ? 0
-                        : userProfile.remainingData,
-                  );
-                  final remainingParts = remainingData.split(' ');
-                  return Row(
-                    children: [
-                      Container(
-                        width: 28,
-                        height: 28,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: colorScheme.primary.withOpacity(0.2),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: colorScheme.primary.withOpacity(0.3),
-                            width: 1.5,
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.data_usage_rounded,
-                          size: 16,
-                          color: colorScheme.primary,
-                        ),
-                      ),
-                      const SizedBox(width: 15),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!.remainingData,
-                              style: TextStyle(
-                                color: colorScheme.onSurface.withOpacity(0.70),
-                                fontSize: 12,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Row(
-                              children: [
-                                Text(
-                                  remainingParts[0],
-                                  style: TextStyle(
-                                    color: colorScheme.onSurface,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                if (remainingParts.length > 1)
-                                  Text(
-                                    ' ${remainingParts[1]}',
-                                    style: TextStyle(
-                                      color: colorScheme.onSurface.withOpacity(
-                                        0.70,
-                                      ),
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                if (viewModel.canManualRefresh) ...[
-                                  const SizedBox(width: 6),
-                                  GestureDetector(
-                                    onTap: viewModel.isRefreshing
-                                        ? null
-                                        : viewModel.manualRefresh,
-                                    child: viewModel.isRefreshing
-                                        ? SizedBox(
-                                            width: 12,
-                                            height: 12,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 2,
-                                              color: colorScheme.onSurface
-                                                  .withOpacity(0.70),
-                                            ),
-                                          )
-                                        : Icon(
-                                            Icons.refresh_rounded,
-                                            size: 18,
-                                            color: colorScheme.onSurface
-                                                .withOpacity(0.70),
-                                          ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      // const SizedBox(width: 10),
-                      // Container(
-                      //   padding: const EdgeInsets.symmetric(
-                      //     horizontal: 10,
-                      //     vertical: 4,
-                      //   ),
-                      //   decoration: BoxDecoration(
-                      //     gradient: LinearGradient(
-                      //       begin: Alignment.topLeft,
-                      //       end: Alignment.bottomRight,
-                      //       colors: [
-                      //         colorScheme.primary,
-                      //         colorScheme.secondary,
-                      //       ],
-                      //     ),
-                      //     borderRadius: BorderRadius.circular(10),
-                      //   ),
-                      //   child: Row(
-                      //     mainAxisSize: MainAxisSize.min,
-                      //     children: [
-                      //       Icon(
-                      //         Icons.rocket_launch_rounded,
-                      //         size: 12,
-                      //         color: colorScheme.onPrimary,
-                      //       ),
-                      //       const SizedBox(width: 4),
-                      //       Text(
-                      //         AppLocalizations.of(context)!.upgrade,
-                      //         style: TextStyle(
-                      //           color: colorScheme.onPrimary,
-                      //           fontSize: 10,
-                      //           fontWeight: FontWeight.w700,
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
-                  );
-                },
-              ),
+              child: viewModel.userProfile == null
+                  ? const SizedBox(height: 28, width: double.infinity)
+                  : _TrafficCardBody(
+                      userProfile: viewModel.userProfile!,
+                      isRefreshing: viewModel.isRefreshing,
+                      showRefreshIcon: viewModel.canManualRefresh,
+                    ),
             ),
           );
         },
       ),
+    );
+  }
+}
+
+class _TrafficCardBody extends StatelessWidget {
+  const _TrafficCardBody({
+    required this.userProfile,
+    required this.isRefreshing,
+    required this.showRefreshIcon,
+  });
+
+  final UserProfile userProfile;
+  final bool isRefreshing;
+  final bool showRefreshIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final remainingData = bytesToReadable(
+      userProfile.remainingData < 0 ? 0 : userProfile.remainingData,
+    );
+    final remainingParts = remainingData.split(' ');
+
+    return Row(
+      children: [
+        Container(
+          width: 28,
+          height: 28,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: colorScheme.primary.withOpacity(0.2),
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: colorScheme.primary.withOpacity(0.3),
+              width: 1.5,
+            ),
+          ),
+          child: Icon(
+            Icons.data_usage_rounded,
+            size: 16,
+            color: colorScheme.primary,
+          ),
+        ),
+        const SizedBox(width: 15),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.remainingData,
+                style: TextStyle(
+                  color: colorScheme.onSurface.withOpacity(0.70),
+                  fontSize: 12,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Row(
+                children: [
+                  Text(
+                    remainingParts[0],
+                    style: TextStyle(
+                      color: colorScheme.onSurface,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  if (remainingParts.length > 1)
+                    Text(
+                      ' ${remainingParts[1]}',
+                      style: TextStyle(
+                        color: colorScheme.onSurface.withOpacity(0.70),
+                        fontSize: 14,
+                      ),
+                    ),
+                  if (showRefreshIcon) ...[
+                    const SizedBox(width: 6),
+                    isRefreshing
+                        ? SizedBox(
+                            width: 12,
+                            height: 12,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: colorScheme.onSurface.withOpacity(0.70),
+                            ),
+                          )
+                        : Icon(
+                            Icons.refresh_rounded,
+                            size: 18,
+                            color: colorScheme.onSurface.withOpacity(0.70),
+                          ),
+                  ],
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

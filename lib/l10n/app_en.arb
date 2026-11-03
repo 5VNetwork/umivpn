@@ -854,6 +854,14 @@
   "byArea": "By area",
   "byServer": "By server",
   "byHandler": "By handler",
+  "handlerCount": "{count} handlers",
+  "@handlerCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "noHandlersMessage": "Sorry, no handler matching your choice is available now. Please change location or try again later.",
   "expired": "Expired",
   "today": "Today",
@@ -918,6 +926,8 @@
   "gotIt": "Got It",
   "enableAppOpenAds": "App Open Ads",
   "enableAppOpenAdsDesc": "Once enabled, the connection duration will be 30 minutes instead of 15 minutes. An ad will appear when you open UmiVPN.",
+  "showHomeAds": "Home Page Ads",
+  "showHomeAdsDesc": "Show promotional ads on the home page. Turn this off if you prefer not to see them.",
   "noTorrect": "No Torrenting",
   "noTorrectDesc": "UmiVPN cannot be used for torrenting, torrenting traffic will not go through VPN tunnels. They will be go directly to the public Internet",
   "privacy0": "Email Address",
@@ -963,6 +973,9 @@
   "oneYear": "One Year",
   "supportReplied": "Support replied",
   "openSupportChat": "Open",
+  "deleteLocalChat": "Delete chat",
+  "deleteLocalChatConfirmTitle": "Delete local chat?",
+  "deleteLocalChatConfirmMessage": "This removes cached messages from this device. Server history is not deleted(server history is usually deleted within 7 days automatically). New replies will still appear.",
   "supportWelcomeMessage": "Welcome! You can ask anything, report any issue, such as unable to access some websites. Thanks for your feedback! (Normally, we respond within 24 hours.). You can also visit our website to see FAQ: {faqUrl}",
   "@supportWelcomeMessage": {
     "placeholders": {

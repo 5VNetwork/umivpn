@@ -378,6 +378,15 @@ extension PrefHelperExtension on SharedPreferences {
     setBool('enableAppOpenAds', enable);
   }
 
+  /// Home page promotional ads. Air users can turn this off in Settings.
+  bool get showHomeAds {
+    return getBool('showHomeAds') ?? true;
+  }
+
+  void setShowHomeAds(bool enable) {
+    setBool('showHomeAds', enable);
+  }
+
   String? get installedWindowsServiceVersion {
     return getString('installedWindowsServiceVersion');
   }
@@ -412,6 +421,23 @@ extension PrefHelperExtension on SharedPreferences {
 
   void setLastReviewPromptAt(DateTime time) {
     setInt('lastReviewPromptAt', time.millisecondsSinceEpoch);
+  }
+}
+
+/// Reactive preference for whether home page ads are shown (air plan toggle).
+class ShowHomeAdsNotifier extends ChangeNotifier {
+  ShowHomeAdsNotifier(this._pref) : _show = _pref.showHomeAds;
+
+  final SharedPreferences _pref;
+  bool _show;
+
+  bool get show => _show;
+
+  void setShow(bool value) {
+    if (_show == value) return;
+    _show = value;
+    _pref.setShowHomeAds(value);
+    notifyListeners();
   }
 }
 

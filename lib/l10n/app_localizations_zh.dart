@@ -2033,6 +2033,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get byHandler => '按节点';
 
   @override
+  String handlerCount(int count) {
+    return '$count 个节点';
+  }
+
+  @override
   String get noHandlersMessage => '抱歉，当前没有符合条件的节点。请更换位置或稍后再试。';
 
   @override
@@ -2181,6 +2186,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get enableAppOpenAdsDesc => '开启后连接最大时长为 30 分钟，（而非 15 分钟）。打开UmiVPN时会显示广告。';
 
   @override
+  String get showHomeAds => '首页广告';
+
+  @override
+  String get showHomeAdsDesc => '在首页显示推广广告。如果不想看到，可以关闭。';
+
+  @override
   String get noTorrect => '无法种子下载';
 
   @override
@@ -2241,10 +2252,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get vpnServiceDesc => 'UmiVPN利用VPNService使您的上网体验更加安全，私密与稳定。在使用VPNService的过程中，我们会根据您的IP地址来为您提供最优服务器，我们不会分享或储存您的IP地址。';
 
   @override
-  String get directAppTipTitle => '直联应用集';
+  String get directAppTipTitle => '直连应用集';
 
   @override
-  String get directAppTipDesc => '建议将不需要走 VPN 的应用添加到直联应用集，以获得更好的性能和续航。';
+  String get directAppTipDesc => '建议将不需要走 VPN 的应用添加到直连应用集，以获得更好的性能和续航。';
 
   @override
   String get viewDirectAppTutorial => '查看教程';
@@ -2292,6 +2303,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get openSupportChat => '打开';
+
+  @override
+  String get deleteLocalChat => '删除聊天';
+
+  @override
+  String get deleteLocalChatConfirmTitle => '删除本地聊天？';
+
+  @override
+  String get deleteLocalChatConfirmMessage => '将清除本设备上缓存的消息，不会删除服务器上的记录(服务端的记录通常会在7天内自动删除)。之后的新回复仍会显示。';
 
   @override
   String supportWelcomeMessage(String faqUrl) {

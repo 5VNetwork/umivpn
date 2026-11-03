@@ -174,6 +174,48 @@ Future<void> _createCheckoutSession(
   }
 }
 
+/// Play Console base plan ids for [Period] (e.g. `umivpn_air` + `month`).
+String _androidBasePlanId(Period period) => switch (period) {
+  Period.month => 'month',
+  Period.quarter => 'quarter',
+  Period.halfYear => 'half-year',
+  Period.year => 'year',
+};
+
+SubscriptionOfferDetailsWrapper? _androidOfferFor(PurchasableProduct product) {
+  final details = product.productDetails;
+  if (details is! GooglePlayProductDetails) return null;
+  final index = details.subscriptionIndex;
+  final offers = details.productDetails.subscriptionOfferDetails;
+  if (index == null || offers == null || index >= offers.length) return null;
+  return offers[index];
+}
+
+/// Match by product id + basePlanId. Prefer the base offer (no [offerId])
+/// over promotional offers that share the same base plan.
+PurchasableProduct _findAndroidProduct(
+  List<PurchasableProduct> iapProducts,
+  String productId,
+  Period period,
+) {
+  final basePlanId = _androidBasePlanId(period);
+  final candidates = iapProducts.where((product) {
+    if (product.id != productId) return false;
+    return _androidOfferFor(product)?.basePlanId == basePlanId;
+  }).toList();
+
+  for (final product in candidates) {
+    if (_androidOfferFor(product)?.offerId == null) {
+      return product;
+    }
+  }
+  if (candidates.isNotEmpty) return candidates.first;
+
+  throw StateError(
+    'No Android IAP offer for productId=$productId basePlanId=$basePlanId',
+  );
+}
+
 Map<SubscriptionPlan, PlanMetadata> _convertToIAPPlans(
   Map<SubscriptionPlan, PlanMetadata> plans,
   ProPurchases proPurchases,
@@ -188,17 +230,15 @@ Map<SubscriptionPlan, PlanMetadata> _convertToIAPPlans(
       priceOptions: plan.key == SubscriptionPlan.free
           ? planData.priceOptions
           : planData.priceOptions.map((priceOption) {
-              PurchasableProduct? product;
-              if (Platform.isAndroid) {
-                final matchingProducts = iapProducts
-                    .where((product) => product.id == planData.productId)
-                    .toList();
-                product = matchingProducts[priceOption.subscriptionIndex];
-              } else {
-                product = iapProducts.firstWhere(
-                  (product) => product.id == priceOption.appleProductId,
-                );
-              }
+              final product = Platform.isAndroid
+                  ? _findAndroidProduct(
+                      iapProducts,
+                      planData.productId,
+                      priceOption.period,
+                    )
+                  : iapProducts.firstWhere(
+                      (product) => product.id == priceOption.appleProductId,
+                    );
               return PriceOption(
                 price: product.price,
                 period: priceOption.period,
@@ -272,7 +312,8 @@ class PriceOption {
   final String price;
   final Period period;
   final String priceId; // Stripe price ID for checkout session
-  final int subscriptionIndex; // android subscription index for IAP.
+  /// Legacy plans JSON field; Android IAP matching uses [Period] → basePlanId.
+  final int subscriptionIndex;
   final String appleProductId;
   final String stripePaymentLink;
   PurchasableProduct? iapProduct;

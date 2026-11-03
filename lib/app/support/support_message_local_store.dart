@@ -174,6 +174,14 @@ class SupportMessageLocalStore {
     await saveMessages(userId, kept);
   }
 
+  /// Drops cached messages for [userId], keeping only the local welcome.
+  ///
+  /// Preserves [lastFetchMaxMessageId] so a later sync does not re-download
+  /// history the user just removed from this device.
+  Future<void> clearCachedMessages(String userId) async {
+    await saveMessages(userId, [buildLocalWelcomeMessage(userId)]);
+  }
+
   Map<String, dynamic> _messageToJson(SupportMessage message) {
     return {
       'id': message.id,
