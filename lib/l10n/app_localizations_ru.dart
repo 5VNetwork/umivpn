@@ -1196,6 +1196,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get deleteAccountConfirm => 'Вы уверены, что хотите удалить свою учётную запись? Это действие не может быть отменено.';
 
   @override
+  String get deleteAccountFailed => 'Не удалось удалить аккаунт. Пожалуйста, попробуйте позже.';
+
+  @override
   String get setPassword => 'Установить пароль';
 
   @override

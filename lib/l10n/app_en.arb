@@ -475,6 +475,7 @@
   "deleteFailed": "Delete failed",
   "deleteAccount": "Delete Account",
   "deleteAccountConfirm": "Are you sure you want to delete your account? This action cannot be undone. This email will not be used to login again.",
+  "deleteAccountFailed": "Failed to delete the account. Please try again later.",
   "setPassword": "Set Password",
   "setPasswordDesc": "Set a password to sign in on other devices using your email and password.",
   "newPassword": "New Password",

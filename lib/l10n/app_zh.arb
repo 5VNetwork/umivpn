@@ -484,6 +484,7 @@
   "deleteFailed": "删除失败",
   "deleteAccount": "删除账户",
   "deleteAccountConfirm": "确定要删除账户吗？此操作无法撤销。此邮箱将无法再次用于登录。",
+  "deleteAccountFailed": "删除账户失败，请稍后重试。",
   "setPassword": "设置密码",
   "setPasswordDesc": "设置密码后，可在其他设备使用邮箱和密码登录。",
   "newPassword": "新密码",

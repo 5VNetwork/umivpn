@@ -1146,6 +1146,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteAccountConfirm => '确定要删除账户吗？此操作无法撤销。此邮箱将无法再次用于登录。';
 
   @override
+  String get deleteAccountFailed => '删除账户失败，请稍后重试。';
+
+  @override
   String get setPassword => '设置密码';
 
   @override
