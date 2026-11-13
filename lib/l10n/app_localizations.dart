@@ -2227,6 +2227,12 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to delete your account? This action cannot be undone. This email will not be used to login again.'**
   String get deleteAccountConfirm;
 
+  /// No description provided for @deleteAccountFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete the account. Please try again later.'**
+  String get deleteAccountFailed;
+
   /// No description provided for @setPassword.
   ///
   /// In en, this message translates to:

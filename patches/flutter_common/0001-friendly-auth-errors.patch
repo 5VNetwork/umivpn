@@ -1,0 +1,280 @@
+diff --git a/lib/auth/auth_error.dart b/lib/auth/auth_error.dart
+new file mode 100644
+index 0000000..d9c50e2
+--- /dev/null
++++ b/lib/auth/auth_error.dart
+@@ -0,0 +1,35 @@
++import 'package:flutter_common/l10n/app_localizations.dart';
++
++/// Maps an error of the auth flow to a message that can be shown to the user.
++///
++/// The raw errors of the supabase client are technical and contain the whole
++/// response of the server, for example:
++///
++///   AuthRetryableFetchException(message: {"code":"unexpected_failure",
++///     "message":"Database error saving new user"}, statusCode: 500)
++///
++/// They are replaced by a short message, the details are only logged.
++String authErrorMessage(Object error, AppLocalizations l10n) {
++  final message = error.toString();
++  if (message.contains('Database error saving new user')) {
++    // The database rejected the new user, this happens when rows of a
++    // previously deleted account are still in the database.
++    return l10n.cannotRegisterEmail;
++  }
++  if (message.contains('User already registered') ||
++      message.contains('email_exists')) {
++    return l10n.emailAlreadyRegistered;
++  }
++  if (message.contains('Email not confirmed')) {
++    return l10n.emailNotConfirmed;
++  }
++  if (message.contains('Invalid login credentials')) {
++    return l10n.invalidCredentials;
++  }
++  if (message.contains('Failed to fetch') ||
++      message.contains('SocketException') ||
++      message.contains('Connection refused')) {
++    return l10n.networkError;
++  }
++  return message;
++}
+diff --git a/lib/auth/auth_provider.dart b/lib/auth/auth_provider.dart
+index 1f614f5..c8677b6 100644
+--- a/lib/auth/auth_provider.dart
++++ b/lib/auth/auth_provider.dart
+@@ -197,10 +197,17 @@ class SupabaseAuth extends AuthProvider {
+     if (token == null) {
+       throw 'No Token';
+     }
+-    await supabase.functions.invoke(
++    final response = await supabase.functions.invoke(
+       'delete-account',
+       headers: {'Authorization': 'Bearer $token'},
+     );
++    // The result has to be checked, otherwise a failed deletion is reported as
++    // a success. The account is then half deleted: the auth user is gone but
++    // the rows that belong to the email are still in the database, which makes
++    // it impossible to register the same email again.
++    if (response.status < 200 || response.status >= 300) {
++      throw 'Delete account failed: ${response.status}';
++    }
+     supabase.auth.signOut();
+   }
+ }
+diff --git a/lib/auth/email_auth.dart b/lib/auth/email_auth.dart
+index d6ea1f1..81c91fc 100644
+--- a/lib/auth/email_auth.dart
++++ b/lib/auth/email_auth.dart
+@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
+ import 'package:flutter/services.dart';
+ import 'package:provider/provider.dart';
+ import 'package:flutter_common/auth/auth_provider.dart';
++import 'package:flutter_common/auth/auth_error.dart';
+ import 'package:flutter_common/common.dart';
+ import 'package:flutter_common/l10n/app_localizations.dart';
+ import 'package:flutter_common/widgets/count_down_timer.dart';
+@@ -163,7 +164,12 @@ class _EmailAuthState extends State<EmailAuth> {
+                             email,
+                           );
+                         } catch (e) {
+-                          setState(() => _sendOtpError = e.toString());
++                          setState(
++                            () => _sendOtpError = authErrorMessage(
++                              e,
++                              AppLocalizations.of(context)!,
++                            ),
++                          );
+                         }
+                         setState(() {
+                           _isCounting = true;
+@@ -256,7 +262,11 @@ class _EmailAuthState extends State<EmailAuth> {
+                 }
+               } catch (e) {
+                 scaffoldMessenger.showSnackBar(
+-                  SnackBar(content: Text(e.toString())),
++                  SnackBar(
++                    content: Text(
++                      authErrorMessage(e, AppLocalizations.of(context)!),
++                    ),
++                  ),
+                 );
+               } finally {
+                 setState(() => _isLoggingIn = false);
+diff --git a/lib/auth/sign_in_page.dart b/lib/auth/sign_in_page.dart
+index 456558d..52a8873 100644
+--- a/lib/auth/sign_in_page.dart
++++ b/lib/auth/sign_in_page.dart
+@@ -8,6 +8,7 @@ import 'package:flutter_common/widgets/app_bar.dart';
+ import 'package:provider/provider.dart';
+ import 'package:url_launcher/url_launcher.dart';
+ import 'package:flutter_common/auth/auth_provider.dart';
++import 'package:flutter_common/auth/auth_error.dart';
+ import 'package:flutter_common/auth/email_auth.dart';
+ import 'package:flutter_common/l10n/app_localizations.dart';
+ import 'package:flutter_common/util/layout.dart';
+@@ -204,7 +205,14 @@ class _SignInPageState extends State<SignInPage> {
+                           'Failed to sign in with Google: $e\n$stackTrace',
+                         );
+                         scaffoldMessenger.showSnackBar(
+-                          SnackBar(content: Text(e.toString())),
++                          SnackBar(
++                            content: Text(
++                              authErrorMessage(
++                                e,
++                                AppLocalizations.of(context)!,
++                              ),
++                            ),
++                          ),
+                         );
+                       } finally {
+                         setState(() {
+@@ -241,7 +249,11 @@ class _SignInPageState extends State<SignInPage> {
+                         await authProvider.signInWithApple();
+                       } catch (e) {
+                         scaffoldMessenger.showSnackBar(
+-                          SnackBar(content: Text(e.toString())),
++                          SnackBar(
++                            content: Text(
++                              authErrorMessage(e, AppLocalizations.of(context)!),
++                            ),
++                          ),
+                         );
+                       } finally {
+                         setState(() {
+@@ -271,7 +283,11 @@ class _SignInPageState extends State<SignInPage> {
+                       authProvider.signInWithMicrosoft();
+                     } catch (e) {
+                       scaffoldMessenger.showSnackBar(
+-                        SnackBar(content: Text(e.toString())),
++                        SnackBar(
++                          content: Text(
++                            authErrorMessage(e, AppLocalizations.of(context)!),
++                          ),
++                        ),
+                       );
+                     } finally {
+                       setState(() {
+diff --git a/lib/l10n/app_en.arb b/lib/l10n/app_en.arb
+index e75c079..77a2409 100644
+--- a/lib/l10n/app_en.arb
++++ b/lib/l10n/app_en.arb
+@@ -46,5 +46,10 @@
+     "password": "Password",
+     "passwordRequired": "Password required",
+     "usePassword": "Use password",
+-    "useOtp": "Use OTP"
++    "useOtp": "Use OTP",
++    "cannotRegisterEmail": "This email can not be registered right now. Please try again later or use another email.",
++    "emailAlreadyRegistered": "This email is already registered, please sign in",
++    "emailNotConfirmed": "This email is not confirmed yet, please check your inbox",
++    "invalidCredentials": "Wrong email or password",
++    "networkError": "Network error, please check your connection and try again"
+ }
+\ No newline at end of file
+diff --git a/lib/l10n/app_localizations.dart b/lib/l10n/app_localizations.dart
+index fd50f2a..958c70f 100644
+--- a/lib/l10n/app_localizations.dart
++++ b/lib/l10n/app_localizations.dart
+@@ -232,6 +232,36 @@ abstract class AppLocalizations {
+   /// In en, this message translates to:
+   /// **'Use OTP'**
+   String get useOtp;
++
++  /// No description provided for @cannotRegisterEmail.
++  ///
++  /// In en, this message translates to:
++  /// **'This email can not be registered right now. Please try again later or use another email.'**
++  String get cannotRegisterEmail;
++
++  /// No description provided for @emailAlreadyRegistered.
++  ///
++  /// In en, this message translates to:
++  /// **'This email is already registered, please sign in'**
++  String get emailAlreadyRegistered;
++
++  /// No description provided for @emailNotConfirmed.
++  ///
++  /// In en, this message translates to:
++  /// **'This email is not confirmed yet, please check your inbox'**
++  String get emailNotConfirmed;
++
++  /// No description provided for @invalidCredentials.
++  ///
++  /// In en, this message translates to:
++  /// **'Wrong email or password'**
++  String get invalidCredentials;
++
++  /// No description provided for @networkError.
++  ///
++  /// In en, this message translates to:
++  /// **'Network error, please check your connection and try again'**
++  String get networkError;
+ }
+ 
+ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+diff --git a/lib/l10n/app_localizations_en.dart b/lib/l10n/app_localizations_en.dart
+index c343fe9..9dfc2ae 100644
+--- a/lib/l10n/app_localizations_en.dart
++++ b/lib/l10n/app_localizations_en.dart
+@@ -82,4 +82,19 @@ class AppLocalizationsEn extends AppLocalizations {
+ 
+   @override
+   String get useOtp => 'Use OTP';
++
++  @override
++  String get cannotRegisterEmail => 'This email can not be registered right now. Please try again later or use another email.';
++
++  @override
++  String get emailAlreadyRegistered => 'This email is already registered, please sign in';
++
++  @override
++  String get emailNotConfirmed => 'This email is not confirmed yet, please check your inbox';
++
++  @override
++  String get invalidCredentials => 'Wrong email or password';
++
++  @override
++  String get networkError => 'Network error, please check your connection and try again';
+ }
+diff --git a/lib/l10n/app_localizations_zh.dart b/lib/l10n/app_localizations_zh.dart
+index a06259c..67104f1 100644
+--- a/lib/l10n/app_localizations_zh.dart
++++ b/lib/l10n/app_localizations_zh.dart
+@@ -82,4 +82,19 @@ class AppLocalizationsZh extends AppLocalizations {
+ 
+   @override
+   String get useOtp => '使用验证码登录';
++
++  @override
++  String get cannotRegisterEmail => '该邮箱暂时无法注册，请稍后重试或使用其他邮箱';
++
++  @override
++  String get emailAlreadyRegistered => '该邮箱已注册，请直接登录';
++
++  @override
++  String get emailNotConfirmed => '该邮箱尚未验证，请先查收邮件';
++
++  @override
++  String get invalidCredentials => '邮箱或密码错误';
++
++  @override
++  String get networkError => '网络错误，请检查网络后重试';
+ }
+diff --git a/lib/l10n/app_zh.arb b/lib/l10n/app_zh.arb
+index 7e07e0b..16d3fd1 100644
+--- a/lib/l10n/app_zh.arb
++++ b/lib/l10n/app_zh.arb
+@@ -58,5 +58,10 @@
+     "password": "密码",
+     "passwordRequired": "请输入密码",
+     "usePassword": "使用密码登录",
+-    "useOtp": "使用验证码登录"
++    "useOtp": "使用验证码登录",
++    "cannotRegisterEmail": "该邮箱暂时无法注册，请稍后重试或使用其他邮箱",
++    "emailAlreadyRegistered": "该邮箱已注册，请直接登录",
++    "emailNotConfirmed": "该邮箱尚未验证，请先查收邮件",
++    "invalidCredentials": "邮箱或密码错误",
++    "networkError": "网络错误，请检查网络后重试"
+ }
+\ No newline at end of file

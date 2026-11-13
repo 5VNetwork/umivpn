@@ -9,6 +9,7 @@ import 'package:umivpn/common/common.dart';
 import 'package:umivpn/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:umivpn/auth/auth_bloc.dart';
+import 'package:umivpn/auth/account_service.dart';
 import 'package:umivpn/auth/user.dart';
 import 'package:umivpn/utils/logger.dart';
 import 'package:umivpn/widgets/pro_icon.dart';
@@ -186,20 +187,32 @@ class _AccountPageState extends State<AccountPage> {
                                                   return;
                                                 }
 
-                                                await context
-                                                    .read<AuthProvider>()
+                                                // The result of the deletion
+                                                // is verified on the server, a
+                                                // failed deletion must not be
+                                                // reported as a success.
+                                                // Otherwise the account stays
+                                                // half deleted and the email
+                                                // can not be registered again.
+                                                await AccountService()
                                                     .deleteAccount();
                                                 if (context.mounted) {
                                                   Navigator.pop(context);
                                                 }
                                               } catch (e) {
+                                                logger.e(
+                                                  'delete account failed',
+                                                  error: e,
+                                                );
                                                 if (context.mounted) {
                                                   ScaffoldMessenger.of(
                                                     context,
                                                   ).showSnackBar(
                                                     SnackBar(
                                                       content: Text(
-                                                        e.toString(),
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.deleteAccountFailed,
                                                       ),
                                                       backgroundColor: Theme.of(
                                                         context,

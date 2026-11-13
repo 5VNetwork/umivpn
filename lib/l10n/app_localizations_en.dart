@@ -1196,6 +1196,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAccountConfirm => 'Are you sure you want to delete your account? This action cannot be undone. This email will not be used to login again.';
 
   @override
+  String get deleteAccountFailed => 'Failed to delete the account. Please try again later.';
+
+  @override
   String get setPassword => 'Set Password';
 
   @override
