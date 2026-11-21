@@ -4267,18 +4267,6 @@ abstract class AppLocalizations {
   /// **'For providing Google login service'**
   String get privacy1Desc;
 
-  /// No description provided for @privacy2.
-  ///
-  /// In en, this message translates to:
-  /// **'City and Network Service Provider'**
-  String get privacy2;
-
-  /// No description provided for @privacy2Desc.
-  ///
-  /// In en, this message translates to:
-  /// **'To prevent account sharing, provide the best route'**
-  String get privacy2Desc;
-
   /// No description provided for @privacy3.
   ///
   /// In en, this message translates to:

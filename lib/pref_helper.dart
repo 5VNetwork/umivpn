@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tm/protos/vx/tun/tun.pb.dart';
 import 'package:umivpn/app/home.dart';
 import 'package:umivpn/common/common.dart';
 import 'package:umivpn/l10n/app_localizations.dart';
@@ -310,6 +311,24 @@ extension PrefHelperExtension on SharedPreferences {
 
   void setInboundMode(InboundMode mode) {
     setInt('inboundMode', mode.index);
+  }
+
+  TunConfig_TUN46Setting get tun46Setting {
+    final setting = getInt('tun46Setting');
+    if (setting == null) {
+      return Platform.isWindows
+          ? TunConfig_TUN46Setting.DYNAMIC
+          : TunConfig_TUN46Setting.FOUR_ONLY;
+    }
+    final value = TunConfig_TUN46Setting.values[setting];
+    if (Platform.isAndroid && value == TunConfig_TUN46Setting.DYNAMIC) {
+      return TunConfig_TUN46Setting.FOUR_ONLY;
+    }
+    return value;
+  }
+
+  void setTun46Setting(TunConfig_TUN46Setting setting) {
+    setInt('tun46Setting', setting.value);
   }
 
   bool get fakeDns {

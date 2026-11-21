@@ -943,8 +943,6 @@
   "privacy0Desc": "用于账户创建和身份验证",
   "privacy1": "Google 账户显示名称（如果使用 Google 登录",
   "privacy1Desc": "用于提供谷歌登录服务",
-  "privacy2": "城市和网络服务提供商",
-  "privacy2Desc": "用于防止账户共享，提供最优线路",
   "privacy3": "使用了多少流量",
   "privacy3Desc": "用于提供流量统计, 衡量套餐定价, 防止滥用",
   "privacy4": "登录设备数量",

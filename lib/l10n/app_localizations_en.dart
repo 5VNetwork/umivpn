@@ -2261,12 +2261,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get privacy1Desc => 'For providing Google login service';
 
   @override
-  String get privacy2 => 'City and Network Service Provider';
-
-  @override
-  String get privacy2Desc => 'To prevent account sharing, provide the best route';
-
-  @override
   String get privacy3 => 'Data Usage';
 
   @override

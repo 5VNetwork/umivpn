@@ -2210,12 +2210,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get privacy1Desc => '用于提供谷歌登录服务';
 
   @override
-  String get privacy2 => '城市和网络服务提供商';
-
-  @override
-  String get privacy2Desc => '用于防止账户共享，提供最优线路';
-
-  @override
   String get privacy3 => '使用了多少流量';
 
   @override

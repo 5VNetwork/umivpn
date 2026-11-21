@@ -934,8 +934,6 @@
   "privacy0Desc": "For account creation and authentication",
   "privacy1": "Google Account Display Name (if using Google login)",
   "privacy1Desc": "For providing Google login service",
-  "privacy2": "City and Network Service Provider",
-  "privacy2Desc": "To prevent account sharing, provide the best route",
   "privacy3": "Data Usage",
   "privacy3Desc": "For providing traffic statistics, pricing, and preventing abuse",
   "privacy4": "Logged-in Device Count",

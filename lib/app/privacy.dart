@@ -52,13 +52,6 @@ class InitialPage extends StatelessWidget {
                           theme: theme,
                         ),
                         _PrivacySection(
-                          icon: Icons.location_city,
-                          iconColor: colorScheme.primary,
-                          title: l10n.privacy2,
-                          description: l10n.privacy2Desc,
-                          theme: theme,
-                        ),
-                        _PrivacySection(
                           icon: Icons.data_usage_outlined,
                           iconColor: colorScheme.primary,
                           title: l10n.privacy3,
