@@ -7,7 +7,8 @@ plugins {
     // START: FlutterFire Configuration
     id("com.google.gms.google-services")
     // END: FlutterFire Configuration
-    id("kotlin-android")
+    // Required while android.builtInKotlin=false (unmigrated plugins still use KGP).
+    id("org.jetbrains.kotlin.android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -24,8 +25,8 @@ android {
     ndkVersion = "29.0.14206865"
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
         // Flag to enable support for the new language APIs
         isCoreLibraryDesugaringEnabled = true
     }
@@ -54,6 +55,11 @@ android {
         release  {
             signingConfig = signingConfigs.getByName("release")
         }
+    }
+
+    // AGP 9 disables resValues by default; flavors use resValue for app_name.
+    buildFeatures {
+        resValues = true
     }
 
     flavorDimensions += "default"
@@ -99,7 +105,7 @@ android {
 
 kotlin {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_11)
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 

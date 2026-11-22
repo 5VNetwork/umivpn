@@ -19,8 +19,8 @@ TextTheme? getTextTheme(Locale? locale, {bool isDark = false}) {
 // Custom color extensions for app-specific needs only
 // All standard colors should use ColorScheme properties directly:
 // - primary, secondary, tertiary
-// - surface, background
-// - onPrimary, onSecondary, onSurface, onBackground
+// - surface, onSurface
+// - onPrimary, onSecondary
 // - outline, outlineVariant
 extension AppColors on ColorScheme {
   Color get bgColor => brightness == Brightness.dark
@@ -108,35 +108,35 @@ ThemeData lightTheme(Locale? locale) =>
 ThemeData darkTheme(Locale? locale) =>
     _buildTheme(_darkColorScheme, locale, isDark: true);
 
-final _lightColorScheme = ColorScheme.light(
+final _lightColorScheme = ColorScheme.fromSeed(
+  seedColor: const Color(0xFF00A896),
+  brightness: Brightness.light,
   primary: const Color(0xFF00A896),
   secondary: const Color(0xFF00BFA6),
   tertiary: const Color(0xFFE2E8F0),
   surface: const Color(0xFFF1F5F9),
-  background: const Color(0xFFF8FAFC),
   error: Colors.red,
   onPrimary: Colors.white,
   onSecondary: Colors.white,
   onTertiary: const Color(0xFF0F172A),
   onSurface: const Color(0xFF0F172A),
-  onBackground: const Color(0xFF0F172A),
   onError: Colors.white,
   secondaryContainer: const Color(0xFFD1FAF5),
   onSecondaryContainer: const Color(0xFF006B5E),
 );
 
-final _darkColorScheme = ColorScheme.dark(
+final _darkColorScheme = ColorScheme.fromSeed(
+  seedColor: const Color(0xFF00FFCB),
+  brightness: Brightness.dark,
   primary: const Color(0xFF00FFCB),
   secondary: const Color(0xFF00BFA6),
   tertiary: const Color(0xFF1E293B),
   surface: const Color(0xFF1E293B),
-  background: const Color(0xFF0F172A),
   error: Colors.red,
   onPrimary: Colors.black87,
   onSecondary: Colors.white,
   onTertiary: Colors.white,
   onSurface: Colors.white,
-  onBackground: Colors.white,
   onError: Colors.white,
   secondaryContainer: const Color(0xFF1E3A3A),
   onSecondaryContainer: const Color(0xFF00FFCB),
