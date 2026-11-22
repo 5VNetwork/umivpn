@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:installed_apps/index.dart';
+import 'package:installed_apps/installed_apps.dart';
 import 'package:lru_cache/lru_cache.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -183,7 +183,7 @@ class LogBloc extends Bloc<LogEvent, LogState> {
       if (icon != null) {
         return icon;
       }
-      final appInfo = await InstalledApps.getAppInfo(app, null);
+      final appInfo = await InstalledApps.getAppInfo(app);
       if (appInfo != null && appInfo.icon != null) {
         _appIconCache.put(app, appInfo.icon!);
         return appInfo.icon;

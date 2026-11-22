@@ -5,7 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_common/widgets/app_bar.dart';
-import 'package:installed_apps/index.dart';
+import 'package:installed_apps/installed_apps.dart';
 import 'package:provider/provider.dart';
 import 'package:tm/custom_routing_rules.dart';
 import 'package:tm/default.dart';
@@ -673,9 +673,9 @@ class _AndroidInstalledAppsScreenState
 
   Future<void> _load() async {
     final values = await InstalledApps.getInstalledApps(
-      !_showSystemApps,
-      true,
-      "",
+      excludeSystemApps: !_showSystemApps,
+      withIcon: true,
+      packageNamePrefix: "",
     );
     values.removeWhere((e) => e.packageName == androidPackageNme);
     setState(() {

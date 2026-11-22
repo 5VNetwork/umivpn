@@ -69,7 +69,7 @@ dependencies:
   flutter_secure_storage: ^10.0.0
   vector_graphics: ^1.1.18
   file_picker: ^10.3.10
-  installed_apps: ^1.6.0
+  installed_apps: ^2.2.1
   auto_size_text: ^3.0.0
   crypto: ^3.0.6
   device_info_plus: ^11.5.0
@@ -80,7 +80,7 @@ dependencies:
   sign_in_with_apple: ^7.0.1
   google_sign_in: ^7.2.0
   in_app_purchase: 3.3.0
-  in_app_review: ^2.0.10
+  in_app_review: ^2.0.12
   flutter_local_notifications: ^22.0.1
   firebase_core: ^4.6.0
   firebase_messaging: ^16.0.0

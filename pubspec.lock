@@ -950,10 +950,10 @@ packages:
     dependency: "direct main"
     description:
       name: in_app_review
-      sha256: "36a06771b88fb0e79985b15e7f2ac0f1142e903fe72517f3c055d78bc3bc1819"
+      sha256: "364db0c160b37fe7fad9cdaa18f968473924b17368869010af902760421b6bf8"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.10"
+    version: "2.0.12"
   in_app_review_platform_interface:
     dependency: transitive
     description:
@@ -974,10 +974,10 @@ packages:
     dependency: "direct main"
     description:
       name: installed_apps
-      sha256: dd2b7c531f91114cd6df447c56567593c9799ca83f057137ae719324ae0afd06
+      sha256: "742e1e1aa7a7f4b2ce9cdba76499559415213736acba0d4a0eaa5e958dac65f7"
       url: "https://pub.dev"
     source: hosted
-    version: "1.6.0"
+    version: "2.2.1"
   intl:
     dependency: "direct main"
     description:
