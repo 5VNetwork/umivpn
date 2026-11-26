@@ -28,7 +28,7 @@ class ModeSelector extends StatelessWidget {
         decoration: BoxDecoration(
           color: colorScheme.brightness == Brightness.dark
               ? colorScheme.surfaceOverlayLight
-              : colorScheme.surfaceContainerLow,
+              : colorScheme.surfaceContainerLowest,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: colorScheme.borderLight),
         ),
