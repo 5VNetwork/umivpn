@@ -76,7 +76,7 @@ class InboundModeSelector extends StatelessWidget {
               decoration: BoxDecoration(
                 color: colorScheme.brightness == Brightness.dark
                     ? colorScheme.surfaceOverlayLight
-                    : colorScheme.surfaceContainerHigh,
+                    : colorScheme.surfaceContainerLow,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: colorScheme.borderLight),
               ),

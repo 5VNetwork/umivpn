@@ -2071,7 +2071,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get currentLocation => 'Location';
 
   @override
+  String get currentLocationUnavailable => 'Current location is unavailable. Please select another.';
+
+  @override
   String get selectLocation => 'Select location';
+
+  @override
+  String get showRealtimeLogs => 'Show realtime logs';
 
   @override
   String get byArea => 'By area';
@@ -2239,8 +2245,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get showHomeAds => 'Home Page Ads';
 
   @override
-  String get showHomeAdsDesc =>
-      'Show promotional ads on the home page. Turn this off if you prefer not to see them.';
+  String get showHomeAdsDesc => 'Show promotional ads on the home page. Turn this off if you prefer not to see them.';
 
   @override
   String get noTorrect => 'No Torrenting';

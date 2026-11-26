@@ -41,50 +41,56 @@ class Selector extends StatelessWidget {
         decoration: BoxDecoration(
           color: colorScheme.brightness == Brightness.dark
               ? colorScheme.surfaceOverlayLight
-              : colorScheme.surfaceContainerHigh,
+              : colorScheme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: colorScheme.borderLight),
         ),
-        child: BlocBuilder<ChoiceCubit, Choice>(
-          buildWhen: (previous, current) =>
-              previous.country != current.country ||
-              previous.serverId != current.serverId ||
-              previous.handlerTag != current.handlerTag,
-          builder: (ctx, state) {
-            final country = _displayCountry(ctx, state);
-            return Row(
-              children: [
-                getCountryIcon(country, height: 28, width: 28),
-                const SizedBox(width: 15),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.currentLocation,
-                        style: TextStyle(
-                          color: colorScheme.onSurface.withOpacity(0.70),
-                          fontSize: 12,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          _getSelectionLabel(context, state),
-                          maxLines: 1,
-                          style: TextStyle(
-                            color: colorScheme.onSurface,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
+        // Choice alone is not enough: handler/server labels need FetchResult
+        // (loaded async on restart). Rebuild when either changes.
+        child: Consumer<FetchResultProvider>(
+          builder: (context, _, __) {
+            return BlocBuilder<ChoiceCubit, Choice>(
+              buildWhen: (previous, current) =>
+                  previous.country != current.country ||
+                  previous.serverId != current.serverId ||
+                  previous.handlerTag != current.handlerTag,
+              builder: (ctx, state) {
+                final country = _displayCountry(ctx, state);
+                return Row(
+                  children: [
+                    getCountryIcon(country, height: 28, width: 28),
+                    const SizedBox(width: 15),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.currentLocation,
+                            style: TextStyle(
+                              color: colorScheme.onSurface.withOpacity(0.70),
+                              fontSize: 12,
+                            ),
                           ),
-                        ),
+                          const SizedBox(height: 2),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              _getSelectionLabel(context, state),
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: colorScheme.onSurface,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              ],
+                    ),
+                  ],
+                );
+              },
             );
           },
         ),
@@ -1048,92 +1054,87 @@ class _SelectionTile extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context)!;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: isCurrent
-            ? colorScheme.primary.withOpacity(0.15)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Opacity(
-        opacity: currentUnavailable ? 0.5 : 1.0,
-        child: ListTile(
-          contentPadding: const EdgeInsets.only(left: 16, right: 4),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          leading: Container(
-            width: 28,
-            height: 28,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: isCurrent
-                  ? colorScheme.primary.withOpacity(0.2)
-                  : colorScheme.surfaceOverlay,
-              shape: BoxShape.circle,
-            ),
-            child: icon,
-          ),
-          subtitle: currentUnavailable
-              ? Text(
-                  'Current location is unavailable. Please select another.',
-                  style: TextStyle(
-                    color: colorScheme.error.withOpacity(0.70),
-                    fontSize: 12,
-                  ),
-                )
-              : subtitle == null
-              ? null
-              : Text(
-                  subtitle!,
-                  style: TextStyle(
-                    color: colorScheme.onSurface.withOpacity(0.60),
-                    fontSize: 12,
-                  ),
-                ),
-          title: Text(
-            title,
-            style: TextStyle(
-              color: isCurrent ? colorScheme.primary : colorScheme.onSurface,
-              fontWeight: isCurrent ? FontWeight.w700 : FontWeight.normal,
-            ),
-          ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (metrics != null)
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: _HandlerMetricsTrailing(metrics: metrics!),
-                ),
-              if (onTest != null)
-                IconButton(
-                  tooltip: '${l10n.statusTest} · ${l10n.speedTest}',
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(
-                    minWidth: 36,
-                    minHeight: 36,
-                  ),
-                  visualDensity: VisualDensity.compact,
-                  onPressed: testing ? null : onTest,
-                  icon: testing
-                      ? SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: colorScheme.primary,
-                          ),
-                        )
-                      : Icon(
-                          Icons.speed_outlined,
-                          color: colorScheme.onSurface.withOpacity(0.55),
-                        ),
-                ),
-            ],
-          ),
-          onTap: onTap,
+    return Opacity(
+      opacity: currentUnavailable ? 0.5 : 1.0,
+      child: ListTile(
+        contentPadding: const EdgeInsets.only(left: 16, right: 4),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
+        tileColor: isCurrent
+            ? colorScheme.primary.withOpacity(0.15)
+            : null,
+        leading: Container(
+          width: 28,
+          height: 28,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: isCurrent
+                ? colorScheme.primary.withOpacity(0.2)
+                : colorScheme.surfaceOverlay,
+            shape: BoxShape.circle,
+          ),
+          child: icon,
+        ),
+        subtitle: currentUnavailable
+            ? Text(
+                l10n.currentLocationUnavailable,
+                style: TextStyle(
+                  color: colorScheme.error.withOpacity(0.70),
+                  fontSize: 12,
+                ),
+              )
+            : subtitle == null
+            ? null
+            : Text(
+                subtitle!,
+                style: TextStyle(
+                  color: colorScheme.onSurface.withOpacity(0.60),
+                  fontSize: 12,
+                ),
+              ),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: isCurrent ? colorScheme.primary : colorScheme.onSurface,
+            fontWeight: isCurrent ? FontWeight.w700 : FontWeight.normal,
+          ),
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (metrics != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: _HandlerMetricsTrailing(metrics: metrics!),
+              ),
+            if (onTest != null)
+              IconButton(
+                tooltip: '${l10n.statusTest} · ${l10n.speedTest}',
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(
+                  minWidth: 36,
+                  minHeight: 36,
+                ),
+                visualDensity: VisualDensity.compact,
+                onPressed: testing ? null : onTest,
+                icon: testing
+                    ? SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: colorScheme.primary,
+                        ),
+                      )
+                    : Icon(
+                        Icons.speed_outlined,
+                        color: colorScheme.onSurface.withOpacity(0.55),
+                      ),
+              ),
+          ],
+        ),
+        onTap: onTap,
       ),
     );
   }

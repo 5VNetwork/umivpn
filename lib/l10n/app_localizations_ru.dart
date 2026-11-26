@@ -2071,7 +2071,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get currentLocation => 'Location';
 
   @override
+  String get currentLocationUnavailable => 'Текущее местоположение недоступно. Выберите другое.';
+
+  @override
   String get selectLocation => 'Выберите локацию';
+
+  @override
+  String get showRealtimeLogs => 'Показать журналы в реальном времени';
 
   @override
   String get byArea => 'По региону';
@@ -2239,8 +2245,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get showHomeAds => 'Реклама на главной';
 
   @override
-  String get showHomeAdsDesc =>
-      'Показывать рекламу на главной странице. Отключите, если не хотите её видеть.';
+  String get showHomeAdsDesc => 'Показывать рекламу на главной странице. Отключите, если не хотите её видеть.';
 
   @override
   String get noTorrect => 'No Torrenting';

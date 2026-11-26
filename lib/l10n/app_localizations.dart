@@ -3913,11 +3913,23 @@ abstract class AppLocalizations {
   /// **'Location'**
   String get currentLocation;
 
+  /// No description provided for @currentLocationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Current location is unavailable. Please select another.'**
+  String get currentLocationUnavailable;
+
   /// No description provided for @selectLocation.
   ///
   /// In en, this message translates to:
   /// **'Select location'**
   String get selectLocation;
+
+  /// No description provided for @showRealtimeLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Show realtime logs'**
+  String get showRealtimeLogs;
 
   /// No description provided for @byArea.
   ///

@@ -4,34 +4,20 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_common/util/net.dart';
-import 'package:flutter_common/widgets/app_bar.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:pasteboard/pasteboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tm/protos/vx/common/geo/geo.pbenum.dart';
-import 'package:tm/protos/vx/router/router.pbenum.dart';
+import 'package:tm/protos/vx/common/geo/geo.pb.dart';
+import 'package:tm/protos/vx/router/router.pb.dart';
 import 'package:tm/x_controller.dart';
 import 'package:umivpn/app/choice_cubit.dart';
 import 'package:umivpn/app/log/log_bloc.dart';
 import 'package:umivpn/app/log/log_routing_helper.dart';
 import 'package:umivpn/common/common.dart';
-import 'package:umivpn/common/domain.dart';
 import 'package:umivpn/common/extension.dart';
 import 'package:umivpn/l10n/app_localizations.dart';
-import 'package:umivpn/main.dart';
 import 'package:umivpn/utils/logger.dart';
-import 'dart:io';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_common/util/net.dart';
-import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
-import 'package:pasteboard/pasteboard.dart';
-import 'package:provider/provider.dart';
-import 'package:tm/protos/vx/common/geo/geo.pb.dart';
-import 'package:tm/protos/vx/router/router.pb.dart';
 
 const XBlue = Color(0xFF208EFD);
 const ShimmerPurple = Color(0xFFB433F7);
@@ -63,7 +49,6 @@ class _LogPageState extends State<LogPage> {
   late TextEditingController _searchController;
   late SearchBar _searchBar;
   late Text _logText;
-  BlocBuilder<LogBloc, LogState>? _menuAnchor;
   late Widget _goToBottomButton;
 
   @override
@@ -86,7 +71,6 @@ class _LogPageState extends State<LogPage> {
             },
           ),
           builder: (context, child) {
-            print(_searchController.text);
             if (_searchController.text.isNotEmpty) {
               return child!;
             }
@@ -105,69 +89,6 @@ class _LogPageState extends State<LogPage> {
         maxHeight: 40,
         maxWidth: 360,
       ),
-    );
-    _menuAnchor = BlocBuilder<LogBloc, LogState>(
-      builder: (context, state) {
-        return MenuAnchor(
-          menuChildren: [
-            if (!Platform.isIOS)
-              MenuItemButton(
-                onPressed: () => context.read<LogBloc>().add(
-                  AppPressedEvent(!state.showApp),
-                ),
-                child: Text(
-                  state.showApp
-                      ? AppLocalizations.of(context)!.hideApp
-                      : AppLocalizations.of(context)!.showApp,
-                ),
-              ),
-            MenuItemButton(
-              onPressed: () => context.read<LogBloc>().add(
-                SessionOngoingPressedEvent(!state.showSessionOngoing),
-              ),
-              child: Text(
-                state.showSessionOngoing
-                    ? AppLocalizations.of(context)!.hideSessionOngoingIndicator
-                    : AppLocalizations.of(context)!.showSessionOngoingIndicator,
-              ),
-            ),
-            MenuItemButton(
-              onPressed: () => context.read<LogBloc>().add(
-                RealtimeUsagePressedEvent(!state.showRealtimeUsage),
-              ),
-              child: Text(
-                state.showRealtimeUsage
-                    ? AppLocalizations.of(context)!.hideRealtimeUsage
-                    : AppLocalizations.of(context)!.showRealtimeUsage,
-              ),
-            ),
-            MenuItemButton(
-              onPressed: () => context.read<LogBloc>().add(
-                DismissDuplicateSessionsPressedEvent(
-                  !state.dismissDuplicateSessions,
-                ),
-              ),
-              child: Text(
-                state.dismissDuplicateSessions
-                    ? AppLocalizations.of(context)!.showDuplicateSessions
-                    : AppLocalizations.of(context)!.hideDuplicateSessions,
-              ),
-            ),
-          ],
-          builder: (context, controller, child) {
-            return IconButton(
-              onPressed: () {
-                if (controller.isOpen) {
-                  controller.close();
-                } else {
-                  controller.open();
-                }
-              },
-              icon: const Icon(Icons.more_vert_rounded),
-            );
-          },
-        );
-      },
     );
     _goToBottomButton = IconButton(
       onPressed: () => _logListKey.currentState?.scrollController.animateTo(
@@ -313,6 +234,10 @@ class _LogPageState extends State<LogPage> {
                     ),
                   ],
                 );
+                final displayOptionsButton = IconButton(
+                  onPressed: () => _showDisplayOptions(context),
+                  icon: const Icon(Icons.more_vert_rounded),
+                );
                 late final Widget filter;
                 if (MediaQuery.of(context).size.width < 700) {
                   filter = Center(
@@ -323,17 +248,12 @@ class _LogPageState extends State<LogPage> {
                           children: [
                             Expanded(child: _searchBar),
                             const Gap(5),
-                            if (_menuAnchor != null) _menuAnchor!,
+                            displayOptionsButton,
                             _goToBottomButton,
                           ],
                         ),
                         const Gap(5),
-                        _menuAnchor != null
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [chips],
-                              )
-                            : chips,
+                        chips,
                       ],
                     ),
                   );
@@ -343,16 +263,16 @@ class _LogPageState extends State<LogPage> {
                       Expanded(child: _searchBar),
                       const Gap(10),
                       chips,
-                      if (_menuAnchor != null) _menuAnchor!,
+                      displayOptionsButton,
                       _goToBottomButton,
                     ],
                   );
                 }
                 if (!state.enableLog) {
-                  return const Center(
+                  return Center(
                     child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('Show realtime logs'),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(AppLocalizations.of(context)!.showRealtimeLogs),
                     ),
                   );
                 }
@@ -381,6 +301,90 @@ class _LogPageState extends State<LogPage> {
       ),
     );
   }
+
+  void _showDisplayOptions(BuildContext context) {
+    final logBloc = context.read<LogBloc>();
+    final content = BlocProvider.value(
+      value: logBloc,
+      child: BlocBuilder<LogBloc, LogState>(
+        builder: (context, state) {
+          final l10n = AppLocalizations.of(context)!;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (!Platform.isIOS)
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(l10n.showApp),
+                  value: state.showApp,
+                  onChanged: (v) =>
+                      context.read<LogBloc>().add(AppPressedEvent(v)),
+                ),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.showSessionOngoingIndicator),
+                value: state.showSessionOngoing,
+                onChanged: (v) => context.read<LogBloc>().add(
+                  SessionOngoingPressedEvent(v),
+                ),
+              ),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.showRealtimeUsage),
+                value: state.showRealtimeUsage,
+                onChanged: (v) =>
+                    context.read<LogBloc>().add(RealtimeUsagePressedEvent(v)),
+              ),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.hideDuplicateSessions),
+                value: state.dismissDuplicateSessions,
+                onChanged: (v) => context.read<LogBloc>().add(
+                  DismissDuplicateSessionsPressedEvent(v),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    if (MediaQuery.of(context).size.isCompact) {
+      showModalBottomSheet(
+        context: context,
+        useRootNavigator: true,
+        useSafeArea: true,
+        constraints: const BoxConstraints(maxWidth: 500),
+        builder: (ctx) {
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 16,
+                bottom: 8,
+              ),
+              child: content,
+            ),
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        useRootNavigator: true,
+        builder: (ctx) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context)!.settings),
+            content: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: content,
+            ),
+          );
+        },
+      );
+    }
+  }
 }
 
 const chipBorderRadius = RoundedRectangleBorder(
@@ -400,6 +404,7 @@ class _LogListState extends State<LogList> {
   late Chip _vChip;
   final ScrollController scrollController = ScrollController();
   bool _isScrolledToBottom = true;
+  bool _scrollAdjustScheduled = false;
   late Text _directText;
   late Text _proxyText;
   // late Text _errorText;
@@ -475,11 +480,22 @@ class _LogListState extends State<LogList> {
   }
 
   void _adgustScrollPosition() {
+    _scrollAdjustScheduled = false;
     if (!scrollController.hasClients) return;
-    // print(_scrollController.position.pixels);
     if (_isScrolledToBottom) {
       scrollController.jumpTo(scrollController.position.maxScrollExtent);
     }
+  }
+
+  void _scheduleScrollAdjust() {
+    if (_scrollAdjustScheduled) {
+      logger.d('skip scroll adjust');
+      return;
+    }
+    _scrollAdjustScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _adgustScrollPosition();
+    });
   }
 
   @override
@@ -1270,9 +1286,7 @@ class _LogListState extends State<LogList> {
         // print(constraints.maxWidth);
         return BlocBuilder<LogBloc, LogState>(
           builder: (context, state) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _adgustScrollPosition();
-            });
+            _scheduleScrollAdjust();
             // To maintain a static view when a user is viewing log history
             if (!_isScrolledToBottom &&
                 !scrollController.position.isScrollingNotifier.value &&
@@ -1328,7 +1342,13 @@ class _LogListState extends State<LogList> {
                                 child: SizedBox(
                                   width: 24,
                                   height: 24,
-                                  child: Image.memory(l.icon!),
+                                  child: Image.memory(
+                                    l.icon!,
+                                    gaplessPlayback: true,
+                                    cacheWidth: 48,
+                                    cacheHeight: 48,
+                                    filterQuality: FilterQuality.low,
+                                  ),
                                 ),
                               ),
                             if (l.abnormal)
@@ -1350,7 +1370,7 @@ class _LogListState extends State<LogList> {
                                   style: textStyle.copyWith(
                                     color: Theme.of(
                                       context,
-                                    ).colorScheme.secondary,
+                                    ).colorScheme.primary,
                                   ),
                                 ),
                               ),

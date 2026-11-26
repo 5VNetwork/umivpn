@@ -9,7 +9,10 @@ Future<bool> canReceiveFcmNotifications() async {
     final settings = await FirebaseMessaging.instance.getNotificationSettings();
     return switch (settings.authorizationStatus) {
       AuthorizationStatus.authorized || AuthorizationStatus.provisional => true,
-      AuthorizationStatus.denied || AuthorizationStatus.notDetermined => false,
+      AuthorizationStatus.denied ||
+      AuthorizationStatus.deniedPermanently ||
+      AuthorizationStatus.notDetermined =>
+        false,
     };
   } catch (e, st) {
     logger.e('getNotificationSettings failed', error: e, stackTrace: st);

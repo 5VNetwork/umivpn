@@ -869,5 +869,7 @@
   "announcements": "Уведомления",
   "noAnnouncements": "Пока нет объявлений",
   "failedToLoadAnnouncements": "Не удалось загрузить объявления",
-  "learnMore": "Подробнее"
+  "learnMore": "Подробнее",
+  "currentLocationUnavailable": "Текущее местоположение недоступно. Выберите другое.",
+  "showRealtimeLogs": "Показать журналы в реальном времени"
 }
